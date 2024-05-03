@@ -1,0 +1,7 @@
+services: 
+  app: 
+    build: ./app
+    container_name: spamoverflow
+    restart: always 
+    ports:
+      - "8080:8080" 
