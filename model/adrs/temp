@@ -1,0 +1,60 @@
+Title: Adoption of a Web-Based Platform for Initial Deployment
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to develop a responsive web application instead of a native mobile app is driven by the need for broad accessibility and reduced development costs.
+
+Context: Considering the target audience's diverse access to technology, a web application accessible via browsers on multiple devices ensures that the ride-sharing service is available to a wide user base. Additionally, the team’s proficiency in web technologies supports this approach.
+
+Decision: The team will build a responsive web application utilizing standard web technologies. This decision leverages existing skills and accelerates the development process, focusing on a single platform rather than managing separate codebases for Android and iOS.
+
+Consequences:
+-Positive: Broader accessibility, reduced development and maintenance costs, faster time to market.
+-Neutral: Reliance on internet connectivity for access.
+-Negative: Potential limitations in accessing native features like advanced GPS and offline capabilities, which could enhance user experience especially for drivers.
+---------------------------------------------------------------------------------------------------------------------------
+
+Title: Utilizing Flask for Backend Development
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to use Flask for the backend framework was influenced by the team's familiarity with Python and the need for a lightweight, flexible solution for rapid development.
+
+Context: The backend of the ridesharing application requires handling multiple types of HTTP requests and database interactions efficiently. Given the team’s existing proficiency in Python, leveraging a Python-based framework is ideal. Flask, being a micro-framework, allows for starting small and scaling up as needed, which aligns well with the project's phased development approach.
+
+Decision: Adopt Flask to develop the backend of the application. This framework will manage HTTP requests, routing, server-side logic, and database operations. Flask's ability to integrate seamlessly with other Python libraries and tools will also be utilized to extend its capabilities as the application's requirements grow.
+
+Consequences:
+-Positive: Enhanced development speed due to familiarity with Python and Flask’s simplicity; easier integration with Python libraries and tools; cost-effective scaling in the early stages of the project.
+-Neutral: Dependency on the Python ecosystem for additional functionality and performance enhancements.
+-Negative: Potential need for additional components or services to handle complex application demands and scaling, such as adding a more robust web server in front of Flask like Gunicorn, or integrating with a message queue for asynchronous task processing.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Title: Adoption of JavaScript Frameworks for Frontend Development
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to use JavaScript for frontend development, utilizing frameworks like React or Vue.js, was made to leverage the extensive capabilities and support these technologies offer for creating dynamic and interactive web applications.
+
+Context: A dynamic and responsive user interface is crucial for the application to provide a seamless user experience across various devices. JavaScript is universally supported by modern web browsers and allows for the creation of rich, client-side applications. The choice of specific frameworks like React or Vue.js is driven by their robust ecosystem, component-driven architecture, and wide adoption, which ensures community support and resource availability. An integral part of the user interface is the implementation of dynamic maps for route navigation and location tracking, which is essential for both riders and drivers.
+
+Decision: Implement the frontend using JavaScript, with the choice of React or Vue.js based on specific project needs and team familiarity. These frameworks will help manage the application’s state, handle user interactions efficiently, and offer reusable UI components. Additionally, the application will integrate mapping functionalities using popular APIs like Google Maps or OpenStreetMap to support real-time geolocation and routing features.
+
+Consequences:
+-Positive: Enhanced user experience with dynamic content updates and interactive UIs; scalability in managing complex states and UI components; integrated mapping provides critical functionality for navigation and location tracking.
+-Neutral: Requires consistent updates and maintenance to keep up with changes in the JavaScript ecosystem and mapping API developments.
+-Negative: Increased complexity in frontend architecture, requiring skilled developers familiar with modern JavaScript practices and tools to manage and scale the frontend effectively; integration of mapping APIs adds another layer of complexity and potential dependency on external services
+--------------------------------------------------------------------------------------------------------------------------------
+
+Title: Differentiated User Interfaces for Drivers and Riders
+Date: 24/04/2024
+Status: Accepted
+Summary: To cater to the distinct needs and workflows of drivers and riders, separate user interfaces will be designed and implemented, ensuring tailored experiences for each group.
+
+Context: Drivers and riders interact with the platform in fundamentally different ways. Drivers need more detailed navigation aids and ride status updates, while riders focus on ease of booking and ride tracking. Addressing these distinct needs requires customized interfaces.
+
+Decision: Develop separate user interfaces for drivers and riders within the application. This approach will leverage shared design elements where feasible but prioritize distinct functionalities to optimize each user group’s experience and efficiency.
+
+Consequences:
+-Positive: Enhanced user satisfaction by providing tailored functionalities that meet the specific needs of drivers and riders; -increased efficiency in interactions with the app.
+-Neutral: Some overlap in design and development efforts where shared functionalities exist.
+-Negative: Increased complexity in design, development, and testing to ensure both interfaces are equally intuitive and functional; higher maintenance costs due to the dual interface approach.
+
+<------------ need to add more tmrw ----------->
