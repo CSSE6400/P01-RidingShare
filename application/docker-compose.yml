@@ -7,12 +7,16 @@ services:
       POSTGRES_PASSWORD: verySecretPassword
       POSTGRES_USER: administrator
       POSTGRES_DB: ride
+    volumes: 
+      - ./data/db:/var/lib/postgresql/data
 
-  app: 
+  api: 
     build: ./api
     container_name: ridingshare
     restart: always 
     environment:
-      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2cffi://administrator:verySecretPassword@database:5432/ride
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
     ports:
-      - "8080:8080" 
+      - "8080:8080"
+    depends_on:
+      - database 

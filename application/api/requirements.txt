@@ -1,8 +1,7 @@
 flask==3.*
 flask-restful==0.3.*
 flask-sqlalchemy==3.*
-psycopg2cffi==2.* 
-email-validator==2.*
+psycopg==3.*
 gunicorn==22.*
 celery[sqs]==5.*
 boto3==1.*

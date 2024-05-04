@@ -1,7 +1,7 @@
 FROM pypy:3.10-slim
 
 # Installing dependencies for running a python application
-RUN apt-get update && apt-get install -y python3 python3-pip postgresql-client libpq-dev wget
+RUN apt-get update && apt-get install -y libpq-dev postgresql-common
 
 # Setting the working directory
 WORKDIR /app
