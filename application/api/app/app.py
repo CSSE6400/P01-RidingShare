@@ -6,7 +6,7 @@ def create_app(config_overrides=None):
     app = Flask(__name__)
 
     # Configure app with database URI + overrides
-    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("SQLALCHEMY_DATABASE_URI", "postgresql:///spamoverflow")
+    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("SQLALCHEMY_DATABASE_URI", "postgresql:///ridingshare")
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] =  {"pool_pre_ping":True}
     app.config.from_mapping(
         CELERY=dict(
