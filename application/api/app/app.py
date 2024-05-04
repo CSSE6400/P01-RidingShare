@@ -20,6 +20,18 @@ def create_app(config_overrides=None):
         app.config.update(config_overrides)
     app.config.from_prefixed_env()
 
+    from models import db
+    from models.passenger import Passenger
+    from models.trip_request import TripRequest
+    from models.driver import Driver
+    from models.trip import Trip
+    db.init_app(app)
+
+    # Create the database tables
+    with app.app_context():
+        db.create_all()
+        db.session.commit()
+
     # Register the blueprints
     from views.routes import api_bp
     app.register_blueprint(api_bp)
