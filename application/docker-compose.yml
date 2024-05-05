@@ -11,7 +11,9 @@ services:
       - ./data/db:/var/lib/postgresql/data
 
   api: 
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     container_name: ridingshare
     restart: always 
     environment:
