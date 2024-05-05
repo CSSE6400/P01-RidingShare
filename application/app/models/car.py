@@ -2,19 +2,13 @@ import datetime
 from . import db
 import uuid
 
-class Trip(db.Model):
-    __tablename__ = 'trip'
+class Car(db.Model):
+    __tablename__ = 'car'
 
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    driver_id = db.Column(db.String, db.ForeignKey('driver.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
-    end_time = db.Column(db.DateTime, nullable=True)
-    start_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
-    end_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
-    status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
-    seats_remaining = db.Column(db.Integer, nullable=False)
-    ## the below is useful for accessing all trips being made by a driver 
-    driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
+    max_available_seats = 
+    licence_plate = 
+    
 
     def __repr__(self):
         return f'<Trip {self.id}>'
