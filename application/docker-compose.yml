@@ -7,11 +7,9 @@ services:
       POSTGRES_PASSWORD: verySecretPassword
       POSTGRES_USER: administrator
       POSTGRES_DB: ride
-    volumes: 
-      - ./data/db:/var/lib/postgresql/data
 
   api: 
-    build: ./api
+    build: .
     container_name: ridingshare
     restart: always 
     environment:

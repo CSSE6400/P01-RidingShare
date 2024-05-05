@@ -1,7 +1,7 @@
 @baseUrl =http://localhost:8080
 
 ### Get Request
-GET {{baseUrl}}/passengers/b21b2e7e-4d1e-4cd8-8519-01b3933b7206
+GET {{baseUrl}}/passengers
 ### Add a Passenger 
 POST {{baseUrl}}/passengers
 Content-Type: application/json
