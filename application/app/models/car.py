@@ -6,8 +6,8 @@ class Car(db.Model):
     __tablename__ = 'car'
 
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    max_available_seats = 
-    licence_plate = 
+    # max_available_seats = None
+    # licence_plate = None
     
 
     def __repr__(self):

@@ -11,8 +11,8 @@ class TripRequest(db.Model):
     pickup_location = db.Column(db.JSON, nullable=False)
     dropoff_location = db.Column(db.JSON, nullable=False)
 
-    pickup_window_start = 
-    pickup_window_end = 
+    # pickup_window_start = None
+    # pickup_window_end = None
 
     status = db.Column(db.String, default="Pending") # Options: Pending, Matched, Cancelled
     ## the below is useful for accessing the trip request being made by a passenger

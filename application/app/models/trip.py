@@ -15,7 +15,7 @@ class Trip(db.Model):
     seats_remaining = db.Column(db.Integer, nullable=False)
     ## the below is useful for accessing all trips being made by a driver 
     driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
-    car = None # HAVE THIS OR IN DRIVER?
+    # car = None # HAVE THIS OR IN DRIVER?
 
     def __repr__(self):
         return f'<Trip {self.id}>'

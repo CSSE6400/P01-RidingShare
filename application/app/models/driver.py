@@ -10,7 +10,7 @@ class Driver(db.Model):
     name = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.String, nullable=False)
     car_registration_number = db.Column(db.String, nullable=False)
-    trip_preferences = # I only want to take an extra 5 kms for all my pickups 
+    # trip_preferences = # I only want to take an extra 5 kms for all my pickups 
 
     def to_dict(self):
         return {
