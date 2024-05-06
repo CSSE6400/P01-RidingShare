@@ -82,13 +82,8 @@ class PassengerListResource(Resource):
     def post(self):
         return PassengerResource().post()
 
-class Index(Resource):
-     def get(self):
-         return render_template("index.html")
 
 api.add_resource(Health, "/health")
 api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
 api.add_resource(PassengerListResource, '/passengers')
 api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
-
-api.add_resource(Index, "/")
