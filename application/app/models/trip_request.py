@@ -19,6 +19,7 @@ class TripRequest(db.Model):
     
     ## the below is useful for accessing the trip request being made by a passenger
     passenger = db.relationship('Passenger', backref=db.backref('trip_requests', lazy=True))
+    
 
     def to_dict(self):
         return {
@@ -30,5 +31,8 @@ class TripRequest(db.Model):
             'status': self.status
         }
 
+    def write_preferences(seats_available=None, distance_addition=None, time_addition=None):
+        return jsonify({'seats_available': seats_available, 'distance_addition': distance_addition, 'time_addition': time_addition})
+        
     def __repr__(self):
         return f'<TripRequest {self.id}>'

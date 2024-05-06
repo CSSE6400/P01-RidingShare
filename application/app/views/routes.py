@@ -48,35 +48,37 @@ class DriverResource(Resource):
             return make_response(jsonify({"error": "Driver not found"}), 404)
 
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str, required=True, help="Name cannot be blank!")
-        parser.add_argument('phone_number', type=str, required=True, help="Phone number cannot be blank!")
-        parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
-        parser.add_argument('max_available_seats', type=Integer, required=True, help="Car seating number cannot be blank!")
-        parser.add_argument('car_registration_number', type=str, required=True, help="Car registration number cannot be blank!")
-        args = parser.parse_args()
+        try:
+            parser = reqparse.RequestParser()
+            parser.add_argument('name', type=str, required=True, help="Name cannot be blank!")
+            parser.add_argument('phone_number', type=str, required=True, help="Phone number cannot be blank!")
+            parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
+            parser.add_argument('max_available_seats', type=int, required=True, help="Car seating number cannot be blank!")
+            parser.add_argument('car_registration_number', type=str, required=True, help="Car registration number cannot be blank!")
+            args = parser.parse_args()
 
-        # Create a new car
-        new_car = Car(
-            max_available_seats=args['max_available_seats'],
-            licence_plate=args['car_registration_number']
-        )
-        db.session.add(new_car)
-        db.session.commit()
+            # Create a new car
+            new_car = Car(
+                max_available_seats=args['max_available_seats'],
+                licence_plate=args['car_registration_number']
+            )
+            db.session.add(new_car)
+            db.session.commit()
+            # Create a new driver and associate the car with the driver
+            new_driver = Driver(
+                name=args['name'],
+                phone_number=args['phone_number'],
+                email=args['email'],
+                car=new_car,
+                car_id=new_car.id
+            )
+            db.session.add(new_driver)
+            db.session.commit()
 
-        # Create a new driver and associate the car with the driver
-        new_driver = Driver(
-            name=args['name'],
-            phone_number=args['phone_number'],
-            email=args['email'],
-            car=new_car,
-            car_id=new_car.id
-        )
-        db.session.add(new_driver)
-        db.session.commit()
+            return make_response(jsonify(new_driver.to_dict()), 201)
 
-        return make_response(jsonify(new_driver.to_dict()), 201)
-
+        except Exception as e:
+            return make_response(str(e), 404)
 
 class PassengerListResource(Resource):
     def post(self):

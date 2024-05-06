@@ -14,10 +14,12 @@ class Trip(db.Model):
     status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
     seats_remaining = db.Column(db.Integer, nullable=False)
     
-    ## the below is useful for accessing all trips being made by a driver 
     driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
-    # car = None # HAVE THIS OR IN DRIVER?
+    trip_preferences = db.Column(db.JSON, nullable=True)
 
+    def write_preferences(seats_available=None, distance_addition=None, time_addition=None):
+        return jsonify({'seats_available': seats_available, 'distance_addition': distance_addition, 'time_addition': time_addition})
+        
     def __repr__(self):
         return f'<Trip {self.id}>'
 
