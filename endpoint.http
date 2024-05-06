@@ -48,4 +48,4 @@ Content-Type: application/json
 }
 
 ### Get trip
-GET {{baseUrl}}/trips/<trip_id>
+GET {{baseUrl}}/trip/d93f3db2-35fd-45f2-8157-bc6ac32f3e8d
