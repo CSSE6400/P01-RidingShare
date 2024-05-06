@@ -11,7 +11,6 @@ class Driver(db.Model):
     name = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.String, nullable=False)
     car_registration_number = db.Column(db.String, nullable=False) # TODO maybe remove this and access it straight from the car?
-    car_id = db.Column(db.String, db.ForeignKey('car.id'))
 
     car = db.relationship('Car', backref='driver', uselist=False)
     car_id = db.Column(db.String, db.ForeignKey('car.id'))  # Foreign key to Car model
@@ -23,7 +22,6 @@ class Driver(db.Model):
             'phone_number': self.phone_number,
             'email': self.email,
             'car_registration_number': self.car_registration_number,
-            'driver_preferences': self.trip_preferences
         }
 
     def __repr__(self):

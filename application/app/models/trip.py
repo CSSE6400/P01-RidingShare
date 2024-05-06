@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from . import db
 import uuid
 
@@ -7,18 +7,16 @@ class Trip(db.Model):
 
     id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
     driver_id = db.Column(db.String, db.ForeignKey('driver.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     end_time = db.Column(db.DateTime, nullable=True)
     start_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
     end_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
     status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
-    seats_remaining = db.Column(db.Integer, nullable=False)
-    
+    seats_remaining = db.Column(db.Integer, nullable=True)
+    time_addition = db.Column(db.Integer, nullable=True)
+    distance_addition = db.Column(db.Integer, nullable=True)
     driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
-    trip_preferences = db.Column(db.JSON, nullable=True)
-
-    def write_preferences(seats_available=None, distance_addition=None, time_addition=None):
-        return jsonify({'seats_available': seats_available, 'distance_addition': distance_addition, 'time_addition': time_addition})
+    created_at = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
         
     def __repr__(self):
         return f'<Trip {self.id}>'
@@ -34,6 +32,5 @@ class Trip(db.Model):
             'status': self.status,
             'seats_remaining': self.seats_remaining,
             'created_at': self.created_at.strftime('%Y-%m-%dT%H:%M:%SZ') if self.created_at else None,
-            'updated_at': self.updated_at.strftime('%Y-%m-%dT%H:%M:%SZ') if self.updated_at else None,
         }
 
