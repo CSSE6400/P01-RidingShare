@@ -3,7 +3,7 @@ from flask import Flask
 
 
 def create_app(config_overrides=None):
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='frontend/build', static_url_path="/")
 
     # Configure app with database URI + overrides
     app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("SQLALCHEMY_DATABASE_URI", "postgresql+psycopg:///ridingshare")
@@ -36,4 +36,6 @@ def create_app(config_overrides=None):
     from views.routes import api_bp
     app.register_blueprint(api_bp)
 
+    app.add_url_rule('/', 'index', lambda: app.send_static_file('index.html'))
+    
     return app

@@ -1,16 +1,14 @@
 from flask import Blueprint, make_response, jsonify, request
-from flask_restful import Api, Resource, marshal, reqparse 
+from flask_restful import Api, Resource, reqparse 
 from models import db
 from models.passenger import Passenger
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
 
-
 class Health(Resource):
-	def get(self):
-		return make_response({"status": "ok"})
-
+    def get(self):
+        return make_response(jsonify({"status": "ok"}), 200)
 
 api.add_resource(Health, "/health")
 
@@ -42,6 +40,11 @@ class PassengerResource(Resource):
 api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
 
 class PassengerListResource(Resource):
+    def get(self):
+        passengers = Passenger.query.all()
+        passengers_list = [passenger.to_dict() for passenger in passengers]
+        return make_response(jsonify(passengers_list), 200)
+
     def post(self):
         return PassengerResource().post()
 
