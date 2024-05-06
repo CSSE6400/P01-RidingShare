@@ -2,6 +2,7 @@
 
 ### Get Request
 GET {{baseUrl}}/passengers/b21b2e7e-4d1e-4cd8-8519-01b3933b7206
+
 ### Add a Passenger 
 POST {{baseUrl}}/passengers
 Content-Type: application/json
@@ -10,4 +11,15 @@ Content-Type: application/json
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe@example.com"
+}
+
+### Add a Driver 
+POST {{baseUrl}}/passengers
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "phone_number": "111222333",
+  "email": "jane.doe@gmail.com",
+  "car_registration_number": "319IRG"
 }

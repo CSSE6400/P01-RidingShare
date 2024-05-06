@@ -13,6 +13,7 @@ class Trip(db.Model):
     end_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
     status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
     seats_remaining = db.Column(db.Integer, nullable=False)
+    
     ## the below is useful for accessing all trips being made by a driver 
     driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
     # car = None # HAVE THIS OR IN DRIVER?

@@ -11,10 +11,12 @@ class TripRequest(db.Model):
     pickup_location = db.Column(db.JSON, nullable=False)
     dropoff_location = db.Column(db.JSON, nullable=False)
 
-    # pickup_window_start = None
-    # pickup_window_end = None
+    ## Added DateTime possibilities for a window of opportunities
+    pickup_window_start =  db.Column(db.DateTime, nullable=False)
+    pickup_window_end =  db.Column(db.DateTime, nullable=False)
 
     status = db.Column(db.String, default="Pending") # Options: Pending, Matched, Cancelled
+    
     ## the below is useful for accessing the trip request being made by a passenger
     passenger = db.relationship('Passenger', backref=db.backref('trip_requests', lazy=True))
 
