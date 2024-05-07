@@ -30,14 +30,14 @@ Content-Type: application/json
 GET {{baseUrl}}/drivers/<driver_id>
 
 ### Get a Driver's Information
-GET {{baseUrl}}/drivers/ad4a96d7-11b6-49dc-818a-c568a4ee8003
+GET {{baseUrl}}/drivers/87482e8a-2e0a-42e4-a587-7f023d0edce0
 
 ### Add Trip
 POST {{baseUrl}}/trip
 Content-Type: application/json
 
 {
-  "driver_id": "77627d09-7ebb-4c19-a2da-614de4e356e5",
+  "driver_id": "87482e8a-2e0a-42e4-a587-7f023d0edce0",
   "start_time": "2024-05-10T08:00:00Z",
   "end_time": "2024-05-10T10:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194},
@@ -48,4 +48,26 @@ Content-Type: application/json
 }
 
 ### Get trip
-GET {{baseUrl}}/trip/d93f3db2-35fd-45f2-8157-bc6ac32f3e8d
+GET {{baseUrl}}/trip/82df1135-a628-40c3-b033-91d41d3eec2b
+
+### Add trip request
+POST {{baseUrl}}/trip-request
+Content-Type: application/json
+
+{
+    "passenger_id": "87327b27-def0-4df6-84bc-74629d392400",
+    "requested_time": "2024-05-10T08:00:00",
+    "pickup_location": {
+        "latitude": 37.7749,
+        "longitude": -122.4194
+    },
+    "dropoff_location": {
+        "latitude": 37.7749,
+        "longitude": -122.4194
+    },
+    "pickup_window_start": "2024-05-10T07:30:00",
+    "pickup_window_end": "2024-05-10T08:00:00"
+}
+
+### Get trip request
+GET {{baseUrl}}/trip_request/b9188313-7580-4dc9-870f-beda5e763d13

@@ -163,6 +163,63 @@ class TripResource(Resource):
             # If the trip is not found, return a 404 error
             return make_response({"error": "Trip not found"}, 404)
 
+class TripRequestResource(Resource):
+    def post(self):
+        try:
+            # Parse request data
+            parser = reqparse.RequestParser()
+            parser.add_argument('passenger_id', type=str, required=True, help="Passenger ID cannot be blank!")
+            parser.add_argument('requested_time', type=str, required=True, help="Requested time cannot be blank!")
+            parser.add_argument('pickup_location', type=dict, required=True, help="Pickup location cannot be blank!")
+            parser.add_argument('dropoff_location', type=dict, required=True, help="Dropoff location cannot be blank!")
+            parser.add_argument('pickup_window_start', type=str, required=True, help="Pickup window start cannot be blank!")
+            parser.add_argument('pickup_window_end', type=str, required=True, help="Pickup window end cannot be blank!")
+            args = parser.parse_args()
+
+            # Extract parsed arguments
+            passenger_id = args['passenger_id']
+            requested_time = args['requested_time']
+            pickup_location = args['pickup_location']
+            dropoff_location = args['dropoff_location']
+            pickup_window_start = args['pickup_window_start']
+            pickup_window_end = args['pickup_window_end']
+            
+            # Convert string times to datetime objects
+            pickup_window_start = datetime.strptime(pickup_window_start, '%Y-%m-%dT%H:%M:%S')
+            pickup_window_end = datetime.strptime(pickup_window_end, '%Y-%m-%dT%H:%M:%S')
+
+            # Create a new trip request object
+            new_trip_request = TripRequest(
+                passenger_id=passenger_id,
+                requested_time=requested_time,
+                pickup_location=pickup_location,
+                dropoff_location=dropoff_location,
+                pickup_window_start=pickup_window_start,
+                pickup_window_end=pickup_window_end
+            )
+
+            # Add the new trip request to the database session and commit
+            db.session.add(new_trip_request)
+            db.session.commit()
+
+            return make_response(new_trip_request.to_dict(), 201)
+        except Exception as e:
+            return make_response(str(e), 404)
+
+    
+    def get(self, trip_request_id=None):
+        try:
+            # Retrieve a specific trip request by its ID
+            trip_request = TripRequest.query.get(trip_request_id)
+            if trip_request:
+                return make_response(trip_request.to_dict(), 200)
+            else:
+                return make_response({"error": "Trip request not found"}, 404)
+
+            return make_response(trip_requests_data, 200)
+        except Exception as e:
+            return make_response(str(e), 404)
+
 class PassengerListResource(Resource):
     def post(self):
         return PassengerResource().post()
@@ -173,3 +230,4 @@ api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
 api.add_resource(PassengerListResource, '/passengers')
 api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
 api.add_resource(TripResource, '/trip', '/trip/<string:trip_id>')
+api.add_resource(TripRequestResource, '/trip-request','/trip_request/<string:trip_request_id>' )
