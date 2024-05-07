@@ -1,7 +1,7 @@
 services: 
 
   database:
-    image: postgres:latest
+    image: postgis/postgis
     restart: always
     environment:
       POSTGRES_PASSWORD: verySecretPassword
