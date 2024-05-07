@@ -1,7 +1,7 @@
 flask==3.*
 flask-restful==0.3.*
 flask-sqlalchemy==3.*
-GeoAlchemy2==0.15.*
+GeoAlchemy2[shapely]==0.15.*
 psycopg==3.*
 gunicorn==22.*
 celery[sqs]==5.*
