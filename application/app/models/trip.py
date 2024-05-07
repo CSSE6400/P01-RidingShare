@@ -19,7 +19,7 @@ class Trip(db.Model):
     driver_id = db.Column(db.String, db.ForeignKey('driver.id'), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     end_time = db.Column(db.DateTime, nullable=True)
-    start_location = db.Column(Geometry("POINT"), nullable=False)
+    start_location = db.Column(Geometry("POINT"), nullable=False) # LONG LAT FORMAT
     end_location = db.Column(Geometry("POINT"), nullable=False)
 
 
