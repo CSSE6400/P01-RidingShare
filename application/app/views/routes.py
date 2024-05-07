@@ -79,6 +79,11 @@ class DriverResource(Resource):
 
 
 class PassengerListResource(Resource):
+    def get(self):
+        passengers = Passenger.query.all()
+        passengers_list = [passenger.to_dict() for passenger in passengers]
+        return make_response(jsonify(passengers_list), 200)
+
     def post(self):
         return PassengerResource().post()
 
