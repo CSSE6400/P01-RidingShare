@@ -17,6 +17,7 @@ class TripRequest(db.Model):
     requested_time = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
     window_start_time =  db.Column(db.DateTime, nullable=False)
     window_end_time =  db.Column(db.DateTime, nullable=False)
+
     passenger = db.relationship("Passenger", back_populates="trip_requests")
     passenger_id = db.Column(db.String, db.ForeignKey("passenger.id"), nullable=False)
 
