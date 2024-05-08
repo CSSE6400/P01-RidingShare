@@ -24,4 +24,11 @@ create_trip_parser.add_argument('end_location',             type=dict, required=
 create_trip_parser.add_argument('distance_addition',        type=int, required=False, default=10)
 create_trip_parser.add_argument('seats_available',          type=int, required=False)
   
-            
+create_trip_request_parser = reqparse.RequestParser()
+create_trip_request_parser.add_argument('pickup_location', type=dict, required=True, help="Pickup location cannot be blank!")
+create_trip_request_parser.add_argument('dropoff_location', type=dict, required=True, help="Dropoff location cannot be blank!")
+create_trip_request_parser.add_argument('requested_time', type=str, required=True, help="Requested time cannot be blank!")
+create_trip_request_parser.add_argument('pickup_window_start', type=str, required=True, help="Pickup window start cannot be blank!")
+create_trip_request_parser.add_argument('pickup_window_end', type=str, required=True, help="Pickup window end cannot be blank!")    
+create_trip_request_parser.add_argument('username', type=str, required=True, help="Username cannot be blank!")
+       

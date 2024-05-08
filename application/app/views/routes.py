@@ -9,8 +9,8 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser
-from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser
+from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -46,61 +46,9 @@ class PassengerResource(Resource):
         else:
             return make_response(jsonify({"error": "Passenger not found"}), 404)
 
-class TripRequestResource(Resource):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('passenger_id', type=str, required=True, help="Passenger ID cannot be blank!")
-            parser.add_argument('requested_time', type=str, required=True, help="Requested time cannot be blank!")
-            parser.add_argument('pickup_location', type=dict, required=True, help="Pickup location cannot be blank!")
-            parser.add_argument('dropoff_location', type=dict, required=True, help="Dropoff location cannot be blank!")
-            parser.add_argument('pickup_window_start', type=str, required=True, help="Pickup window start cannot be blank!")
-            parser.add_argument('pickup_window_end', type=str, required=True, help="Pickup window end cannot be blank!")
-            args = parser.parse_args()
-
-            passenger_id = args['passenger_id']
-            requested_time = args['requested_time']
-            pickup_location = args['pickup_location']
-            dropoff_location = args['dropoff_location']
-            pickup_window_start = args['pickup_window_start']
-            pickup_window_end = args['pickup_window_end']
-            
-            pickup_window_start = datetime.strptime(pickup_window_start, '%Y-%m-%dT%H:%M:%S')
-            pickup_window_end = datetime.strptime(pickup_window_end, '%Y-%m-%dT%H:%M:%S')
-
-            new_trip_request = TripRequest(
-                passenger_id=passenger_id,
-                requested_time=requested_time,
-                pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
-                dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
-                pickup_window_start=pickup_window_start,
-                pickup_window_end=pickup_window_end
-            )
-
-            db.session.add(new_trip_request)
-            db.session.commit()
-
-            return make_response(new_trip_request.to_dict(), 201)
-        except Exception as e:
-            return make_response(str(e), 404)
-
-    
-    def get(self, trip_request_id=None):
-        try:
-            trip_request = TripRequest.query.get(trip_request_id)
-            if trip_request:
-                return make_response(trip_request.to_dict(), 200)
-            else:
-                return make_response({"error": "Trip request not found"}, 404)
-
-            return make_response(trip_requests_data, 200)
-        except Exception as e:
-            return make_response(str(e), 404)
-
 class PassengerListResource(Resource):
     def post(self):
         return PassengerResource().post()
-
 
 class CreateDriver(Resource):
 
@@ -183,8 +131,8 @@ class CreateTrip(Resource):
         if not driver:
             return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
         
-        ## Check the driver does not have a conflicting schedule 
-        conflicting = check_for_conflicting_times(driver_id, contents.get("start_time"), contents.get("end_time"))
+        ## Check the driver does not have a conflicting schedule
+        conflicting = check_for_conflicting_times_driver(driver_id, contents.get("start_time"), contents.get("end_time"))
         if conflicting:
             return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
 
@@ -212,11 +160,44 @@ class CreateTrip(Resource):
         db.session.commit()
         return make_response(new_trip.to_dict(), 201)
 
+class CreateTripRequest(Resource):
+    def post(self):
+        contents = create_trip_request_parser.parse_args()
+        passenger_id = get_passenger_id_from_username(contents.get("username"))
+        if not passenger_id:
+            return make_response("No passenger exists under this username", 400)
+
+        passenger = get_passenger_from_driver_id(passenger_id)
+        
+        pickup_location = contents.get("pickup_location")
+        dropoff_location = contents.get("dropoff_location")
+        
+        conflicting = check_for_conflicting_times_passenger(passenger_id, contents.get("pickup_window_start"), contents.get("pickup_window_end"))
+        if conflicting:
+            return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
+
+
+        new_trip_request = TripRequest(
+            passenger_id=passenger_id,
+            passenger=passenger,
+            requested_time=contents.get("requested_time"),
+            pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
+            dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
+            window_start_time=contents.get("pickup_window_start"),
+            window_end_time=contents.get("pickup_window_end")
+        )
+
+        db.session.add(new_trip_request)
+        db.session.commit()
+
+        return make_response(new_trip_request.to_dict(), 201)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
 api.add_resource(CreatePassenger, "/passenger/create")
 api.add_resource(CreateTrip, "/trip/create")
+api.add_resource(CreateTripRequest, "/trip_request/create")
 api.add_resource(GetUser, "/profile")
 
 ### Specific Get methods for trips based on what is required ###
@@ -244,5 +225,27 @@ def get_pending_trips():
     else:
         return make_response("There is no driver under this username.", 400)
 
+@api_bp.route("/trip_requests/get/all")
+def get_all_trip_requests():
+    contents = get_user_parser.parse_args()
+    user = get_user_from_username(contents.get("username"))
+    passenger_id = get_passenger_id_from_username(contents.get("username"))
+    if passenger_id:
+        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
+        trips_data = [trip.to_dict() for trip in trips]
+        return make_response({"trip_requests": trips_data}, 200)
+    else:
+        return make_response("There is no passenger under this username.", 400)
 
-# api.add_resource(TripRequestResource, '/trip-request','/trip_request/<string:trip_request_id>' )
+@api_bp.route("/trip_requests/get/pending")
+def get_pending_trip_requests():
+    contents = get_user_parser.parse_args()
+    user = get_user_from_username(contents.get("username"))
+    passenger_id = get_passenger_id_from_username(contents.get("username"))
+    if passenger_id:
+        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
+        trips_data = [trip.to_dict() for trip in trips]
+        return make_response({"trip_requests": trips_data}, 200)
+    else:
+        return make_response("There is no passenger under this username.", 400)
+

@@ -17,13 +17,11 @@ class TripRequest(db.Model):
     requested_time = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
     window_start_time =  db.Column(db.DateTime, nullable=False)
     window_end_time =  db.Column(db.DateTime, nullable=False)
-
-    status = db.Column(db.String, default=TripRequestState.PENDING)
-    
-    ## the below is useful for accessing the trip request being made by a passenger
     passenger = db.relationship("Passenger", back_populates="trip_requests")
     passenger_id = db.Column(db.String, db.ForeignKey("passenger.id"), nullable=False)
 
+    ## Changes once matched
+    status = db.Column(db.String, default=TripRequestState.PENDING)
     trip = db.relationship("Trip", back_populates="trip_requests") ### Needs to link to a trip onces its been approved
     trip_id = db.Column(db.String, db.ForeignKey("trip.id")) # this instead since were indexing?
 
