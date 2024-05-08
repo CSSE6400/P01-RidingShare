@@ -1,7 +1,6 @@
 from . import db
 from .helper import generate_uuid
 
-
 class Driver(db.Model):
     __tablename__ = "driver"
 

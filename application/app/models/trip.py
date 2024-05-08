@@ -30,8 +30,6 @@ class Trip(db.Model):
     def __repr__(self):
         return f"<Trip {self.id}>"
 
-
-
     def to_dict(self):
         start_point = to_shape(self.start_location)
         end_point = to_shape(self.end_location)
@@ -44,7 +42,6 @@ class Trip(db.Model):
             "start_location": {"latitude": start_point.y, "longitude": start_point.x},
             "end_location": {"latitude": end_point.y, "longitude": end_point.x},
             "status": self.status,
-            "time_addition": self.time_addition,
             "distance_addition": self.distance_addition,
             "driver_id": self.driver_id,
             "seats_remaining": self.seats_remaining

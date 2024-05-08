@@ -9,8 +9,8 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser
-from .helpers.helpers import get_user_from_username
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser
+from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -45,124 +45,6 @@ class PassengerResource(Resource):
             return make_response(jsonify(passenger.to_dict()), 200)
         else:
             return make_response(jsonify({"error": "Passenger not found"}), 404)
-
-class DriverResource(Resource):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('name', type=str, required=True, help="Name cannot be blank!")
-            parser.add_argument('phone_number', type=str, required=True, help="Phone number cannot be blank!")
-            parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
-            parser.add_argument('max_available_seats', type=int, required=True, help="Car seating number cannot be blank!")
-            parser.add_argument('car_registration_number', type=str, required=True, help="Car registration number cannot be blank!")
-            args = parser.parse_args()
-
-            # Create a new car
-            new_car = Car(
-                max_available_seats=args['max_available_seats'],
-                licence_plate=args['car_registration_number']
-            )
-            db.session.add(new_car)
-            db.session.commit()
-            # Create a new driver and associate the car with the driver
-            new_driver = Driver(
-                name=args['name'],
-                phone_number=args['phone_number'],
-                email=args['email'],
-                car_registration_number=args['car_registration_number'],
-                car=new_car,
-                car_id=new_car.id
-            )
-            db.session.add(new_driver)
-            db.session.commit()
-
-            return make_response(jsonify(new_driver.to_dict()), 201)
-
-        except Exception as e:
-            return make_response(str(e), 404)
-
-    def get(self, driver_id):
-        driver = Driver.query.get(driver_id)
-        if driver:
-            return make_response(jsonify(driver.to_dict()), 200)
-        else:
-            return make_response(jsonify({"error": "Driver not found"}), 404)
-
-class TripResource(Resource):
-    def post(self):
-        try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('driver_id', type=str, required=True, help="Driver cannot be blank!")
-            parser.add_argument('start_time', type=str, required=True, help="Start time cannot be blank!")
-            parser.add_argument('end_time', type=str, required=True, help="End time cannot be blank!")
-            parser.add_argument('start_location', type=dict, required=True, help="Start location cannot be blank!")
-            parser.add_argument('end_location', type=dict, required=True, help="End location cannot be blank!")
-            
-            # Optional arguments
-            parser.add_argument('status', type=str, required=False)
-            parser.add_argument('seats_available', type=int, required=False)
-            parser.add_argument('distance_addition', type=str, required=False)
-            parser.add_argument('time_addition', type=str, required=False)
-            args = parser.parse_args()
-
-            # Assign parsed arguments to variables
-            driver_id = args['driver_id']
-            start_time = args['start_time']
-            if start_time:
-                start_time = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%SZ')
-            end_time = args['end_time']
-            end_time = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%SZ')
-            start_location = args['start_location']
-            end_location = args['end_location']
-            status = args.get('status')  # Using .get() to handle optional arguments
-            seats_available = args.get('seats_available')
-            distance_addition = args.get('distance_addition')
-            time_addition = args.get('time_addition')
-
-            if seats_available is None:
-                driver = Driver.query.get(driver_id)
-                if not driver:
-                    return make_response({"error": "Driver not found"}, 404)
-
-                car_id = driver.car_id
-                if not car_id:
-                    return make_response({"error": "No car associated with the driver"}, 404)
-
-                car = Car.query.get(car_id)
-
-                if not car:
-                    return make_response({"error": "Car not found"}, 404)
-                seats_available = car.max_available_seats
-
-            if not distance_addition and not time_addition:
-                return make_response({"error": "Either distance addition or time addition must be provided for the Trip"}, 400)
-
-            new_trip = Trip(
-                driver_id=driver_id,
-                start_time=start_time,
-                end_time=end_time,
-                start_location=f'Point({start_location.get("longitude")} {start_location.get("latitude")})',
-                end_location=f'Point({end_location.get("longitude")} {end_location.get("latitude")})',
-                status=status,
-                seats_remaining=seats_available,
-                distance_addition=distance_addition,
-                time_addition=time_addition,
-                driver=driver,
-                created_at=datetime.utcnow()
-            )
-            db.session.add(new_trip)
-            db.session.commit()
-            return make_response(new_trip.to_dict(), 201)
-
-        except Exception as e:
-            return make_response(str(e), 404)
-    def get(self, trip_id):
-        trip = Trip.query.get(trip_id)
-        
-        if trip:
-            return make_response(trip.to_dict(), 200)
-        else:
-            return make_response({"error": "Trip not found"}, 404)
 
 class TripRequestResource(Resource):
     def post(self):
@@ -281,7 +163,6 @@ class CreatePassenger(Resource):
             return make_response("User account is already a passenger", 202)
     
 class GetUser(Resource):
-
     def get(self):
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
@@ -291,15 +172,77 @@ class GetUser(Resource):
             return make_response(user.to_dict())
 
 
+class CreateTrip(Resource):
+    def post(self):
+        contents = create_trip_parser.parse_args()
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if not driver_id:
+            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
+        
+        driver = get_driver_from_driver_id(driver_id)
+        if not driver:
+            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
+        
+        ## Check the driver does not have a conflicting schedule 
+        conflicting = check_for_conflicting_times(driver_id, contents.get("start_time"), contents.get("end_time"))
+        if conflicting:
+            return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
 
+        if contents.get("seats_available") is None:
+            car = Car.query.get(driver.car_id)
+            if not car:
+                return make_response({"error": "No car associated with the driver"}, 404)
 
+            seats_available = car.max_available_seats
+
+        start_location = contents.get('start_location')
+        end_location = contents.get('end_location')
+        new_trip = Trip(
+            start_time=contents.get("start_time"),
+            end_time=contents.get("end_time"),
+            start_location=f'Point({start_location.get("longitude")} {start_location.get("latitude")})',
+            end_location=f'Point({end_location.get("longitude")} {end_location.get("latitude")})',
+            seats_remaining=seats_available,
+            distance_addition=contents.get("distance_addition"),
+            driver=driver,
+            driver_id=driver_id,
+        )
+
+        db.session.add(new_trip)
+        db.session.commit()
+        return make_response(new_trip.to_dict(), 201)
+
+### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
 api.add_resource(CreatePassenger, "/passenger/create")
+api.add_resource(CreateTrip, "/trip/create")
 api.add_resource(GetUser, "/profile")
 
-# api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
-# api.add_resource(PassengerListResource, '/passengers')
-# api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
-# api.add_resource(TripResource, '/trip', '/trip/<string:trip_id>')
+### Specific Get methods for trips based on what is required ###
+@api_bp.route("/trips/get/all")
+def get_all_trips():
+    contents = get_user_parser.parse_args()
+    user = get_user_from_username(contents.get("username"))
+    driver_id = get_driver_id_from_username(contents.get("username"))
+    if driver_id:
+        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
+        trips_data = [trip.to_dict() for trip in trips]
+        return make_response({"trips": trips_data}, 200)
+    else:
+        return make_response("There is no driver under this username.", 400)
+
+@api_bp.route("/trips/get/pending")
+def get_pending_trips():
+    contents = get_user_parser.parse_args()
+    user = get_user_from_username(contents.get("username"))
+    driver_id = get_driver_id_from_username(contents.get("username"))
+    if driver_id:
+        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id, status="PENDING")).scalars().all()
+        trips_data = [trip.to_dict() for trip in trips]
+        return make_response({"trips": trips_data}, 200)
+    else:
+        return make_response("There is no driver under this username.", 400)
+
+
 # api.add_resource(TripRequestResource, '/trip-request','/trip_request/<string:trip_request_id>' )
