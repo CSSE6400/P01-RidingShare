@@ -1,67 +1,27 @@
-@baseUrl =http://localhost:8080
+@baseUrl = http://localhost:8080
 
 
-### Get Request
-GET {{baseUrl}}/passengers
-
-### Add a Passenger 
-POST {{baseUrl}}/passengers
+### Create a driver
+POST {{baseUrl}}/create/driver
 Content-Type: application/json
 
 {
+  "username": "jDoe12",
+  "name": "John Doe",
+  "phone_number": "1234567890",
+  "email": "john.doe1@example.com",
+  "max_available_seats": 3,
+  "licence_plate": "319IRG"
+}
+
+### Create a passenger
+POST {{baseUrl}}/create/passenger
+Content-Type: application/json
+
+{
+  "username": "jDoe12",
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com"
 }
 
-### Add a Driver 
-POST {{baseUrl}}/drivers
-Content-Type: application/json
-
-{
-  "name": "Jane Doe",
-  "phone_number": "111222333",
-  "email": "jane.doe1@gmail.com",
-  "max_available_seats": 3,
-  "car_registration_number": "319IRG"
-}
-
-### Get a Driver's Information
-GET {{baseUrl}}/drivers/<driver_id>
-
-### Get a Driver's Information
-GET {{baseUrl}}/drivers/c11cf69f-2cd4-43ef-ac9a-6b7abb8680e6
-
-### Add Trip
-POST {{baseUrl}}/trip
-Content-Type: application/json
-
-{
-  "driver_id": "c11cf69f-2cd4-43ef-ac9a-6b7abb8680e6",
-  "start_time": "2024-05-10T08:00:00Z",
-  "end_time": "2024-05-10T10:00:00Z",
-  "start_location": {"latitude": 37.7749, "longitude": -122.4194},
-  "end_location": {"latitude": 37.7749, "longitude": -122.4194},
-  "status": "Matched",
-  "seats_remaining": 3,
-  "time_addition": 10
-}
-
-### Get trip
-GET {{baseUrl}}/trip/82df1135-a628-40c3-b033-91d41d3eec2b
-
-### Add trip request
-POST {{baseUrl}}/trip-request
-Content-Type: application/json
-
-{
-    "passenger_id": "c5bd0970-b3cc-4553-a96d-42cccb991fb8",
-    "requested_time": "2024-05-10T08:00:00",
-    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194},
-    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194},
-    "pickup_window_start": "2024-05-10T07:30:00",
-    "pickup_window_end": "2024-05-10T08:00:00"
-}
-
-### Get trip request
-GET {{baseUrl}}/trip_request/b9188313-7580-4dc9-870f-beda5e763d13

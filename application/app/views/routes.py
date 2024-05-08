@@ -6,11 +6,14 @@ from models.driver import Driver
 from models.passenger import Passenger
 from models.trip_request import TripRequest
 from models.trip import Trip
+from models.user import User
 from datetime import datetime
+
+from .helpers.args_parser import create_driver_parser, create_passenger_parser
+
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
-
 class Health(Resource):
 	def get(self):
 		return make_response({"status": "ok"})
@@ -217,9 +220,119 @@ class PassengerListResource(Resource):
         return PassengerResource().post()
 
 
-api.add_resource(Health, "/health")
-api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
-api.add_resource(PassengerListResource, '/passengers')
-api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
-api.add_resource(TripResource, '/trip', '/trip/<string:trip_id>')
-api.add_resource(TripRequestResource, '/trip-request','/trip_request/<string:trip_request_id>' )
+class Test(Resource):
+    def post(self):
+        # new_car = Car(
+        #     max_available_seats=1,
+        #     licence_plate="ZZZ"
+        # )
+        # db.session.add(new_car)
+        # db.session.commit()
+
+        # driver = Driver(
+        #     car = new_car
+        # )
+        # db.session.add(driver)
+        # db.session.commit()
+
+        # user = User(
+        #     username = "test",
+        #     driver = driver,
+        #     email = "driver@email.com",
+        #     name = "DriverNAME",
+        #     phone_number= "0404"
+        # )
+        # db.session.add(user)
+        # db.session.commit()
+        # passenger = Passenger()
+        # db.session.add(passenger)
+
+        # tag = "P2"
+
+        # user = User(
+        #     username = f"{tag}",
+        #     passenger = passenger,
+        #     email = f"{tag}@email.com",
+        #     name = f"{tag}Name",
+        #     phone_number= f"04{tag}"
+        # )
+        # db.session.add(user)
+        # Trip(
+
+        # )
+
+
+        db.session.commit()
+
+
+class CreateDriver(Resource):
+
+    def post(self):
+        args = create_driver_parser.parse_args()
+
+        user = db.session.execute(db.select(User).filter_by(username = args.get("username"))).scalars().first()
+        if user == None or user.driver == None:
+            car = Car(
+                max_available_seats = args.get("max_available_seats"),
+                licence_plate = args.get("licence_plate")   
+            )
+            db.session.add(car)
+
+            driver = Driver(
+                car = car
+            )
+            db.session.add(driver)
+
+            if user == None:
+                user = User(
+                    username = args.get("username"),
+                    email = args.get("email"),
+                    name = args.get("name"),
+                    phone_number = args.get("phone_number"),
+                )
+                db.session.add(user)
+            
+            user.driver = driver
+            db.session.commit()
+            return make_response(user.to_dict(), 201)
+
+        elif user.driver != None:
+            return make_response("User account is already a driver", 202)
+
+class CreatePassenger(Resource):
+
+    def post(self):
+        args = create_passenger_parser.parse_args()
+               
+        user = db.session.execute(db.select(User).filter_by(username = args.get("username"))).scalars().first()
+        if user == None or user.passenger == None:
+            passenger = Passenger()
+            db.session.add(passenger)
+
+            if user == None:
+                user = User(
+                    username = args.get("username"),
+                    email = args.get("email"),
+                    name = args.get("name"),
+                    phone_number = args.get("phone_number"),
+                )
+                db.session.add(user)
+            
+            user.passenger = passenger
+            db.session.commit()
+            return make_response(user.to_dict(), 201)
+
+        elif user.passenger != None:
+            return make_response("User account is already a passenger", 202)
+    
+
+
+api.add_resource(CreateDriver, "/create/driver")
+api.add_resource(CreatePassenger, "/create/passenger")
+
+# api.add_resource(Health, "/health")
+# api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
+# api.add_resource(PassengerListResource, '/passengers')
+# api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
+# api.add_resource(TripResource, '/trip', '/trip/<string:trip_id>')
+# api.add_resource(TripRequestResource, '/trip-request','/trip_request/<string:trip_request_id>' )
