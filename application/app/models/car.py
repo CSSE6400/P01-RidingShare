@@ -1,11 +1,10 @@
-import datetime
 from . import db
-import uuid
+from .helper import generate_uuid
 
 class Car(db.Model):
     __tablename__ = 'car'
 
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.String, primary_key=True, default=generate_uuid)
     max_available_seats = db.Column(db.Integer, nullable=False)
     licence_plate = db.Column(db.String(20), nullable=False)
 

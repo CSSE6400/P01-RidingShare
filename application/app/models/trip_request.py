@@ -1,13 +1,13 @@
-import datetime
 from . import db
-import uuid
+from .helper import generate_uuid, get_current_datetime, cast_datetime
+
 
 class TripRequest(db.Model):
     __tablename__ = 'trip_request'
 
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = db.Column(db.String, primary_key=True, default=generate_uuid)
     passenger_id = db.Column(db.String, db.ForeignKey('passenger.id'), nullable=False)
-    requested_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    requested_time = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
     pickup_location = db.Column(db.JSON, nullable=False)
     dropoff_location = db.Column(db.JSON, nullable=False)
 
@@ -27,14 +27,11 @@ class TripRequest(db.Model):
         return {
             'id': self.id,
             'passenger_id': self.passenger_id,
-            'requested_time': self.requested_time.strftime('%Y-%m-%dT%H:%M:%SZ') if self.requested_time else None,
+            'requested_time': cast_datetime(self.requested_time) if self.requested_time else None,
             'pickup_location': self.pickup_location,
             'dropoff_location': self.dropoff_location,
             'status': self.status
         }
 
-    def write_preferences(seats_available=None, distance_addition=None, time_addition=None):
-        return jsonify({'seats_available': seats_available, 'distance_addition': distance_addition, 'time_addition': time_addition})
-        
     def __repr__(self):
         return f'<TripRequest {self.id}>'
