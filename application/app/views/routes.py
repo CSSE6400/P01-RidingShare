@@ -9,8 +9,8 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser
-
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser
+from .helpers.helpers import get_user_from_username
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -220,61 +220,16 @@ class PassengerListResource(Resource):
         return PassengerResource().post()
 
 
-class Test(Resource):
-    def post(self):
-        # new_car = Car(
-        #     max_available_seats=1,
-        #     licence_plate="ZZZ"
-        # )
-        # db.session.add(new_car)
-        # db.session.commit()
-
-        # driver = Driver(
-        #     car = new_car
-        # )
-        # db.session.add(driver)
-        # db.session.commit()
-
-        # user = User(
-        #     username = "test",
-        #     driver = driver,
-        #     email = "driver@email.com",
-        #     name = "DriverNAME",
-        #     phone_number= "0404"
-        # )
-        # db.session.add(user)
-        # db.session.commit()
-        # passenger = Passenger()
-        # db.session.add(passenger)
-
-        # tag = "P2"
-
-        # user = User(
-        #     username = f"{tag}",
-        #     passenger = passenger,
-        #     email = f"{tag}@email.com",
-        #     name = f"{tag}Name",
-        #     phone_number= f"04{tag}"
-        # )
-        # db.session.add(user)
-        # Trip(
-
-        # )
-
-
-        db.session.commit()
-
-
 class CreateDriver(Resource):
 
     def post(self):
-        args = create_driver_parser.parse_args()
+        contents = create_driver_parser.parse_args()
 
-        user = db.session.execute(db.select(User).filter_by(username = args.get("username"))).scalars().first()
+        user = get_user_from_username(contents.get("username"))
         if user == None or user.driver == None:
             car = Car(
-                max_available_seats = args.get("max_available_seats"),
-                licence_plate = args.get("licence_plate")   
+                max_available_seats = contents.get("max_available_seats"),
+                licence_plate = contents.get("licence_plate")   
             )
             db.session.add(car)
 
@@ -285,10 +240,10 @@ class CreateDriver(Resource):
 
             if user == None:
                 user = User(
-                    username = args.get("username"),
-                    email = args.get("email"),
-                    name = args.get("name"),
-                    phone_number = args.get("phone_number"),
+                    username = contents.get("username"),
+                    email = contents.get("email"),
+                    name = contents.get("name"),
+                    phone_number = contents.get("phone_number"),
                 )
                 db.session.add(user)
             
@@ -302,19 +257,19 @@ class CreateDriver(Resource):
 class CreatePassenger(Resource):
 
     def post(self):
-        args = create_passenger_parser.parse_args()
+        contents = create_passenger_parser.parse_args()
                
-        user = db.session.execute(db.select(User).filter_by(username = args.get("username"))).scalars().first()
+        user = get_user_from_username(contents.get("username"))
         if user == None or user.passenger == None:
             passenger = Passenger()
             db.session.add(passenger)
 
             if user == None:
                 user = User(
-                    username = args.get("username"),
-                    email = args.get("email"),
-                    name = args.get("name"),
-                    phone_number = args.get("phone_number"),
+                    username = contents.get("username"),
+                    email = contents.get("email"),
+                    name = contents.get("name"),
+                    phone_number = contents.get("phone_number"),
                 )
                 db.session.add(user)
             
@@ -325,12 +280,24 @@ class CreatePassenger(Resource):
         elif user.passenger != None:
             return make_response("User account is already a passenger", 202)
     
+class GetUser(Resource):
+
+    def get(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        if user == None:
+            return make_response("That user does not exist")
+        else:
+            return make_response(user.to_dict())
 
 
-api.add_resource(CreateDriver, "/create/driver")
-api.add_resource(CreatePassenger, "/create/passenger")
 
-# api.add_resource(Health, "/health")
+
+api.add_resource(Health, "/health")
+api.add_resource(CreateDriver, "/driver/create")
+api.add_resource(CreatePassenger, "/passenger/create")
+api.add_resource(GetUser, "/profile")
+
 # api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
 # api.add_resource(PassengerListResource, '/passengers')
 # api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')

@@ -15,7 +15,6 @@ class Driver(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "user": self.user,
             "car_id": self.car_id
         }
 

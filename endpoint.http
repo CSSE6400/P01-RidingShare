@@ -2,7 +2,7 @@
 
 
 ### Create a driver
-POST {{baseUrl}}/create/driver
+POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### Create a passenger
-POST {{baseUrl}}/create/passenger
+POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
@@ -23,5 +23,13 @@ Content-Type: application/json
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com"
+}
+
+### Get a user by username
+GET {{baseUrl}}/profile
+Content-Type: application/json
+
+{
+  "username": "jDoe12"
 }
 

@@ -11,3 +11,7 @@ create_driver_parser.add_argument("max_available_seats",	type=int, required=True
 create_driver_parser.add_argument("licence_plate", 			type=str, required=True, help="License plate cannot be blank!")
 
 create_passenger_parser = create_user_parser.copy()
+
+get_user_parser = reqparse.RequestParser()
+get_user_parser.add_argument("username", 	type=str, required=True, help="Username cannot be blank!")
+
