@@ -1,0 +1,127 @@
+Title: Adoption of a Web-Based Platform for Initial Deployment
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to develop a responsive web application instead of a native mobile app is driven by the need for broad accessibility and reduced development costs.
+
+Context: Considering the target audience's diverse access to technology, a web application accessible via browsers on multiple devices ensures that the ride-sharing service is available to a wide user base. Additionally, the team’s proficiency in web technologies supports this approach.
+
+Decision: The team will build a responsive web application utilizing standard web technologies. This decision leverages existing skills and accelerates the development process, focusing on a single platform rather than managing separate codebases for Android and iOS.
+
+Consequences:
+-Positive: Broader accessibility, reduced development and maintenance costs, faster time to market.
+-Neutral: Reliance on internet connectivity for access.
+-Negative: Potential limitations in accessing native features like advanced GPS and offline capabilities, which could enhance user experience especially for drivers.
+---------------------------------------------------------------------------------------------------------------------------
+
+Title: Utilizing Flask for Backend Development
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to use Flask for the backend framework was influenced by the team's familiarity with Python and the need for a lightweight, flexible solution for rapid development.
+
+Context: The backend of the ridesharing application requires handling multiple types of HTTP requests and database interactions efficiently. Given the team’s existing proficiency in Python, leveraging a Python-based framework is ideal. Flask, being a micro-framework, allows for starting small and scaling up as needed, which aligns well with the project's phased development approach.
+
+Decision: Adopt Flask to develop the backend of the application. This framework will manage HTTP requests, routing, server-side logic, and database operations. Flask's ability to integrate seamlessly with other Python libraries and tools will also be utilized to extend its capabilities as the application's requirements grow.
+
+Consequences:
+-Positive: Enhanced development speed due to familiarity with Python and Flask’s simplicity; easier integration with Python libraries and tools; cost-effective scaling in the early stages of the project.
+-Neutral: Dependency on the Python ecosystem for additional functionality and performance enhancements.
+-Negative: Potential need for additional components or services to handle complex application demands and scaling, such as adding a more robust web server in front of Flask like Gunicorn, or integrating with a message queue for asynchronous task processing.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Title: Adoption of JavaScript Frameworks for Frontend Development
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to use JavaScript for frontend development, utilizing frameworks like React or Vue.js, was made to leverage the extensive capabilities and support these technologies offer for creating dynamic and interactive web applications.
+
+Context: A dynamic and responsive user interface is crucial for the application to provide a seamless user experience across various devices. JavaScript is universally supported by modern web browsers and allows for the creation of rich, client-side applications. The choice of specific frameworks like React or Vue.js is driven by their robust ecosystem, component-driven architecture, and wide adoption, which ensures community support and resource availability. An integral part of the user interface is the implementation of dynamic maps for route navigation and location tracking, which is essential for both riders and drivers.
+
+Decision: Implement the frontend using JavaScript, with the choice of React or Vue.js based on specific project needs and team familiarity. These frameworks will help manage the application’s state, handle user interactions efficiently, and offer reusable UI components. Additionally, the application will integrate mapping functionalities using popular APIs like Google Maps or OpenStreetMap to support real-time geolocation and routing features.
+
+Consequences:
+-Positive: Enhanced user experience with dynamic content updates and interactive UIs; scalability in managing complex states and UI components; integrated mapping provides critical functionality for navigation and location tracking.
+-Neutral: Requires consistent updates and maintenance to keep up with changes in the JavaScript ecosystem and mapping API developments.
+-Negative: Increased complexity in frontend architecture, requiring skilled developers familiar with modern JavaScript practices and tools to manage and scale the frontend effectively; integration of mapping APIs adds another layer of complexity and potential dependency on external services
+--------------------------------------------------------------------------------------------------------------------------------
+
+Title: Differentiated User Interfaces for Drivers and Riders
+Date: 24/04/2024
+Status: Accepted
+Summary: To cater to the distinct needs and workflows of drivers and riders, separate user interfaces will be designed and implemented, ensuring tailored experiences for each group.
+
+Context: Drivers and riders interact with the platform in fundamentally different ways. Drivers need more detailed navigation aids and ride status updates, while riders focus on ease of booking and ride tracking. Addressing these distinct needs requires customized interfaces.
+
+Decision: Develop separate user interfaces for drivers and riders within the application. This approach will leverage shared design elements where feasible but prioritize distinct functionalities to optimize each user group’s experience and efficiency.
+
+Consequences:
+-Positive: Enhanced user satisfaction by providing tailored functionalities that meet the specific needs of drivers and riders; -increased efficiency in interactions with the app.
+-Neutral: Some overlap in design and development efforts where shared functionalities exist.
+-Negative: Increased complexity in design, development, and testing to ensure both interfaces are equally intuitive and functional; higher maintenance costs due to the dual interface approach.
+
+----------------------------------------------------------------------------------------------------------------------------------------
+Title: Integration of Third-Party Mapping and Traffic Data Services
+Date: 24/04/2024
+Status: Accepted
+Summary: The decision to integrate third-party mapping and traffic data services, such as Google Maps API, into the ride-sharing application was made to enhance routing accuracy and provide real-time traffic updates, crucial for operational efficiency.
+
+Context: The effectiveness of a ride-sharing service largely depends on its ability to provide accurate and timely routing information. Integrating established third-party services ensures access to up-to-date geographic data and traffic conditions, which is essential for route optimization and customer satisfaction.
+
+Decision: Adopt third-party services like Google Maps API for mapping and traffic data. This integration will enable the application to provide detailed routing information, estimated times of arrival, and adjustments based on current traffic conditions.
+
+Consequences:
+-Positive: Reliable routing information, improved user satisfaction, and enhanced operational efficiency.
+-Neutral: Ongoing dependency on external service providers.
+-Negative: Increased operational costs due to API usage fees and potential risks related to service availability or changes in terms of service.
+------------------------------------------------------------------------------------------------------------------------------------
+
+Title: Implementation of a Geospatial Notification System for Driver-Rider Matching
+Date: 24/04/2024
+Status: Accepted
+Summary: Implementing a notification system that utilizes geospatial data to match drivers with nearby riders efficiently, supporting real-time adjustments based on location and route deviations.
+
+Context: The core functionality of a ride-sharing service depends on effectively matching riders with nearby drivers who can quickly and efficiently adjust their routes. This requires sophisticated handling of geospatial data and real-time decision-making capabilities.
+
+Decision: Develop a robust notification system within the application's backend, utilizing geospatial data to alert drivers when a potential rider match is found. This system will consider geographical proximity and potential route deviations to optimize matching.
+
+Consequences:
+-Positive: Increased efficiency in matching drivers with riders, leading to reduced wait times and enhanced user satisfaction.
+-Neutral: Requires continuous refinement and updating of geospatial data handling capabilities.
+-Negative: Complexity in backend logic, increasing the demand for high-quality data management and real-time processing skills.
+------------------------------------------------------------------------------------------------------------------------------------
+
+Title: Development of Cost Calculation and Display System for Ride Options
+Date: 24/04/2024
+Status: Accepted
+Summary: The implementation of a feature that calculates and displays detailed cost information for various ride options, enhancing transparency and aiding users in making informed choices.
+
+Context: Providing users with transparent and accurate cost information is essential for trust and reliability in a ride-sharing service. This requires complex algorithms that can dynamically adjust cost estimates based on factors like distance, traffic, and chosen route.
+
+Decision: Create a feature within the application that accurately calculates and displays the costs, travel times, and driver details for each route option available to the rider. This system will use dynamic pricing algorithms to ensure accuracy and competitiveness.
+
+Consequences:
+-Positive: Enhanced decision-making for users with clear, upfront cost information; increased trust and user satisfaction.
+-Neutral: Ongoing adjustments and updates to pricing algorithms to reflect real-time conditions and market changes.
+-Negative: The complexity of implementing and maintaining dynamic cost calculation algorithms, requiring advanced technical capabilities in data analysis and algorithm development.
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Title: Simplification of MVP Features for Initial Launch
+Date: 26/04/2024
+Status: Superseded
+Summary: Due to time constraints, the MVP of the ride-sharing application will focus on core functionalities that can be quickly implemented and easily used on mobile devices via a web application.
+
+Context: The initial scope of the MVP included a number of advanced features such as dynamic cost calculations and a robust login system. However, considering the tight timeline and the goal to quickly validate the concept, it's been decided to simplify the feature set. This will allow the team to focus on the essential functionalities that provide immediate value while ensuring a quicker development cycle.
+
+Decision: The MVP will:
+
+-Exclude a separate website — The application will be developed solely as a mobile-responsive web application, accessible on any device with a browser, eliminating the need for separate desktop and mobile applications.
+
+-Simplify cost calculation — Instead of dynamic pricing, costs will be calculated using a fixed rate per kilometer, simplifying the backend complexity and reducing the initial development effort.
+
+-Eliminate user accounts for MVP — There will be no login system; instead, users can switch between driver and passenger modes with a simple button, reducing barriers to initial use and simplifying the user interface.
+
+-Set a maximum ride distance — To further simplify operations and focus on a local test market, a maximum ride distance will be enforced.
+
+Consequences:
+
+-Positive: Faster development and launch of the MVP; reduced complexity in backend processing and user interface; easier scalability post-MVP as complexities can be incrementally added based on user feedback and system performance.
+-Neutral: Potential limitations in user engagement and data collection due to the lack of user accounts and personalized experiences.
+-Negative: Reduced functionality might limit the initial user experience and data insights; lack of dynamic pricing could impact profitability and market competitiveness; absence of a dedicated mobile app might reduce accessibility or performance on mobile devices.

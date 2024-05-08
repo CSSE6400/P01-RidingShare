@@ -1,0 +1,25 @@
+@baseUrl =http://localhost:8080
+
+### Get Request
+GET {{baseUrl}}/passengers
+
+### Add a Passenger 
+POST {{baseUrl}}/passengers
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "phone_number": "1234567890",
+  "email": "john.doe@example.com"
+}
+
+### Add a Driver 
+POST {{baseUrl}}/passengers
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "phone_number": "111222333",
+  "email": "jane.doe@gmail.com",
+  "car_registration_number": "319IRG"
+}

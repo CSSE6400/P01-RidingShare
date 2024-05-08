@@ -1,0 +1,24 @@
+services: 
+
+  database:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: verySecretPassword
+      POSTGRES_USER: administrator
+      POSTGRES_DB: ride
+    volumes: 
+      - ./data/db:/var/lib/postgresql/data
+
+  api: 
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: ridingshare
+    restart: always 
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database 
