@@ -19,7 +19,9 @@ class TripRequest(db.Model):
     
     ## the below is useful for accessing the trip request being made by a passenger
     passenger = db.relationship('Passenger', backref=db.backref('trip_requests', lazy=True))
-    
+
+    trip = None ### Needs to link to a trip onces its been approved
+    trip_id = None # this instead since were indexing?
 
     def to_dict(self):
         return {

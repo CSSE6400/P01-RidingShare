@@ -22,13 +22,14 @@ class Trip(db.Model):
     start_location = db.Column(Geometry("POINT"), nullable=False) # LONG LAT FORMAT
     end_location = db.Column(Geometry("POINT"), nullable=False)
 
-
-    status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
+    status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled, Pending
     seats_remaining = db.Column(db.Integer, nullable=True)
     time_addition = db.Column(db.Integer, nullable=True)
     distance_addition = db.Column(db.Integer, nullable=True)
     driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
     created_at = db.Column(db.DateTime, nullable=False, default=_get_current_datetime)
+
+    requests_added = None # list of all the trip_requests that are taking this trip
         
     def __repr__(self):
         return f'<Trip {self.id}>'
