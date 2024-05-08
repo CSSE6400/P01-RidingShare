@@ -1,9 +1,10 @@
 from os import environ
-from flask import Flask
+import os
+from flask import Flask, send_from_directory
 
 
 def create_app(config_overrides=None):
-    app = Flask(__name__, static_folder='frontend/build', static_url_path="/")
+    app = Flask(__name__, static_folder='frontend/build')
 
     # Configure app with database URI + overrides
     app.config['SQLALCHEMY_DATABASE_URI'] = environ.get("SQLALCHEMY_DATABASE_URI", "postgresql+psycopg:///ridingshare")
@@ -36,6 +37,14 @@ def create_app(config_overrides=None):
     from views.routes import api_bp
     app.register_blueprint(api_bp)
 
-    app.add_url_rule('/', 'index', lambda: app.send_static_file('index.html'))
+    # Serve React App
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path != "" and os.path.exists(app.static_folder + '/' + path):
+            return send_from_directory(app.static_folder, path)
+        else:
+            return send_from_directory(app.static_folder, 'index.html')
+
     
     return app
