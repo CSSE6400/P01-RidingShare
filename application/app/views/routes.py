@@ -186,8 +186,8 @@ class TripRequestResource(Resource):
             new_trip_request = TripRequest(
                 passenger_id=passenger_id,
                 requested_time=requested_time,
-                pickup_location=pickup_location,
-                dropoff_location=dropoff_location,
+                pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
+                dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
                 pickup_window_start=pickup_window_start,
                 pickup_window_end=pickup_window_end
             )
