@@ -1,15 +1,19 @@
 services: 
 
   database:
-    image: postgres:latest
+    image: postgis/postgis
     restart: always
     environment:
       POSTGRES_PASSWORD: verySecretPassword
       POSTGRES_USER: administrator
       POSTGRES_DB: ride
+    volumes: 
+      - ./data/db:/var/lib/postgresql/data
 
   api: 
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: ridingshare
     restart: always 
     environment:
@@ -18,3 +22,4 @@ services:
       - "8080:8080"
     depends_on:
       - database 
+    command: ["flask", "--app", "wsgi:app", "run", "--debug", "--host", "0.0.0.0", "--port", "8080"]

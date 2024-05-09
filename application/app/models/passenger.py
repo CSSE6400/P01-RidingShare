@@ -1,22 +1,23 @@
-import datetime
 from . import db
-import uuid
+from .helper import generate_uuid
+
 
 class Passenger(db.Model):
-    __tablename__ = 'passenger'
+    __tablename__ = "passenger"
 
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    name = db.Column(db.String, nullable=False)
-    phone_number = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
+    id = db.Column(db.String, primary_key=True, default=generate_uuid)
+    user = db.relationship("User", back_populates="passenger")
+
+    trip_requests = db.relationship("TripRequest", back_populates="passenger")
+
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'phone_number': self.phone_number,
-            'email': self.email
+            "id": self.id,
+            "user": self.user,
+            "trip_requests": self.trip_requests
         }
 
+
     def __repr__(self):
-        return f'<Passenger {self.id}>'
+        return f"<Passenger {self.id}>"
