@@ -14,3 +14,22 @@
     margin-top: 8px;
   }
   
+  .actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .approve, .decline {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+  
+  .approve svg, .decline svg {
+    margin-right: 5px;
+  }
