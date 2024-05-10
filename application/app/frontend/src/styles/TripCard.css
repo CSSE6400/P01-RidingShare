@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px; /* Adds some spacing around the container */
+    overflow-x: scroll;
+}
+
+.trip-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px;
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+}

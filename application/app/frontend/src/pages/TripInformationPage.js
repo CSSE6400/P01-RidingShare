@@ -4,7 +4,7 @@ import '../styles/TripInformationPage.css'
 import { useParams } from 'react-router-dom';
 
 const driver = {
-    driversName: "Tom Jerry",
+    name: "Tom Jerry",
     carRepoNo: "AAA111",
     estimatedPickupTime: "09:30 AM"
 }
@@ -25,7 +25,9 @@ const TripInformation = () => {
 
     return (
         <div>
-            <h1> Trip Information </h1>
+            <div class="container">
+                <h1> Trip Information </h1>
+            </div>
             <div class="container">
                 <div>
                     <DriverInformationCard 
