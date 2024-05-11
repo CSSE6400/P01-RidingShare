@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PassengerManager from './components/PassengerManager';
+import Login from './components/Login';
+import TripRequest from './components/TripRequest';
 import './App.css';
 
 /**
@@ -13,7 +15,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PassengerManager />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/trip-request" element={<TripRequest />} />
       </Routes>
     </Router>
   );

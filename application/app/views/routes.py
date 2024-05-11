@@ -118,11 +118,11 @@ class CreatePassenger(Resource):
             return make_response("User account is already a passenger", 202)
     
 class GetUser(Resource):
-    def get(self):
+    def post(self):
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         if user == None or user.password != contents.get("password"):
-            return make_response("That user does not exist or has incorrect password", 202)
+            return make_response("That user does not exist or has incorrect password", 302)
         else:
             return make_response(user.to_dict(), 200)
 
