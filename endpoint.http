@@ -34,7 +34,8 @@ GET {{baseUrl}}/profile
 Content-Type: application/json
 
 {
-  "username": "jDoe12"
+  "username": "jDoe12",
+  "password": "53%32"
 }
 
 ### Add Trip
