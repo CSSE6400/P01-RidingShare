@@ -6,6 +6,7 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
+  "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com",
@@ -22,6 +23,7 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
+  "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com"

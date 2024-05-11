@@ -71,6 +71,7 @@ class CreateDriver(Resource):
             if user == None:
                 user = User(
                     username = contents.get("username"),
+                    password = contents.get("password"),
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -97,6 +98,7 @@ class CreatePassenger(Resource):
             if user == None:
                 user = User(
                     username = contents.get("username"),
+                    password = contents.get("password"),
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
