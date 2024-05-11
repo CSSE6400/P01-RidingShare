@@ -23,8 +23,10 @@ def create_app(config_overrides=None):
     from models import db
     from models.passenger import Passenger
     from models.trip_request import TripRequest
+    from models.car import Car
     from models.driver import Driver
     from models.trip import Trip
+    from models.user import User
     db.init_app(app)
 
     # Create the database tables

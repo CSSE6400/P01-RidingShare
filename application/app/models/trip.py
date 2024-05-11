@@ -1,37 +1,49 @@
-import datetime
 from . import db
-import uuid
+from .helper import generate_uuid, get_current_datetime, cast_datetime
+from geoalchemy2 import Geometry
+from geoalchemy2.shape import to_shape
+from .states_types import TripState
+
 
 class Trip(db.Model):
-    __tablename__ = 'trip'
+    __tablename__ = "trip"
 
-    id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    driver_id = db.Column(db.String, db.ForeignKey('driver.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    id = db.Column(db.String, primary_key=True, default=generate_uuid)
+
+    created_at = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
+    start_time = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
     end_time = db.Column(db.DateTime, nullable=True)
-    start_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
-    end_location = db.Column(db.JSON, nullable=False)  # JSON for storing longitude and latitude
-    status = db.Column(db.String, default="Matched")  # Matched, Ongoing, Completed, Cancelled
-    seats_remaining = db.Column(db.Integer, nullable=False)
     
-    ## the below is useful for accessing all trips being made by a driver 
-    driver = db.relationship('Driver', backref=db.backref('trips', lazy=True))
-    # car = None # HAVE THIS OR IN DRIVER?
+    start_location = db.Column(Geometry("POINT"), nullable=False) # LONG LAT FORMAT
+    end_location = db.Column(Geometry("POINT"), nullable=False)
 
+    status = db.Column(db.String, default=TripState.PENDING)  # Matched, Ongoing, Completed, Cancelled, Pending
+    time_addition = db.Column(db.Integer, nullable=True)
+    distance_addition = db.Column(db.Integer, nullable=True)
+
+    driver = db.relationship("Driver", backref=db.backref("trip", lazy=True))
+    driver_id = db.Column(db.String, db.ForeignKey("driver.id"), nullable=False)
+    seats_remaining = db.Column(db.Integer, nullable=False)
+
+    trip_requests = db.relationship("TripRequest", back_populates="trip")
+        
     def __repr__(self):
-        return f'<Trip {self.id}>'
+        return f"<Trip {self.id}>"
 
     def to_dict(self):
+        start_point = to_shape(self.start_location)
+        end_point = to_shape(self.end_location)
+
         return {
-            'id': self.id,
-            'driver_id': self.driver_id,
-            'start_time': self.start_time.strftime('%Y-%m-%dT%H:%M:%SZ') if self.start_time else None,
-            'end_time': self.end_time.strftime('%Y-%m-%dT%H:%M:%SZ') if self.end_time else None,
-            'start_location': self.start_location,
-            'end_location': self.end_location,
-            'status': self.status,
-            'seats_remaining': self.seats_remaining,
-            'created_at': self.created_at.strftime('%Y-%m-%dT%H:%M:%SZ') if self.created_at else None,
-            'updated_at': self.updated_at.strftime('%Y-%m-%dT%H:%M:%SZ') if self.updated_at else None,
+            "id": self.id,
+            "created_at": self.created_at,
+            "start_time": cast_datetime(self.start_time),
+            "end_time": cast_datetime(self.end_time),
+            "start_location": {"latitude": start_point.y, "longitude": start_point.x},
+            "end_location": {"latitude": end_point.y, "longitude": end_point.x},
+            "status": self.status,
+            "distance_addition": self.distance_addition,
+            "driver_id": self.driver_id,
+            "seats_remaining": self.seats_remaining
         }
 
