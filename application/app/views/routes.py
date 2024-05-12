@@ -121,10 +121,10 @@ class GetUser(Resource):
     def get(self):
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
-        if user == None:
-            return make_response("That user does not exist")
+        if user == None or user.password != contents.get("password"):
+            return make_response("That user does not exist or has incorrect password", 202)
         else:
-            return make_response(user.to_dict())
+            return make_response(user.to_dict(), 200)
 
 
 class CreateTrip(Resource):
