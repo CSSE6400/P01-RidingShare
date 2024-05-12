@@ -4,6 +4,7 @@ import PassengerManager from './components/PassengerManager';
 import TripsPage from './pages/TripsPage'
 import TripInformation from './pages/TripInformationPage';
 import './App.css';
+import Login from './pages/login'
 
 /**
  * App component - the main component of the application.
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/" element={<PassengerManager />} />
         <Route path="/trips" element={<TripsPage />} />
         <Route path="/trip/:riderId" element={<TripInformation />} />
+        <Route path="/login" element={<Login/>} />
       </Routes>
     </Router>
   );

@@ -1,0 +1,32 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full height of the viewport */
+    background-color: #ffffff; /* Adjust background color */
+  }
+  
+  h2 {
+    color: rgb(0, 0, 0);
+    margin-bottom: 20px;
+  }
+  
+  .login-button {
+    width: 150px;
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .driver {
+    background-color: #424242; /* Adjust colors as per your design */
+  }
+  
+  .rider {
+    background-color: #4f4f4f; /* Adjust colors as per your design */
+  }
+  
