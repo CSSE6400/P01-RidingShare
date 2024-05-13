@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
-import '../styles/Login.css'; // Assuming your styles are in this file
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import '../styles/Login.css';
 
 function Login() {
+  const navigate = useNavigate(); // Instantiate the navigate function
+
   useEffect(() => {
     // Simplify the addition and removal of event listeners
     const handleDriverLogin = () => loginUser('driver');
@@ -20,23 +23,8 @@ function Login() {
   }, []);
 
   function loginUser(userType) {
-    console.log(`Login attempted for ${userType}`);
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userType })
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Login successful:', data);
-      window.location.href = '/dashboard'; // Redirect to a dashboard or appropriate page
-    })
-    .catch((error) => {
-      console.error('Error during login:', error);
-      alert('Login failed, please try again.');
-    });
+    // Redirect to the LoginEmail page upon login
+    navigate('/loginPage');
   }
 
   return (

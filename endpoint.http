@@ -1,7 +1,7 @@
 @baseUrl =http://localhost:8080
 
 ### Get Request
-GET {{baseUrl}}/passengers
+GET {{baseUrl}}/login
 
 ### Add a Passenger 
 POST {{baseUrl}}/passengers
@@ -14,7 +14,7 @@ Content-Type: application/json
 }
 
 ### Add a Driver 
-POST {{baseUrl}}/passengers
+POST {{baseUrl}}/drivers
 Content-Type: application/json
 
 {

@@ -82,8 +82,24 @@ class PassengerListResource(Resource):
     def post(self):
         return PassengerResource().post()
 
+class UserExistenceResource(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
+        args = parser.parse_args()
+
+        passenger = Passenger.query.filter_by(email=args['email']).first()
+        driver = Driver.query.filter_by(email=args['email']).first()
+
+        if passenger or driver:
+            return make_response(jsonify({"exists": True}), 200)
+        else:
+            return make_response(jsonify({"exists": False}), 200)
+
 
 api.add_resource(Health, "/health")
 api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
 api.add_resource(PassengerListResource, '/passengers')
 api.add_resource(DriverResource, '/drivers', '/drivers/<string:driver_id>')
+api.add_resource(UserExistenceResource, '/check_email')
+
