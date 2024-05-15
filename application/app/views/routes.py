@@ -47,6 +47,11 @@ class PassengerResource(Resource):
             return make_response(jsonify({"error": "Passenger not found"}), 404)
 
 class PassengerListResource(Resource):
+    def get(self):
+        passengers = Passenger.query.all()
+        passengers_list = [passenger.to_dict() for passenger in passengers]
+        return make_response(jsonify(passengers_list), 200)
+
     def post(self):
         return PassengerResource().post()
 
@@ -71,6 +76,7 @@ class CreateDriver(Resource):
             if user == None:
                 user = User(
                     username = contents.get("username"),
+                    password = contents.get("password"),
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -97,6 +103,7 @@ class CreatePassenger(Resource):
             if user == None:
                 user = User(
                     username = contents.get("username"),
+                    password = contents.get("password"),
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -114,10 +121,10 @@ class GetUser(Resource):
     def get(self):
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
-        if user == None:
-            return make_response("That user does not exist")
+        if user == None or user.password != contents.get("password"):
+            return make_response("That user does not exist or has incorrect password", 202)
         else:
-            return make_response(user.to_dict())
+            return make_response(user.to_dict(), 200)
 
 
 class CreateTrip(Resource):
