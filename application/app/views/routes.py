@@ -9,7 +9,7 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser
 from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger
 
 api_bp = Blueprint("api", __name__)
@@ -119,7 +119,7 @@ class CreatePassenger(Resource):
     
 class GetUser(Resource):
     def get(self):
-        contents = get_user_parser.parse_args()
+        contents = get_user_details_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         if user == None or user.password != contents.get("password"):
             return make_response("That user does not exist or has incorrect password", 202)
@@ -199,6 +199,54 @@ class CreateTripRequest(Resource):
 
         return make_response(new_trip_request.to_dict(), 201)
 
+class GetAllTrips(Resource):
+    def get(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if driver_id:
+            trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trips": trips_data}, 200)
+        else:
+            return make_response("There is no driver under this username.", 400)
+
+class GetPendingTrips(Resource):
+    def get(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if driver_id:
+            trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id, status="PENDING")).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trips": trips_data}, 200)
+        else:
+            return make_response("There is no driver under this username.", 400)
+
+class GetAllTripRequests(Resource):
+        def get(self):
+            contents = get_user_parser.parse_args()
+            user = get_user_from_username(contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            if passenger_id:
+                trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
+                trips_data = [trip.to_dict() for trip in trips]
+                return make_response({"trip_requests": trips_data}, 200)
+            else:
+                return make_response("There is no passenger under this username.", 400)
+
+class GetPendingTripRequests(Resource):
+        def get(self):
+            contents = get_user_parser.parse_args()
+            user = get_user_from_username(contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            if passenger_id:
+                trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
+                trips_data = [trip.to_dict() for trip in trips]
+                return make_response({"trip_requests": trips_data}, 200)
+            else:
+                return make_response("There is no passenger under this username.", 400)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -206,53 +254,7 @@ api.add_resource(CreatePassenger, "/passenger/create")
 api.add_resource(CreateTrip, "/trip/create")
 api.add_resource(CreateTripRequest, "/trip_request/create")
 api.add_resource(GetUser, "/profile")
-
-### Specific Get methods for trips based on what is required ###
-@api_bp.route("/trips/get/all")
-def get_all_trips():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    driver_id = get_driver_id_from_username(contents.get("username"))
-    if driver_id:
-        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trips": trips_data}, 200)
-    else:
-        return make_response("There is no driver under this username.", 400)
-
-@api_bp.route("/trips/get/pending")
-def get_pending_trips():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    driver_id = get_driver_id_from_username(contents.get("username"))
-    if driver_id:
-        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id, status="PENDING")).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trips": trips_data}, 200)
-    else:
-        return make_response("There is no driver under this username.", 400)
-
-@api_bp.route("/trip_requests/get/all")
-def get_all_trip_requests():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    passenger_id = get_passenger_id_from_username(contents.get("username"))
-    if passenger_id:
-        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trip_requests": trips_data}, 200)
-    else:
-        return make_response("There is no passenger under this username.", 400)
-
-@api_bp.route("/trip_requests/get/pending")
-def get_pending_trip_requests():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    passenger_id = get_passenger_id_from_username(contents.get("username"))
-    if passenger_id:
-        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trip_requests": trips_data}, 200)
-    else:
-        return make_response("There is no passenger under this username.", 400)
-
+api.add_resource(GetAllTrips, "/trips/get/all")
+api.add_resource(GetPendingTrips, "/trips/get/pending")
+api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
+api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")

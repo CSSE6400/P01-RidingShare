@@ -14,9 +14,6 @@ Content-Type: application/json
   "licence_plate": "319IRG"
 }
 
-### Get a Driver
-GET {{baseUrl}}/driver/jDoe12
-
 ### Create a passenger
 POST {{baseUrl}}/passenger/create
 Content-Type: application/json
