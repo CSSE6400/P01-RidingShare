@@ -126,3 +126,23 @@ Content-Type: application/json
   "pickup_window_start": "2024-05-10T07:30:00",
   "pickup_window_end": "2024-05-10T08:00:00"
 }
+
+### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
+GET {{baseUrl}}/trip/get/approved
+Content-Type: application/json
+
+{
+  "username": "jDoe12",
+  "pickup_location": {"latitude": 37.7749, "longitude": -122.4194},
+  "pickup_window_start": "2024-05-10T07:30:00",
+  "pickup_window_end": "2024-05-10T08:00:00"
+}
+
+### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
+POST {{baseUrl}}/trip/post/approved
+Content-Type: application/json
+
+{
+  "username": "jDoe12",
+  "trip_request_id": "1234"
+}

@@ -45,7 +45,6 @@ def check_for_conflicting_times_driver(driver_id, new_trip_start_time, new_trip_
 			return True 
 	return False 
 
-
 def check_for_conflicting_times_passenger(passenger_id, new_trip_start_time, new_trip_end_time):
 	user_trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all() 
 

@@ -9,7 +9,7 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
 from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger
 
 api_bp = Blueprint("api", __name__)
@@ -257,12 +257,21 @@ class GetNearbyTripRequests(Resource):
 class GetApprovedTripRequests(Resource):
         def get(self):
             contents = get_user_parser.parse_args()
-            user = get_user_from_username(contents.get("username"))
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
                 return make_response("Hurray your driver exists ! This functionality is still in progress", 200)
             else:
                 return make_response("There is no driver under this username.", 400)
+
+class ApproveRequest(Resource):
+        def post(self):
+            contents = approve_requests_parser.parse_args()
+            username = contents.get("username")
+            driver_id = get_driver_id_from_username(contents.get("username"))
+            if driver_id:
+                return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+            else:
+                return make_response(f"There is no driver under the username: {username}", 400)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
@@ -277,3 +286,4 @@ api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
 api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
+api.add_resource(ApproveRequest, "/trip/post/approved")
