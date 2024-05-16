@@ -37,3 +37,9 @@ create_trip_request_parser.add_argument('pickup_window_start', type=str, require
 create_trip_request_parser.add_argument('pickup_window_end', type=str, required=True, help="Pickup window end cannot be blank!")    
 create_trip_request_parser.add_argument('username', type=str, required=True, help="Username cannot be blank!")
        
+nearby_trip_requests_parser = reqparse.RequestParser()
+create_trip_request_parser.add_argument('pickup_location', type=dict, required=True, help="Pickup location cannot be blank!")
+create_trip_request_parser.add_argument('pickup_window_start', type=str, required=True, help="Pickup window start cannot be blank!")
+create_trip_request_parser.add_argument('pickup_window_end', type=str, required=False, help="Pickup window end cannot be blank!")    
+create_trip_request_parser.add_argument('username', type=str, required=True, help="Username cannot be blank!")
+       
