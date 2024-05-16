@@ -250,16 +250,16 @@ class GetPendingTripRequests(Resource):
 class GetNearbyTripRequests(Resource):
         def get(self):
             contents = nearby_trip_requests_parser.parse_args()
-            user = get_user_from_username(contents.get("username"))
-            passenger_id = get_passenger_id_from_username(contents.get("username"))
-            return make_response("This is yet to be implemented", 400)
+            user = (contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("username"))            
+            return make_response(f"This is yet to be implemented Passenger ID {user}", 401)
 
 class GetApprovedTripRequests(Resource):
         def get(self):
             contents = get_user_parser.parse_args()
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
-                return make_response("Hurray your driver exists ! This functionality is still in progress", 200)
+                return make_response(f"Hurray your driver exists ! This functionality is still in progress driver id: {driver_id}", 200)
             else:
                 return make_response("There is no driver under this username.", 400)
 
@@ -269,7 +269,13 @@ class ApproveRequest(Resource):
             username = contents.get("username")
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
-                return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().all()
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().all()
+                if trip_query and trip_request_query:
+                    return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+                else:
+                    return make_response("This is no longer a trip request or trip.", 400)
+
             else:
                 return make_response(f"There is no driver under the username: {username}", 400)
 
