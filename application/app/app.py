@@ -20,7 +20,6 @@ def create_app(config_overrides=None):
     if config_overrides:
         app.config.update(config_overrides)
     app.config.from_prefixed_env()
-
     from models import db
     from models.passenger import Passenger
     from models.trip_request import TripRequest
@@ -29,12 +28,10 @@ def create_app(config_overrides=None):
     from models.trip import Trip
     from models.user import User
     db.init_app(app)
-
     # Create the database tables
     with app.app_context():
         db.create_all()
         db.session.commit()
-
     # Register the blueprints
     from views.routes import api_bp
     app.register_blueprint(api_bp)
@@ -49,4 +46,5 @@ def create_app(config_overrides=None):
             return send_from_directory(app.static_folder, 'index.html')
 
     
+
     return app

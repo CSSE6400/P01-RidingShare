@@ -1,0 +1,15 @@
+.rider-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px;
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.rider-card img {
+    width: 100%;
+    height: auto;
+    margin-top: 8px;
+}
