@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    padding: 20px; /* Adds some spacing around the container */
+}
+
+.riders {
+    margin-left: 64px;
+}
+
