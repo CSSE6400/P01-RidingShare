@@ -46,6 +46,21 @@ class PassengerListResource(Resource):
         return make_response(jsonify(passengers_list), 200)
 
 
+class UserExistenceResource(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
+        args = parser.parse_args()
+
+        passenger = Passenger.query.filter_by(email=args['email']).first()
+        driver = Driver.query.filter_by(email=args['email']).first()
+
+        if passenger or driver:
+            return make_response(jsonify({"exists": True}), 200)
+        else:
+            return make_response(jsonify({"exists": False}), 200)
+
+
 class CreateDriver(Resource):
 
     def post(self):
@@ -113,7 +128,7 @@ class GetUser(Resource):
         contents = get_user_details_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         if user == None or user.password != contents.get("password"):
-            return make_response("That user does not exist or has incorrect password", 202)
+            return make_response({"error": "That user does not exist or has incorrect password"}, 301)
         else:
             return make_response(user.to_dict(), 200)
 
