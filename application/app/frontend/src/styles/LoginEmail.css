@@ -3,11 +3,14 @@
     width: 100%;
     border-radius: 8px;
     background-color: #ffffff;
+    padding: 20px; 
+    
 }
 
 .login-container h2 {
     text-align: center;
     color: #333;
+    margin-bottom: 20px; 
 }
 
 .login-container form {
@@ -20,11 +23,26 @@
     color: #666;
 }
 
-.login-container input {
+.login-container input,
+.login-container select {
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+.login-container select {
+    appearance: none; 
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+
+.login-container select:focus {
+    outline: none;
+    border-color: #007BFF; 
 }
 
 .login-container button {
@@ -35,8 +53,17 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%; 
+    box-sizing: border-box; 
+
 }
 
 .login-container button:hover {
     background-color: #0056b3;
+}
+
+.login-container select option {
+    padding: 10px; 
+    background-color: #fff; 
+    color: #333; 
 }

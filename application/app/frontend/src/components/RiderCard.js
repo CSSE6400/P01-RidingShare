@@ -1,5 +1,5 @@
 import React from 'react';
-import './RiderCard.css';
+import '../styles/RiderCard.css';
 
 const RiderCard = ({ riderName, startingPoint, destination }) => {
   return (
