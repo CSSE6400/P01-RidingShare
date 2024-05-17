@@ -14,9 +14,6 @@ Content-Type: application/json
   "licence_plate": "319IRG"
 }
 
-### Get a Driver
-GET {{baseUrl}}/driver/jDoe12
-
 ### Create a passenger
 POST {{baseUrl}}/passenger/create
 Content-Type: application/json
@@ -30,7 +27,7 @@ Content-Type: application/json
 }
 
 ### Get a user by username
-GET {{baseUrl}}/profile
+POST {{baseUrl}}/profile
 Content-Type: application/json
 
 {
@@ -67,7 +64,7 @@ Content-Type: application/json
 }
 
 ### Get all trips for a user
-GET {{baseUrl}}/trips/get/all
+POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
@@ -75,7 +72,7 @@ Content-Type: application/json
 }
 
 ### Get all PENDING trips for a user
-GET {{baseUrl}}/trips/get/pending
+POST {{baseUrl}}/trips/get/pending
 Content-Type: application/json
 
 {
@@ -96,7 +93,7 @@ Content-Type: application/json
 }
 
 ### Get all trip requests for a user
-GET {{baseUrl}}/trip_requests/get/all
+POST {{baseUrl}}/trip_requests/get/all
 Content-Type: application/json
 
 {
@@ -104,9 +101,38 @@ Content-Type: application/json
 }
 
 ### Get all PENDING trip requests for a user
-GET {{baseUrl}}/trip_requests/get/pending
+POST {{baseUrl}}/trip_requests/get/pending
 Content-Type: application/json
 
 {
+  "username": "jDoe12",
+  "trip_id": "c0cd6acb-056e-432c-a2f5-e48e3a0793da"
+}
+
+### Get all Nearby Trip Requests for a Driver
+POST {{baseUrl}}/trip/get/pending_nearby
+Content-Type: application/json
+
+{
+  "trip_id": "c0cd6acb-056e-432c-a2f5-e48e3a0793da",
   "username": "jDoe12"
+}
+
+### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
+POST {{baseUrl}}/trip/get/approved
+Content-Type: application/json
+
+{
+  "trip_id": "c0cd6acb-056e-432c-a2f5-e48e3a0793da",
+  "username": "jDoe12"
+}
+
+### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
+POST {{baseUrl}}/trip/post/approved
+Content-Type: application/json
+
+{
+  "username": "jDoe12",
+  "trip_request_id": "ff970c14-3676-41ae-8190-f371bcff550f",
+  "trip_id": "c0cd6acb-056e-432c-a2f5-e48e3a0793da"
 }
