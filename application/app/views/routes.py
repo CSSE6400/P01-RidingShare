@@ -9,7 +9,7 @@ from models.trip import Trip
 from models.user import User
 from datetime import datetime
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser
+from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
 from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger
 
 api_bp = Blueprint("api", __name__)
@@ -39,21 +39,12 @@ class PassengerResource(Resource):
         except Exception as e:
             return make_response(str(e), 404)
 
-    def get(self, passenger_id):
-        passenger = Passenger.query.get(passenger_id)
-        if passenger:
-            return make_response(jsonify(passenger.to_dict()), 200)
-        else:
-            return make_response(jsonify({"error": "Passenger not found"}), 404)
-
 class PassengerListResource(Resource):
-    def get(self):
+    def post(self):
         passengers = Passenger.query.all()
         passengers_list = [passenger.to_dict() for passenger in passengers]
         return make_response(jsonify(passengers_list), 200)
 
-    def post(self):
-        return PassengerResource().post()
 
 class UserExistenceResource(Resource):
     def post(self):
@@ -134,7 +125,7 @@ class CreatePassenger(Resource):
     
 class GetUser(Resource):
     def post(self):
-        contents = get_user_parser.parse_args()
+        contents = get_user_details_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         if user == None or user.password != contents.get("password"):
             return make_response({"error": "That user does not exist or has incorrect password"}, 301)
@@ -214,6 +205,86 @@ class CreateTripRequest(Resource):
 
         return make_response(new_trip_request.to_dict(), 201)
 
+class GetAllTrips(Resource):
+    def post(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if driver_id:
+            trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trips": trips_data}, 200)
+        else:
+            return make_response("There is no driver under this username.", 400)
+
+class GetPendingTrips(Resource):
+    def post(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if driver_id:
+            trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id, status="PENDING")).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trips": trips_data}, 200)
+        else:
+            return make_response("There is no driver under this username.", 400)
+
+class GetAllTripRequests(Resource):
+    def post(self):
+        contents = get_user_parser.parse_args()
+        user = get_user_from_username(contents.get("username"))
+        passenger_id = get_passenger_id_from_username(contents.get("username"))
+        if passenger_id:
+            trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trip_requests": trips_data}, 200)
+        else:
+            return make_response("There is no passenger under this username.", 400)
+
+class GetPendingTripRequests(Resource):
+        def post(self):
+            contents = get_user_parser.parse_args()
+            user = get_user_from_username(contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            if passenger_id:
+                trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
+                trips_data = [trip.to_dict() for trip in trips]
+                return make_response({"trip_requests": trips_data}, 200)
+            else:
+                return make_response("There is no passenger under this username.", 400)
+
+class GetNearbyTripRequests(Resource):
+        def post(self):
+            contents = nearby_trip_requests_parser.parse_args()
+            user = (contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("username"))            
+            return make_response(f"This is yet to be implemented Passenger ID {user}", 401)
+
+class GetApprovedTripRequests(Resource):
+        def post(self):
+            contents = get_user_parser.parse_args()
+            driver_id = get_driver_id_from_username(contents.get("username"))
+            if driver_id:
+                return make_response(f"Hurray your driver exists ! This functionality is still in progress driver id: {driver_id}", 200)
+            else:
+                return make_response("There is no driver under this username.", 400)
+
+class ApproveRequest(Resource):
+        def post(self):
+            contents = approve_requests_parser.parse_args()
+            username = contents.get("username")
+            driver_id = get_driver_id_from_username(contents.get("username"))
+            if driver_id:
+                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().all()
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().all()
+                if trip_query and trip_request_query:
+                    return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+                else:
+                    return make_response("This is no longer a trip request or trip.", 400)
+
+            else:
+                return make_response(f"There is no driver under the username: {username}", 400)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -221,57 +292,10 @@ api.add_resource(CreatePassenger, "/passenger/create")
 api.add_resource(CreateTrip, "/trip/create")
 api.add_resource(CreateTripRequest, "/trip_request/create")
 api.add_resource(GetUser, "/profile")
-
-### Specific Get methods for trips based on what is required ###
-@api_bp.route("/trips/get/all")
-def get_all_trips():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    driver_id = get_driver_id_from_username(contents.get("username"))
-    if driver_id:
-        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trips": trips_data}, 200)
-    else:
-        return make_response("There is no driver under this username.", 400)
-
-@api_bp.route("/trips/get/pending")
-def get_pending_trips():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    driver_id = get_driver_id_from_username(contents.get("username"))
-    if driver_id:
-        trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id, status="PENDING")).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trips": trips_data}, 200)
-    else:
-        return make_response("There is no driver under this username.", 400)
-
-@api_bp.route("/trip_requests/get/all")
-def get_all_trip_requests():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    passenger_id = get_passenger_id_from_username(contents.get("username"))
-    if passenger_id:
-        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trip_requests": trips_data}, 200)
-    else:
-        return make_response("There is no passenger under this username.", 400)
-
-@api_bp.route("/trip_requests/get/pending")
-def get_pending_trip_requests():
-    contents = get_user_parser.parse_args()
-    user = get_user_from_username(contents.get("username"))
-    passenger_id = get_passenger_id_from_username(contents.get("username"))
-    if passenger_id:
-        trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
-        trips_data = [trip.to_dict() for trip in trips]
-        return make_response({"trip_requests": trips_data}, 200)
-    else:
-        return make_response("There is no passenger under this username.", 400)
-        
-api.add_resource(PassengerResource, '/passengers/<string:passenger_id>')
-api.add_resource(PassengerListResource, '/passengers')
-api.add_resource(UserExistenceResource, '/check_email')
-
+api.add_resource(GetAllTrips, "/trips/get/all")
+api.add_resource(GetPendingTrips, "/trips/get/pending")
+api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
+api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
+api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
+api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
+api.add_resource(ApproveRequest, "/trip/post/approved")
