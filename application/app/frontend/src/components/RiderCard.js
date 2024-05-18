@@ -1,7 +1,7 @@
 import React from 'react';
-import './RiderCard.css';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import '../styles/RiderCard.css';
 
 const RiderCard = ({ riderName, startingPoint, destination }) => {
   return (

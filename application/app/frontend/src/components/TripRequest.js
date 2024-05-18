@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
 import { fetchCoordinates } from '../api/api';
-import styles from './TripRequest.module.css';
+import styles from '../styles/TripRequest.module.css';
+import { UserContext } from './UserContext';
 
 function TripRequest() {
-    const location = useLocation();
-    const { username } = location.state;
+    const { user } = useContext(UserContext);
     const [startAddress, setStartAddress] = useState('');
     const [endAddress, setEndAddress] = useState('');
     const [tripDetails, setTripDetails] = useState({
         start_time: "",
         end_time: "",
-        seats_remaining: "",
         distance_addition: ""
     });
     const [errors, setErrors] = useState({});
@@ -29,11 +27,9 @@ function TripRequest() {
 
     const handleTimeChange = (event) => {
         const { name, value } = event.target;
-        const localTime = new Date(value);
-        const isoUtcTime = localTime.toISOString().replace(/\.\d{3}/, ''); 
         setTripDetails(prevState => ({
             ...prevState,
-            [name]: isoUtcTime
+            [name]: value + ":00Z"
         }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: false }));
@@ -53,7 +49,6 @@ function TripRequest() {
 
     const validateForm = () => {
         const newErrors = {};
-        // Check for empty fields and add error message
         if (!startAddress) newErrors.start = true;
         if (!endAddress) newErrors.end = true;
         Object.keys(tripDetails).forEach(key => {
@@ -61,7 +56,6 @@ function TripRequest() {
         });
 
         setErrors(newErrors);
-        // Return true if there are no errors
         return Object.keys(newErrors).length === 0;
     };
 
@@ -78,7 +72,7 @@ function TripRequest() {
 
             const tripData = {
                 ...tripDetails,
-                username,
+                username: user.username,
                 start_location: startCoords,
                 end_location: endCoords
             };
@@ -106,19 +100,17 @@ function TripRequest() {
 
     return (
         <div>
-            <h1>Create Trip Request</h1>
+            <h1>Create Trip </h1>
             <form onSubmit={handleSubmit} className={styles.formContainer}>
-                <div className={styles.flexRow}>
+                <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
                         Start Time:
-                        <input type="datetime-local" name="start_time" value={tripDetails.start_time.slice(0, -1)} onChange={handleTimeChange} className={errors.start_time ? styles.errorInput : styles.inputField} />
+                        <input type="datetime-local" name="start_time" value={tripDetails.start_time.replace(':00Z', '')} onChange={handleTimeChange} className={errors.start_time ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
                         End Time:
-                        <input type="datetime-local" name="end_time" value={tripDetails.end_time.slice(0, -1)} onChange={handleTimeChange} className={errors.end_time ? styles.errorInput : styles.inputField} />
+                        <input type="datetime-local" name="end_time" value={tripDetails.end_time.replace(':00Z', '')} onChange={handleTimeChange} className={errors.end_time ? styles.errorInput : styles.inputField} />
                     </label>
-                </div>
-                <div className={styles.flexRow}>
                     <label className={styles.fullWidth}>
                         Start Address:
                         <input type="text" value={startAddress} onChange={(e) => handleAddressChange(e, "start")} className={errors.start ? styles.errorInput : styles.inputField} />
@@ -127,14 +119,8 @@ function TripRequest() {
                         End Address:
                         <input type="text" value={endAddress} onChange={(e) => handleAddressChange(e, "end")} className={errors.end ? styles.errorInput : styles.inputField} />
                     </label>
-                </div>
-                <div className={styles.flexRow}>
-                    <label className={styles.fullWidth}>
-                        Seats Remaining:
-                        <input type="number" name="seats_remaining" value={tripDetails.seats_remaining} onChange={handleChange} className={errors.seats_remaining ? styles.errorInput : styles.inputField} />
-                    </label>
-                    <label className={styles.fullWidth}>
-                        Distance Addition (km):
+                    <label>
+                        Max Distance (km):
                         <input type="number" name="distance_addition" value={tripDetails.distance_addition} onChange={handleChange} className={errors.distance_addition ? styles.errorInput : styles.inputField} />
                     </label>
                 </div>
