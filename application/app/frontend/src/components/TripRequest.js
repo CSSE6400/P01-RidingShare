@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchCoordinates } from '../api/api';
 import styles from '../styles/TripRequest.module.css';
 import { UserContext } from './UserContext';
 
 function TripRequest() {
-    const { user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const [startAddress, setStartAddress] = useState('');
     const [endAddress, setEndAddress] = useState('');
     const [tripDetails, setTripDetails] = useState({
@@ -13,6 +14,7 @@ function TripRequest() {
         distance_addition: ""
     });
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -98,6 +100,12 @@ function TripRequest() {
         }
     };
 
+    const handleLogout = () => {
+        setUser(null);
+        localStorage.removeItem('user');
+        navigate('/');
+    };
+
     return (
         <div>
             <h1>Create Trip </h1>
@@ -126,6 +134,8 @@ function TripRequest() {
                 </div>
                 <button type="submit" className={styles.button}>Create Trip</button>
             </form>
+            <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
+            <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
         </div>
     );
 }

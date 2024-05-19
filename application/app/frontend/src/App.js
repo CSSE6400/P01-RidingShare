@@ -6,6 +6,8 @@ import LoginEmail from './components/loginEmail';
 import { UserProvider, UserContext } from './components/UserContext';
 import './App.css';
 import { useContext } from 'react';
+import  TripDetail  from './components/TripDetail'
+import  TripList  from './components/TripList'
 
 /**
  * App component - the main component of the application.
@@ -24,6 +26,16 @@ const App = () => {
               <TripRequest />
             </PrivateRoute>
           } />
+          <Route path="/trip-list" element={
+            <PrivateRoute userType="driver">
+              <TripList />
+            </PrivateRoute>
+          } />
+          <Route path="/trip/:tripId" element={
+            <PrivateRoute userType="driver">
+              <TripDetail />
+            </PrivateRoute>
+          } />
           <Route path="/passenger-page" element={
             <PrivateRoute userType="passenger">
               <PassengerManager />
@@ -37,7 +49,7 @@ const App = () => {
 
 const PrivateRoute = ({ children, userType }) => {
   const { user } = useContext(UserContext);
-
+    
   if (!user || user.user_type !== userType) {
     return <Navigate to="/" />;
   }

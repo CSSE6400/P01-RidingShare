@@ -6,7 +6,7 @@ import '../styles/LoginEmail.css';
 function LoginEmail() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user_type, setUserType] = useState('driver'); // Default user type
+  const [user_type, setUserType] = useState('driver'); 
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
@@ -33,11 +33,9 @@ function LoginEmail() {
         body: JSON.stringify({ username, password, user_type }) // Send the username, password, and userType
       });
       const data = await response.json();
-      console.log("got data");
       if (response.status === 200) {
         setUser({ username, user_type });
         if (user_type === 'driver') {
-          console.log("Driver");
           navigate('/trip-request');
         } else if (user_type === 'passenger') {
           navigate('/passenger-page');
