@@ -16,3 +16,39 @@ export const AddPassenger = async (post) => {
   });
   return response.json(); 
 };
+
+export const loginUser = async (body) => {
+  const url = "/profile"; 
+  try {
+      const response = await fetch(url, {
+          method: 'POST',  
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+          body: JSON.stringify(body) 
+      });
+      if (response.ok) {
+          return response.json();
+      } else {
+          throw new Error('Failed to login');
+      }
+  } catch (error) {
+      throw error;
+  }
+};
+
+export const fetchCoordinates = async (address) => {
+  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
+  const response = await fetch(url);
+  if (response.ok) {
+      const data = await response.json();
+      if (data.length > 0) {
+          return { latitude: parseFloat(data[0].lat), longitude: parseFloat(data[0].lon) };
+      } else {
+          console.log("No results found for the address.");
+      }
+  } else {
+      throw new Error("Failed to fetch coordinates.");
+  }
+};
