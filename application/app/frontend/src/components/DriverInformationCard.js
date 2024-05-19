@@ -1,5 +1,5 @@
 import React from 'react';
-import './DriverInformationCard.css';
+import '../styles/DriverInformationCard.css';
 
 const DriverInformationCard = ({ driversName, carRepoNo, estimatedPickupTime }) => {
   return (
