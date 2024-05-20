@@ -5,8 +5,6 @@ import PassengerManager from './components/PassengerManager';
 import LoginEmail from './components/loginEmail';
 import { UserProvider, UserContext } from './components/UserContext';
 import './App.css';
-import Login from './pages/login'
-import LoginEmail from './pages/loginEmail';
 import RideRequests from './components/RideRequests';
 import { useContext } from 'react';
 
@@ -33,9 +31,7 @@ const App = () => {
             </PrivateRoute>
           } />
           <Route path="/rides" element={
-            <PrivateRoute userType="passenger">
               <RideRequests />
-            </PrivateRoute>
           } />
         </Routes>
       </Router>

@@ -1,26 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import RiderCard from './RiderCard';
+import { getPendingTripRequests } from '../api/api';
+import { UserContext } from './UserContext';
 
-const riders = [
-  { id: 1, name: "Shristi Gupta", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-  { id: 2, name: "Mohamad Dabboussy", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-  { id: 2, name: "Bailey Stoodley", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-  { id: 2, name: "Henry Batt", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-  { id: 2, name: "Ferdi Sungkar", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-  { id: 2, name: "Khanh Vy", startingPoint: "201 Main Street", destination: "250 Ann Street" }
-];
+function RideRequests() {
+  const { user } = useContext(UserContext);
+  const [tripRequests, setTripRequests] = useState([]);
+  const [error, setError] = useState('');
 
-const RiderList = () => {
+  useEffect(() => {
+    const fetchTripRequests = async () => {
+      try {
+        const username = 'jDoe12';
+        const response = await getPendingTripRequests(username);
+
+        if (response && Array.isArray(response.trip_requests)) {
+          setTripRequests(response.trip_requests);
+        } else {
+          setError('Data received is not valid');
+          console.error('Data received is not an array:', response);
+        }
+      } catch (error) {
+        setError('Failed to fetch trip requests.');
+        console.error('Failed to fetch trip requests:', error);
+      }
+    };
+    fetchTripRequests();
+  }
+);
+
   return (
     <div>
       <h1>Available Ride Requests</h1>
       <div>
-        {riders.map(passenger => (
+        {tripRequests.map(tripRequest => (
           <RiderCard
-            key={passenger.id}
-            riderName={passenger.name}
-            startingPoint={passenger.startingPoint}
-            destination={passenger.destination}
+            key={tripRequest.id}
+            riderName={tripRequest.passenger_id}
+            startingPoint={tripRequest.pickup_location}
+            destination={tripRequest.dropoff_location}
           />
         ))}
       </div>
@@ -28,4 +46,4 @@ const RiderList = () => {
   );
 };
 
-export default RiderList;
+export default RideRequests;

@@ -52,3 +52,25 @@ export const fetchCoordinates = async (address) => {
       throw new Error("Failed to fetch coordinates.");
   }
 };
+
+
+export const getPendingTripRequests = async (username) => {
+  const url = "/trip_requests/get/pending";
+  try {
+      const response = await fetch(url, {
+          method: 'POST',  
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+          body: JSON.stringify({username}) 
+      });
+      if (response.ok) {
+          return response.json();
+      } else {
+          throw new Error('Failed to fetch pending trip requests');
+      }
+  } catch (error) {
+      throw error;
+  }
+};
