@@ -106,22 +106,118 @@ Consequences:
 Title: Simplification of MVP Features for Initial Launch
 Date: 26/04/2024
 Status: Superseded
-Summary: Due to time constraints, the MVP of the ride-sharing application will focus on core functionalities that can be quickly implemented and easily used on mobile devices via a web application.
+Summary:
+Due to time constraints, the MVP of the ride-sharing application will focus on core functionalities that can be quickly implemented and easily used on mobile devices via a web application.
 
-Context: The initial scope of the MVP included a number of advanced features such as dynamic cost calculations and a robust login system. However, considering the tight timeline and the goal to quickly validate the concept, it's been decided to simplify the feature set. This will allow the team to focus on the essential functionalities that provide immediate value while ensuring a quicker development cycle.
+Context:
+The initial scope of the MVP included a number of advanced features such as dynamic cost calculations and a robust login system. However, considering the tight timeline and the goal to quickly validate the concept, it's been decided to simplify the feature set. This will allow the team to focus on the essential functionalities that provide immediate value while ensuring a quicker development cycle.
 
-Decision: The MVP will:
+Decision:
+The MVP will:
 
--Exclude a separate website — The application will be developed solely as a mobile-responsive web application, accessible on any device with a browser, eliminating the need for separate desktop and mobile applications.
+Be developed solely as a mobile-responsive web application, accessible on any device with a browser. This approach eliminates the need for separate desktop and mobile applications.
 
--Simplify cost calculation — Instead of dynamic pricing, costs will be calculated using a fixed rate per kilometer, simplifying the backend complexity and reducing the initial development effort.
+Simplify cost calculation — Costs will be calculated using a fixed rate per kilometer, simplifying the backend complexity and reducing the initial development effort.
 
--Eliminate user accounts for MVP — There will be no login system; instead, users can switch between driver and passenger modes with a simple button, reducing barriers to initial use and simplifying the user interface.
+Include a user login system — To enhance user engagement and data collection, the MVP will feature a basic login system that allows users to switch between driver and passenger modes, supporting basic user profiles.
 
--Set a maximum ride distance — To further simplify operations and focus on a local test market, a maximum ride distance will be enforced.
+Set a maximum ride distance — To further simplify operations and focus on a local test market, a maximum ride distance will be enforced.
 
 Consequences:
 
--Positive: Faster development and launch of the MVP; reduced complexity in backend processing and user interface; easier scalability post-MVP as complexities can be incrementally added based on user feedback and system performance.
--Neutral: Potential limitations in user engagement and data collection due to the lack of user accounts and personalized experiences.
--Negative: Reduced functionality might limit the initial user experience and data insights; lack of dynamic pricing could impact profitability and market competitiveness; absence of a dedicated mobile app might reduce accessibility or performance on mobile devices.
+Positive: Faster development and launch of the MVP; reduced complexity in backend processing; easier scalability post-MVP as complexities can be incrementally added based on user feedback and system performance.
+
+Neutral: The inclusion of a user login enhances data collection capabilities but adds some development complexity.
+
+Negative: Reduced functionality might limit the initial user experience and data insights; lack of dynamic pricing could impact profitability and market competitiveness; absence of a dedicated mobile app might reduce accessibility or performance on mobile devices.
+-----------------------------------------------------------------------------------------------------------------------------
+Title: Use Leaflet for Interactive Maps
+Date: 1/05/2024
+Status: Accepted
+
+Context: The application requires an interactive map that allows users to view and interact with geographical data. The solution must be lightweight, easy to integrate with our existing web technologies, and cost-effective.
+
+Decision: We have decided to use Leaflet, an open-source JavaScript library for mobile-friendly interactive maps. Leaflet is well-documented, supports numerous plugins, and is compatible with both desktop and mobile platforms.
+
+Consequences:
+
+Benefits:
+Leaflet’s simplicity and performance are suitable for our project’s requirements.
+It has a robust community and extensive plugins which can extend its capabilities.
+It is cost-effective as it has no licensing fees.
+Drawbacks:
+Leaflet may require additional plugins or custom development to match the functionality of more comprehensive libraries like Google Maps.
+Limited support for 3D terrain features, which may be a consideration for future enhancements.
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Title: Adoption of Nominatim API for Geocoding 
+Date: 1/05/2024
+Status: Accepted
+
+Summary:
+This ADR outlines the decision to integrate the Nominatim API for geocoding services in our ride-sharing application to convert addresses into geographic coordinates and vice versa, thus enhancing location accuracy and improving route optimization.
+
+Context:
+Accurate geocoding is crucial for the functioning of ride-sharing applications, as it affects route planning, ETA calculations, and the overall user experience. Geocoding transforms user-input addresses into precise geographic coordinates and is essential for mapping and navigation features within the application.
+
+Decision:
+We will integrate the Nominatim API to handle geocoding functionalities within our ride-sharing application. This decision is based on the need for reliable and efficient geocoding capabilities that are cost-effective and easy to implement.
+
+Rationale for Not Self-Hosting:
+While self-hosting a geocoding service like Nominatim offers complete control over the geocoding process and data, it requires significant resources for setup, maintenance, and updates. For a university project or a small-scale application, this approach is not practical due to:
+
+High setup and maintenance costs.
+Complexity in managing and updating geographic data.
+Requirement for robust server infrastructure to handle potentially high query volumes.
+Considering these factors, using the Nominatim API, which simplifies the geocoding process by managing these complexities on our behalf, is more appropriate.
+
+Consequences:
+
+Positive:
+Quick and easy integration with minimal setup time.
+Access to continually updated and accurate OpenStreetMap data without the need for direct management.
+Reduced costs and resource requirements compared to self-hosting.
+
+Neutral:
+Dependence on external service availability and performance, which could affect service reliability.
+Potential future need to revise API usage policies if usage limits are exceeded or if project scales significantly.
+
+Negative:
+Limited control over the data processing and update frequency, which could result in slightly less customization capability.
+Potential latency issues due to reliance on external servers, especially during high traffic.
+--------------------------------------------------------------------------------------------------------------------
+Title: Adoption of PostGIS for Geospatial Data Management 
+Date: 1/05/2024
+Status: Accepted
+
+Summary:
+This ADR documents the decision to use PostGIS as the geospatial data management system for storing and manipulating geographic data, including latitude and longitude coordinates, within our ride-sharing application.
+
+Context:
+The ability to efficiently store, retrieve, and perform calculations on geospatial data is fundamental for the functionality of ride-sharing services. This includes optimizing routes, calculating distances, and providing accurate ETA predictions. The choice of a geospatial database is critical to support these features effectively.
+
+Decision:
+After evaluating various options, we have decided to use PostGIS, an extension of the PostgreSQL relational database, that adds support for geographic objects. This decision is driven by PostGIS's robust functionality in handling geospatial data and its capacity to perform complex geospatial queries efficiently.
+
+Rationale:
+PostGIS offers several advantages that make it suitable for our needs:
+
+Advanced Geospatial Functionality: PostGIS provides extensive support for spatial functions and operators, including distance calculations, area, length, and perimeter determination, and more complex geographic queries that are essential for our application.
+Performance: PostGIS has a proven track record of high performance in geospatial data handling, which is vital for the real-time demands of a ride-sharing application.
+Integration: Being an extension of PostgreSQL, PostGIS seamlessly integrates with existing PostgreSQL databases, allowing us to manage both spatial and non-spatial data in a unified environment.
+Community and Support: PostGIS enjoys strong community support and is widely used in both academic and industry settings, ensuring good documentation and continual updates.
+
+Consequences:
+
+Positive:
+Enhanced capabilities in geospatial data handling which enable precise and efficient routing and location services.
+Scalability with robust support for complex queries and large datasets, facilitating future growth of the application.
+Consistency and reliability in data handling and query execution.
+
+Neutral:
+Requires additional setup and maintenance within our PostgreSQL database environment.
+Dependence on community support and updates for new features and optimizations.
+
+Negative:
+Potentially higher learning curve for developers not familiar with geospatial databases.
+Increased complexity in database management due to the advanced features and functions of PostGIS.
