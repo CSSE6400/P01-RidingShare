@@ -20,7 +20,6 @@ class Trip(db.Model):
     end_address = db.Column(db.String, nullable=False)
 
     status = db.Column(db.String, default=TripState.PENDING)  # Matched, Ongoing, Completed, Cancelled, Pending
-    time_addition = db.Column(db.Integer, nullable=True)
     distance_addition = db.Column(db.Integer, nullable=True)
 
     driver = db.relationship("Driver", backref=db.backref("trip", lazy=True))

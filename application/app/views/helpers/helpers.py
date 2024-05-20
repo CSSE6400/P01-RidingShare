@@ -6,6 +6,8 @@ from models.passenger import Passenger
 from models.trip_request import TripRequest
 from datetime import datetime
 from math import radians, sin, cos, sqrt, atan2
+from geoalchemy2 import Geometry
+from geoalchemy2.shape import to_shape
 
 def get_user_from_username(username) -> User:
 	return db.session.execute(db.select(User).filter_by(username=username)).scalars().first()
@@ -83,12 +85,16 @@ def haversine(lon1, lat1, lon2, lat2):
 def distance_query(set_long, set_lat, distance):
 	nearby_requests = []
 	## Only search for PENDING to reduce search space
-	trip_requests = db.session.execute(db.select(TripRequest).filter_by(status=PENDING)).scalars().all() 
+	trip_requests = db.session.execute(db.select(TripRequest).filter_by(status='PENDING').order_by(TripRequest.requested_time)).scalars().all() 
 
 	for request in trip_requests:
-		pickup_lon, pickup_lat = request.pickup_location.coords[0]  # Extract longitude and latitude
+		start_point = to_shape(request.pickup_location)
+		end_point = to_shape(request.dropoff_location)
+
 		# Calculate distance between set point and pickup location of the request
-		dist = haversine(set_long, set_lat, pickup_lon, pickup_lat)
-		if dist <= distance:
+		dist = haversine(start_point.x, start_point.y, set_long, set_lat)
+		
+		if abs(dist) <= distance:
 			nearby_requests.append(request)
-	return nearby_requests
+
+	return [trip.to_dict() for trip in trip_requests]
