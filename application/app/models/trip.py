@@ -16,6 +16,8 @@ class Trip(db.Model):
     
     start_location = db.Column(Geometry("POINT"), nullable=False) # LONG LAT FORMAT
     end_location = db.Column(Geometry("POINT"), nullable=False)
+    start_address = db.Column(db.String, nullable=False)
+    end_address = db.Column(db.String, nullable=False)
 
     status = db.Column(db.String, default=TripState.PENDING)  # Matched, Ongoing, Completed, Cancelled, Pending
     time_addition = db.Column(db.Integer, nullable=True)
@@ -41,6 +43,8 @@ class Trip(db.Model):
             "end_time": cast_datetime(self.end_time),
             "start_location": {"latitude": start_point.y, "longitude": start_point.x},
             "end_location": {"latitude": end_point.y, "longitude": end_point.x},
+            "start_address": self.start_address, 
+            "end_address": self.end_address, 
             "status": self.status,
             "distance_addition": self.distance_addition,
             "driver_id": self.driver_id,

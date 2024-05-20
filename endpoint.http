@@ -5,7 +5,7 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "jDoe11",
+  "username": "jDoe12",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
@@ -43,8 +43,8 @@ Content-Type: application/json
   "username": "jDoe12",
   "start_time": "2024-05-10T08:00:00Z",
   "end_time": "2024-05-10T10:00:00Z",
-  "start_location": {"latitude": 37.7749, "longitude": -122.4194},
-  "end_location": {"latitude": 37.7749, "longitude": -122.4194},
+  "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+  "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
   "distance_addition": 10
 }
@@ -57,8 +57,8 @@ Content-Type: application/json
   "username": "jDoe12",
   "start_time": "2024-05-10T11:00:00Z",
   "end_time": "2024-05-10T12:00:00Z",
-  "start_location": {"latitude": 37.7749, "longitude": -122.4194},
-  "end_location": {"latitude": 37.7749, "longitude": -122.4194},
+  "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+  "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
   "distance_addition": 10
 }
@@ -86,8 +86,8 @@ Content-Type: application/json
 {
     "username": "jDoe12",
     "requested_time": "2024-05-10T08:00:00",
-    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194},
-    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194},
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
     "pickup_window_start": "2024-05-10T07:30:00",
     "pickup_window_end": "2024-05-10T08:00:00"
 }

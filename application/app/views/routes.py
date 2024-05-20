@@ -170,6 +170,8 @@ class CreateTrip(Resource):
             end_time=contents.get("end_time"),
             start_location=f'Point({start_location.get("longitude")} {start_location.get("latitude")})',
             end_location=f'Point({end_location.get("longitude")} {end_location.get("latitude")})',
+            start_address = start_location.get("address"),
+            end_address = end_location.get("address"),
             seats_remaining=seats_available,
             distance_addition=contents.get("distance_addition"),
             driver=driver,
@@ -200,6 +202,8 @@ class CreateTripRequest(Resource):
         new_trip_request = TripRequest(
             passenger_id=passenger_id,
             passenger=passenger,
+            start_address = pickup_location.get("address"),
+            end_address = dropoff_location.get("address"),
             requested_time=contents.get("requested_time"),
             pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
             dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
