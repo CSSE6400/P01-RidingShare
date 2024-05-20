@@ -8,6 +8,7 @@ import './App.css';
 import { useContext } from 'react';
 import  TripDetail  from './components/TripDetail'
 import  TripList  from './components/TripList'
+import SimpleMap from './components/Map';
 
 /**
  * App component - the main component of the application.
@@ -24,6 +25,11 @@ const App = () => {
           <Route path="/trip-request" element={
             <PrivateRoute userType="driver">
               <TripRequest />
+            </PrivateRoute>
+          } />
+          <Route path="/map" element={
+            <PrivateRoute userType="driver">
+              <SimpleMap />
             </PrivateRoute>
           } />
           <Route path="/trip-list" element={
