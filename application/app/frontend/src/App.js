@@ -48,7 +48,7 @@ const App = () => {
               <PassengerManager />
             </PrivateRoute>
           } />
-          <Route path="/rides" element={
+          <Route path="/rides/:tripId" element={
               <RideRequests />
           } />
         </Routes>

@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useContext } from 'react';
 import RiderCard from './RiderCard';
-import { getPendingTripRequests } from '../api/api';
+import { getNearbyTripRequests } from '../api/api';
 import { UserContext } from './UserContext';
+import { useParams } from 'react-router-dom';
 
 function RideRequests() {
   const { user } = useContext(UserContext);
+  const username = user.username;
+  const { tripId } = useParams();
   const [tripRequests, setTripRequests] = useState([]);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchTripRequests = async () => {
       try {
-        const username = 'jDoe12';
-        const response = await getPendingTripRequests(username);
+        const response = await getNearbyTripRequests(tripId, username);
 
-        if (response && Array.isArray(response.trip_requests)) {
-          setTripRequests(response.trip_requests);
+        if (response && Array.isArray(response)) {
+          setTripRequests(response);
         } else {
           setError('Data received is not valid');
           console.error('Data received is not an array:', response);
@@ -26,21 +28,24 @@ function RideRequests() {
       }
     };
     fetchTripRequests();
-  }
-);
+  }, [tripId, username]);
 
   return (
     <div>
       <h1>Available Ride Requests</h1>
       <div>
-        {tripRequests.map(tripRequest => (
+        {tripRequests.length > 0 ? (
+          tripRequests.map(tripRequest => (
           <RiderCard
             key={tripRequest.id}
-            riderName={tripRequest.passenger_id}
-            startingPoint={tripRequest.pickup_location}
-            destination={tripRequest.dropoff_location}
+            riderName={tripRequest.passenger_name}
+            startingPoint={tripRequest.start_address}
+            destination={tripRequest.end_address}
           />
-        ))}
+        ))
+      ) : (
+          <p>No ride requests available.</p>
+        )}
       </div>
     </div>
   );
