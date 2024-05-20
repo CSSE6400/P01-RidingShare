@@ -80,7 +80,7 @@ def haversine(lon1, lat1, lon2, lat2):
 	distance = radius_earth_km * c
 	return distance
 
-def distance_query(set_long, set_lat, distance, trip_requests):
+def distance_query(set_long, set_lat, distance):
 	nearby_requests = []
 	## Only search for PENDING to reduce search space
 	trip_requests = db.session.execute(db.select(TripRequest).filter_by(status=PENDING)).scalars().all() 

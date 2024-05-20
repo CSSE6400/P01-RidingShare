@@ -39,7 +39,8 @@ class TripRequest(db.Model):
             "window_end_time": cast_datetime(self.window_end_time),
             "status": self.status,
             "passenger_id": self.passenger_id,
-            "trip_id": self.trip_id
+            "trip_id": self.trip_id,
+            "passenger_name": self.passenger.user[0].name
         }
 
 
