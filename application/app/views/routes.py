@@ -135,11 +135,25 @@ class CreatePassenger(Resource):
 class GetUser(Resource):
     def post(self):
         contents = get_user_details_parser.parse_args()
+        
         user = get_user_from_username(contents.get("username"))
         if user == None or user.password != contents.get("password"):
             return make_response({"error": "That user does not exist or has incorrect password"}, 301)
-        else:
-            return make_response(user.to_dict(), 200)
+       
+        user_type = contents.get("user_type")
+        if user_type not in ["driver", "passenger"]:
+            return make_response({"error": "user_type must be provided and be either 'driver' or 'passenger'"}, 400)
+            
+        if user_type == "driver":
+            driver_id = get_driver_id_from_username(contents.get("username"))
+            if driver_id is None:
+                return make_response({"error": "Driver does not exist"}, 404)
+        elif user_type == "passenger":
+            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            if passenger_id is None:
+                return make_response({"error": "Passenger does not exist"}, 404)
+
+        return make_response(user.to_dict(), 200)
 
 
 class CreateTrip(Resource):

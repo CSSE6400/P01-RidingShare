@@ -1,20 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from './UserContext';
 import '../styles/LoginEmail.css';
 
 function LoginEmail() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [user_type, setUserType] = useState('driver'); 
   const navigate = useNavigate();
-  const location = useLocation();
-  const userType = location.state?.userType;
-
-  useEffect(() => {
-    if (!userType) {
-      alert('User type is not specified!');
-      navigate('/login');
-    }
-  }, [userType, navigate]);
+  const { setUser } = useContext(UserContext);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -22,6 +16,10 @@ function LoginEmail() {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+
+  const handleUserTypeChange = (event) => {
+    setUserType(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -32,11 +30,16 @@ function LoginEmail() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password })  // Send the username and password
+        body: JSON.stringify({ username, password, user_type }) // Send the username, password, and userType
       });
       const data = await response.json();
       if (response.status === 200) {
-        navigate('/login');
+        setUser({ username, user_type });
+        if (user_type === 'driver') {
+          navigate('/trip-request');
+        } else if (user_type === 'passenger') {
+          navigate('/passenger-page');
+        }
       } else {
         alert(data.error);
       }
@@ -48,7 +51,7 @@ function LoginEmail() {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit}>
-        <h2>Login as {userType}</h2>
+        <h2>Login</h2>
         <div>
           <label>Username<br></br></label>
           <input 
@@ -68,6 +71,13 @@ function LoginEmail() {
             placeholder="Please input your password here..."
             required
           />
+        </div>
+        <div>
+          <label>User Type<br></br></label>
+          <select value={user_type} onChange={handleUserTypeChange} required>
+            <option value="driver">Driver</option>
+            <option value="passenger">Passenger</option>
+          </select>
         </div>
         <button type="submit">Log In</button>
       </form>

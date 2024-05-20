@@ -56,6 +56,7 @@ def create_app(config_overrides=None):
 
     return app
 
+    
 
 def celery_init_app(app: Flask) -> Celery:
 	class FlaskTask(Task):
