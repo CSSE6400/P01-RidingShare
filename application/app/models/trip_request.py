@@ -12,6 +12,8 @@ class TripRequest(db.Model):
 
     pickup_location = db.Column(Geometry("POINT"), nullable=False) # LONG LAT FORMAT
     dropoff_location = db.Column(Geometry("POINT"), nullable=False)
+    start_address = db.Column(db.String, nullable=False)
+    end_address = db.Column(db.String, nullable=False)
 
     ## Added DateTime possibilities for a window of opportunities
     requested_time = db.Column(db.DateTime, nullable=False, default=get_current_datetime)
@@ -34,14 +36,16 @@ class TripRequest(db.Model):
             "id": self.id,
             "pickup_location": {"latitude": start_point.y, "longitude": start_point.x},
             "dropoff_location": {"latitude": end_point.y, "longitude": end_point.x},
+            "start_address": self.start_address, 
+            "end_address": self.end_address, 
             "requested_time": cast_datetime(self.requested_time),
             "window_start_time": cast_datetime(self.window_start_time),
             "window_end_time": cast_datetime(self.window_end_time),
             "status": self.status,
             "passenger_id": self.passenger_id,
-            "trip_id": self.trip_id
+            "trip_id": self.trip_id,
+            "passenger_name": self.passenger.user[0].name
         }
-
 
     def __repr__(self):
         return f"<TripRequest {self.id}>"

@@ -271,4 +271,4 @@ fabric.properties
 
 .DS_Store
 
-application/data
+application/data/
