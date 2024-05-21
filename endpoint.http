@@ -5,7 +5,7 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "jDoe11",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
@@ -86,7 +86,6 @@ Content-Type: application/json
 
 {
     "username": "jDoe12",
-    "requested_time": "2024-05-10T08:00:00",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
     "pickup_window_start": "2024-05-10T07:30:00",

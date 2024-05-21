@@ -75,8 +75,8 @@ function TripRequest() {
             const tripData = {
                 ...tripDetails,
                 username: user.username,
-                start_location: startCoords,
-                end_location: endCoords
+                start_location: {...startCoords,"address": startAddress},
+                end_location: {...endCoords, "address": endAddress}
             };
 
             const url = "/trip/create";
@@ -135,7 +135,8 @@ function TripRequest() {
                 <button type="submit" className={styles.button}>Create Trip</button>
             </form>
             <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
-            <button onClick={handleLogout} className={styles.logoutButton}>Logout</button>
+            <button onClick={() => navigate('/map')} className={styles.blueButton}>Show Map</button>
+            <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
         </div>
     );
 }
