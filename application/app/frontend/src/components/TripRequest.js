@@ -75,8 +75,8 @@ function TripRequest() {
             const tripData = {
                 ...tripDetails,
                 username: user.username,
-                start_location: startCoords,
-                end_location: endCoords
+                start_location: {...startCoords,"address": startAddress},
+                end_location: {...endCoords, "address": endAddress}
             };
 
             const url = "/trip/create";

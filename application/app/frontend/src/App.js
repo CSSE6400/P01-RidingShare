@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import TripRequest from './components/TripRequest';
-import PassengerManager from './components/PassengerManager';
 import LoginEmail from './components/loginEmail';
 import { UserProvider, UserContext } from './components/UserContext';
 import './App.css';
@@ -9,6 +8,7 @@ import { useContext } from 'react';
 import  TripDetail  from './components/TripDetail'
 import  TripList  from './components/TripList'
 import SimpleMap from './components/Map';
+import RideRequest from './components/RideRequest';
 
 /**
  * App component - the main component of the application.
@@ -42,9 +42,9 @@ const App = () => {
               <TripDetail />
             </PrivateRoute>
           } />
-          <Route path="/passenger-page" element={
+          <Route path="/ride-request" element={
             <PrivateRoute userType="passenger">
-              <PassengerManager />
+              <RideRequest />
             </PrivateRoute>
           } />
         </Routes>
