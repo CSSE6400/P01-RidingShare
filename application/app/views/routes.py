@@ -8,15 +8,23 @@ from models.trip_request import TripRequest
 from models.trip import Trip
 from models.user import User
 from datetime import datetime
+from geoalchemy2 import Geometry
+from geoalchemy2.shape import to_shape
 
 from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
-from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger
+from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger, distance_query
+
+from tasks.matching import run_request_matching, run_trip_matching
+
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
+
+
 class Health(Resource):
-	def get(self):
-		return make_response({"status": "ok"})
+    def get(self):
+        return make_response({"status": "ok"})
+
 
 class PassengerResource(Resource):
     def post(self):
@@ -38,6 +46,7 @@ class PassengerResource(Resource):
             return make_response(jsonify(new_passenger.to_dict()), 201)
         except Exception as e:
             return make_response(str(e), 404)
+
 
 class PassengerListResource(Resource):
     def post(self):
@@ -62,7 +71,6 @@ class UserExistenceResource(Resource):
 
 
 class CreateDriver(Resource):
-
     def post(self):
         contents = create_driver_parser.parse_args()
 
@@ -96,8 +104,8 @@ class CreateDriver(Resource):
         elif user.driver != None:
             return make_response("User account is already a driver", 202)
 
-class CreatePassenger(Resource):
 
+class CreatePassenger(Resource):
     def post(self):
         contents = create_passenger_parser.parse_args()
                
@@ -122,7 +130,8 @@ class CreatePassenger(Resource):
 
         elif user.passenger != None:
             return make_response("User account is already a passenger", 202)
-    
+
+
 class GetUser(Resource):
     def post(self):
         contents = get_user_details_parser.parse_args()
@@ -177,6 +186,8 @@ class CreateTrip(Resource):
             end_time=contents.get("end_time"),
             start_location=f'Point({start_location.get("longitude")} {start_location.get("latitude")})',
             end_location=f'Point({end_location.get("longitude")} {end_location.get("latitude")})',
+            start_address = start_location.get("address"),
+            end_address = end_location.get("address"),
             seats_remaining=seats_available,
             distance_addition=contents.get("distance_addition"),
             driver=driver,
@@ -186,6 +197,7 @@ class CreateTrip(Resource):
         db.session.add(new_trip)
         db.session.commit()
         return make_response(new_trip.to_dict(), 201)
+
 
 class CreateTripRequest(Resource):
     def post(self):
@@ -203,10 +215,11 @@ class CreateTripRequest(Resource):
         if conflicting:
             return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
 
-
         new_trip_request = TripRequest(
             passenger_id=passenger_id,
             passenger=passenger,
+            start_address = pickup_location.get("address"),
+            end_address = dropoff_location.get("address"),
             requested_time=contents.get("requested_time"),
             pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
             dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
@@ -218,6 +231,7 @@ class CreateTripRequest(Resource):
         db.session.commit()
 
         return make_response(new_trip_request.to_dict(), 201)
+
 
 class GetAllTrips(Resource):
     def post(self):
@@ -231,6 +245,7 @@ class GetAllTrips(Resource):
         else:
             return make_response("There is no driver under this username.", 400)
 
+
 class GetPendingTrips(Resource):
     def post(self):
         contents = get_user_parser.parse_args()
@@ -242,6 +257,7 @@ class GetPendingTrips(Resource):
             return make_response({"trips": trips_data}, 200)
         else:
             return make_response("There is no driver under this username.", 400)
+
 
 class GetAllTripRequests(Resource):
     def post(self):
@@ -255,6 +271,7 @@ class GetAllTripRequests(Resource):
         else:
             return make_response("There is no passenger under this username.", 400)
 
+
 class GetPendingTripRequests(Resource):
         def post(self):
             contents = get_user_parser.parse_args()
@@ -267,12 +284,27 @@ class GetPendingTripRequests(Resource):
             else:
                 return make_response("There is no passenger under this username.", 400)
 
+
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
             user = (contents.get("username"))
-            passenger_id = get_passenger_id_from_username(contents.get("username"))            
-            return make_response(f"This is yet to be implemented Passenger ID {user}", 401)
+            driver_id = get_driver_id_from_username(contents.get("username"))   
+            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+            if trip is None:
+               return make_response("There is no trip under this ID.", 400)
+            start_point = to_shape(trip.start_location)
+            willing_distance_to_travel = trip.seats_remaining 
+            if trip.seats_remaining is not None: 
+                if trip.seats_remaining == 0:
+                    return make_response([], 200)
+                willing_distance_to_travel = trip.distance_addition / trip.seats_remaining 
+            else: 
+                willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
+            
+            choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel)
+            return make_response(choices, 200)
+
 
 class GetApprovedTripRequests(Resource):
         def post(self):
@@ -283,6 +315,7 @@ class GetApprovedTripRequests(Resource):
             else:
                 return make_response("There is no driver under this username.", 400)
 
+
 class ApproveRequest(Resource):
         def post(self):
             contents = approve_requests_parser.parse_args()
@@ -292,12 +325,25 @@ class ApproveRequest(Resource):
                 trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().all()
                 trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().all()
                 if trip_query and trip_request_query:
+                    if trip_query.seats_remaining is not None: 
+                        seats =  trip_query.seats_remaining 
+                    else:
+                        seats = trip_query.driver.car.max_available_seats
+
                     return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+
+                    
+
                 else:
                     return make_response("This is no longer a trip request or trip.", 400)
 
             else:
                 return make_response(f"There is no driver under the username: {username}", 400)
+
+class Test(Resource):
+    def get(self):
+        result = distance_query( -123.4194, 37.7749, 90)
+        return make_response(f"distance = {result}", 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
@@ -313,3 +359,4 @@ api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approved")
+api.add_resource(Test, "/test")
