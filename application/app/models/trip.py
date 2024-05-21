@@ -26,7 +26,7 @@ class Trip(db.Model):
     driver_id = db.Column(db.String, db.ForeignKey("driver.id"), nullable=False)
     seats_remaining = db.Column(db.Integer, nullable=False)
 
-    trip_requests = db.relationship("TripRequest", back_populates="trip")
+    trip_requests = db.relationship("TripRequest", backref=db.backref("trip", lazy=True), uselist=True)
         
     def __repr__(self):
         return f"<Trip {self.id}>"

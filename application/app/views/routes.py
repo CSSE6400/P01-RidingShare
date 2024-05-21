@@ -322,17 +322,19 @@ class ApproveRequest(Resource):
             username = contents.get("username")
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
-                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().all()
-                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().all()
+                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().first()
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query and trip_request_query:
                     if trip_query.seats_remaining is not None: 
                         seats =  trip_query.seats_remaining 
                     else:
                         seats = trip_query.driver.car.max_available_seats
-
-                    return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
-
-                    
+                    if len(trip_query.trip_requests) < seats:
+                        trip_query.trip_requests.append(trip_query)
+                        db.session.commit()
+                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                    else:
+                        return make_response("Your current trip is full.", 400)
 
                 else:
                     return make_response("This is no longer a trip request or trip.", 400)
