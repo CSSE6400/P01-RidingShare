@@ -12,7 +12,7 @@ from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 
 from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
-from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger, distance_query
+from .helpers.helpers import *
 
 from tasks.matching import run_request_matching, run_trip_matching
 
@@ -345,7 +345,14 @@ class ApproveRequest(Resource):
 class Test(Resource):
     def get(self):
         result = distance_query( -123.4194, 37.7749, 90)
-        return make_response(f"distance = {result}", 200)
+
+        worked = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "735eb991-1c24-4108-896d-0f08c32eb226")
+        worked2 = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "50eb1230-8e50-4ec9-93ac-179121c254a1")
+
+        trip = db.session.execute(db.select(Trip).filter_by(id="a5cade10-3b8b-4ff2-80db-eab01946e4c8")).scalars().first()
+
+        return make_response("Num trip requests" + str(len(trip.trip_requests)), 205)
+        # return make_response(f"distance = {result}", 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
