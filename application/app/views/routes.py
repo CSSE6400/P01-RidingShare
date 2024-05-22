@@ -308,10 +308,16 @@ class GetNearbyTripRequests(Resource):
 
 class GetApprovedTripRequests(Resource):
         def post(self):
-            contents = get_user_parser.parse_args()
+            contents = nearby_trip_requests_parser.parse_args()
             driver_id = get_driver_id_from_username(contents.get("username"))
+            trip_id = contents.get("trip_id")
             if driver_id:
-                return make_response(f"Hurray your driver exists ! This functionality is still in progress driver id: {driver_id}", 200)
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+                if trip_query:
+                    ans = [trip.id for trip in trip_query.trip_requests]
+                    return make_response(f"Accepted trip requests are: {ans}", 200)
+                else:
+                    return make_response(f"This is not a valid trip id.", 400)
             else:
                 return make_response("There is no driver under this username.", 400)
 
@@ -329,9 +335,9 @@ class ApproveRequest(Resource):
                         seats =  trip_query.seats_remaining 
                     else:
                         seats = trip_query.driver.car.max_available_seats
+
                     if len(trip_query.trip_requests) < seats:
-                        trip_query.trip_requests.append(trip_query)
-                        db.session.commit()
+                        link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
                         return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
                     else:
                         return make_response("Your current trip is full.", 400)
