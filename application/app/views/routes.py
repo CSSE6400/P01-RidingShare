@@ -11,7 +11,7 @@ from datetime import datetime
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy import update
-from models.states_types import TripRequestState
+from models.states_types import TripRequestState, TripState
 
 
 from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
@@ -344,6 +344,11 @@ class ApproveRequest(Resource):
                         trip_request_query.status = TripRequestState.MATCHED
                         db.session.commit()
                         link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
+
+                        if len(trip_query.trip_requests) == seats:
+                            trip_query.status = TripState.MATCHED
+                            db.session.commit()
+
                         return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
                     else:
                         return make_response("Your current trip is full.", 400)
