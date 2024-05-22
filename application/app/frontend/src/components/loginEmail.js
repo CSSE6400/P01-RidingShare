@@ -38,7 +38,7 @@ function LoginEmail() {
         if (user_type === 'driver') {
           navigate('/trip-request');
         } else if (user_type === 'passenger') {
-          navigate('/passenger-page');
+          navigate('/ride-request');
         }
       } else {
         alert(data.error);

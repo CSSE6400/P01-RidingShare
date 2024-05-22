@@ -223,7 +223,6 @@ class CreateTripRequest(Resource):
             passenger=passenger,
             start_address = pickup_location.get("address"),
             end_address = dropoff_location.get("address"),
-            requested_time=contents.get("requested_time"),
             pickup_location=f'Point({pickup_location.get("longitude")} {pickup_location.get("latitude")})',
             dropoff_location=f'Point({dropoff_location.get("longitude")} {dropoff_location.get("latitude")})',
             window_start_time=contents.get("pickup_window_start"),
