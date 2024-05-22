@@ -349,15 +349,15 @@ class ApproveRequest(Resource):
                             trip_query.status = TripState.MATCHED
                             db.session.commit()
 
-                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
                     else:
-                        return make_response("Your current trip is full.", 400)
+                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
                 else:
-                    return make_response("This is no longer a trip request or trip.", 400)
+                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
 
             else:
-                return make_response(f"There is no driver under the username: {username}", 400)
+                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
 
 class Test(Resource):
     def get(self):

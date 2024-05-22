@@ -95,3 +95,26 @@ export const getNearbyTripRequests = async (tripId, username) => {
         throw error;
     }
   };
+
+  export const approveRequest = async (username, tripRequestId, tripId) => {
+    const url = "/trip/post/approved";
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, trip_request_id: tripRequestId, trip_id: tripId }),
+        });
+        if (response.ok) {
+            return await response.json();
+        } else {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+    } catch (error) {
+        console.error('Error approving trip request:', error);
+        throw error;
+    }
+};

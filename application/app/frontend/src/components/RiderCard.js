@@ -3,7 +3,7 @@ import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import '../styles/RiderCard.css';
 
-const RiderCard = ({ riderName, startingPoint, destination }) => {
+const RiderCard = ({ riderName, startingPoint, destination, onApprove }) => {
   return (
     <div className="rider-card">
       <div className="rider-info">
@@ -15,7 +15,7 @@ const RiderCard = ({ riderName, startingPoint, destination }) => {
         <button className="decline">
           <CloseRoundedIcon style={{ color: 'red' }} />
         </button>
-        <button className="approve">
+        <button className="approve" onClick={onApprove}>
           <DoneRoundedIcon style={{ color: 'green' }} />
         </button>
       </div>
