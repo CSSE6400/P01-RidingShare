@@ -141,7 +141,7 @@ Content-Type: application/json
   "username": "jDoe12"
 }
 
-### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
+### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
 POST {{baseUrl}}/trip/post/approved
 Content-Type: application/json
 

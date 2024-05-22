@@ -71,14 +71,13 @@ def haversine(lon1, lat1, lon2, lat2):
 	Calculate the great-circle distance between two points
 	on the Earth's surface using the Haversine formula.
 	"""
-	# Convert coordinates from degrees to radians
 	lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
 	dlon = lon2 - lon1
 	dlat = lat2 - lat1
 	a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
 	c = 2 * atan2(sqrt(a), sqrt(1-a))
-	radius_earth_km = 6371.0  # Radius of the Earth in kilometers
+	radius_earth_km = 6371.0 
 	distance = radius_earth_km * c
 	return distance
 

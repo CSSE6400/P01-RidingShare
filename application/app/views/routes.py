@@ -10,6 +10,9 @@ from models.user import User
 from datetime import datetime
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
+from sqlalchemy import update
+from models.states_types import TripRequestState
+
 
 from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
 from .helpers.helpers import *
@@ -326,6 +329,7 @@ class ApproveRequest(Resource):
         def post(self):
             contents = approve_requests_parser.parse_args()
             username = contents.get("username")
+            trip_req_id = contents.get("trip_request_id")
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
                 trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().first()
@@ -337,6 +341,8 @@ class ApproveRequest(Resource):
                         seats = trip_query.driver.car.max_available_seats
 
                     if len(trip_query.trip_requests) < seats:
+                        trip_request_query.status = TripRequestState.MATCHED
+                        db.session.commit()
                         link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
                         return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
                     else:
