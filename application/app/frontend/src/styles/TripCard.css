@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .container {
     display: flex;
     justify-content: flex-start;
@@ -5,12 +6,30 @@
     overflow-x: scroll;
 }
 
+=======
+>>>>>>> 786be36703e1866cf2b5a22740775489c7adb965
 .trip-card {
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 16px;
+<<<<<<< HEAD
     margin: 10px;
     width: 300px;
     display: inline-block;
     vertical-align: top;
 }
+=======
+    margin: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+  }
+  
+  .trip-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .trip-card h3 {
+    margin-top: 0;
+  }
+  
+>>>>>>> 786be36703e1866cf2b5a22740775489c7adb965
