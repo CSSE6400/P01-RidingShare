@@ -69,7 +69,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-  "username": "jDoe12"
+  "username": "jDoe11"
 }
 
 ### Get all PENDING trips for a user
@@ -128,8 +128,8 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
-  "username": "jDoe12"
+  "trip_id": "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb",
+  "username": "jDoe11"
 }
 
 ### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)
@@ -137,8 +137,8 @@ POST {{baseUrl}}/trip/get/approved
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
-  "username": "jDoe12"
+  "trip_id": "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb",
+  "username": "jDoe11"
 }
 
 ### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
@@ -146,9 +146,9 @@ POST {{baseUrl}}/trip/post/approved
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
-  "trip_request_id": "0789e17c-0b53-4d1f-ba91-c381b28ef9dd",
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
+  "username": "jDoe11",
+  "trip_request_id": "558e79cc-81e0-47a2-99ba-0db62be73abf",
+  "trip_id": "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb"
 }
 
 ### GET THE TEST
