@@ -21,8 +21,8 @@ const TripCard = ({ trip }) => {
         <p>Driver ID: {trip.driver_id}</p>
         <p>Status: {trip.status}</p>
         <p>Seats Remaining: {trip.seats_remaining}</p>
-        <p>Start Location: ({trip.start_location.latitude}, {trip.start_location.longitude})</p>
-        <p>End Location: ({trip.end_location.latitude}, {trip.end_location.longitude})</p>
+        <p>Start Location: {trip.start_address}</p>
+        <p>End Location: {trip.end_address}</p>
         <p>Start Time: {new Date(trip.start_time).toLocaleString()}</p>
         <p>End Time: {new Date(trip.end_time).toLocaleString()}</p>
       </div>
