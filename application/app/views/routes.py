@@ -317,7 +317,7 @@ class GetApprovedTripRequests(Resource):
                 trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query:
                     ans = [trip.id for trip in trip_query.trip_requests]
-                    return make_response({"accepted trips": ans}, 200)
+                    return make_response({"accepted_trips": ans}, 200)
                 else:
                     return make_response(f"This is not a valid trip id.", 400)
             else:

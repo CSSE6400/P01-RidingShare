@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
 import TripCard from '../components/TripCard';
 import '../styles/TripCard.css';
+import ApporvedTripCard from '../components/ApprovedTripCard';
 
 const TripsPage = () => {
   const [trips, setTrips] = useState('');
@@ -11,7 +12,7 @@ const TripsPage = () => {
 
   const navigate = useNavigate()
   const tripInfo = (passengerId) => {
-    navigate(`/trip/${passengerId}`);
+    navigate(`/trips/${passengerId}`);
   }
 
   useEffect(() => {
@@ -30,8 +31,8 @@ const TripsPage = () => {
         });
 
         if (response.ok) {
-          // const data = await response;
-          setTrips(response);
+          const data = await response.json();
+          setTrips(data.accepted_trips);
         } else {
           console.error('Failed to fetch trips');
         }
@@ -50,16 +51,23 @@ const TripsPage = () => {
     return <div>Loading approved trips...</div>;
   }
 
-  // if (!trips.length) {
-  //   return <div>Driver hasn't approve any trips</div>;
-  // }
+  if (!trips.length) {
+    return <div>Driver hasn't approve any trips</div>;
+  }
 
   return (
-    <div className="trip-list">
-      {/* {trips.map((trip) => (
-        <TripCard key={trip.id} trip={trip} />
-      ))} */}
-      <p>{trips}</p>
+    <div class="container">
+      <h1>Trips</h1>
+      <div className="trip-list">
+        {trips.map((trip) => (
+          <ApporvedTripCard 
+            riderName={trip}
+            startingPoint={"starting"}
+            destination={"destination"}
+            onClickCard={() => tripInfo(trip)}
+          />
+        ))}
+      </div>
     </div>
   );
 };

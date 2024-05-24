@@ -19,7 +19,7 @@ POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "jDoe13",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
@@ -85,7 +85,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "jDoe12",
+    "username": "jDoe13",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -147,7 +147,7 @@ Content-Type: application/json
 
 {
   "username": "jDoe11",
-  "trip_request_id": "558e79cc-81e0-47a2-99ba-0db62be73abf",
+  "trip_request_id": "3a30e362-12a6-47bc-be26-2048494650c4",
   "trip_id": "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb"
 }
 

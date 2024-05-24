@@ -9,19 +9,8 @@ const driver = {
     estimatedPickupTime: "09:30 AM"
 }
 
-const riders = [
-    { id: 1, name: "Shristi Gupta", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-    { id: 2, name: "Mohamad Dabboussy", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-    { id: 3, name: "Bailey Stoodley", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-    { id: 4, name: "Henry Batt", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-    { id: 5, name: "Ferdi Sungkar", startingPoint: "201 Main Street", destination: "250 Ann Street" },
-    { id: 6, name: "Khanh Vy", startingPoint: "201 Main Street", destination: "250 Ann Street" }
-]
-
 const TripInformation = () => {
-    let { riderId } = useParams();
-
-    let rider = riders.find(obj => obj.id === parseInt(riderId))
+    const { tripId } = useParams();
 
     return (
         <div>
@@ -37,11 +26,11 @@ const TripInformation = () => {
                     />
                 </div>
                 <div class="riders">
-                    <h3>{rider.name}</h3>
+                    <h3>{tripId}</h3>
                     <p>pickup point</p>
-                    <h3>{rider.startingPoint}</h3>
+                    <h3>{"pickup"}</h3>
                     <p>destination</p>
-                    <h3>{rider.destination}</h3>
+                    <h3>{"destination"}</h3>
                 </div>
             </div>
         </div>
