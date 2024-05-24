@@ -10,9 +10,12 @@ from models.user import User
 from datetime import datetime
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
+from sqlalchemy import update
+from models.states_types import TripRequestState, TripState
+
 
 from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
-from .helpers.helpers import get_user_from_username, get_driver_id_from_username, get_driver_from_driver_id, check_for_conflicting_times_driver, get_passenger_from_driver_id, get_passenger_id_from_username, check_for_conflicting_times_passenger, distance_query
+from .helpers.helpers import *
 
 from tasks.matching import run_request_matching, run_trip_matching
 
@@ -307,10 +310,16 @@ class GetNearbyTripRequests(Resource):
 
 class GetApprovedTripRequests(Resource):
         def post(self):
-            contents = get_user_parser.parse_args()
+            contents = nearby_trip_requests_parser.parse_args()
             driver_id = get_driver_id_from_username(contents.get("username"))
+            trip_id = contents.get("trip_id")
             if driver_id:
-                return make_response(f"Hurray your driver exists ! This functionality is still in progress driver id: {driver_id}", 200)
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+                if trip_query:
+                    ans = [trip.id for trip in trip_query.trip_requests]
+                    return make_response(f"Accepted trip requests are: {ans}", 200)
+                else:
+                    return make_response(f"This is not a valid trip id.", 400)
             else:
                 return make_response("There is no driver under this username.", 400)
 
@@ -319,19 +328,29 @@ class ApproveRequest(Resource):
         def post(self):
             contents = approve_requests_parser.parse_args()
             username = contents.get("username")
+            trip_req_id = contents.get("trip_request_id")
             driver_id = get_driver_id_from_username(contents.get("username"))
             if driver_id:
-                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().all()
-                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().all()
+                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().first()
+                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query and trip_request_query:
                     if trip_query.seats_remaining is not None: 
                         seats =  trip_query.seats_remaining 
                     else:
                         seats = trip_query.driver.car.max_available_seats
 
-                    return make_response("Hurray your driver exists ! This functionality is still in progress yet to approve", 200)
+                    if len(trip_query.trip_requests) < seats:
+                        trip_request_query.status = TripRequestState.MATCHED
+                        db.session.commit()
+                        link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
 
-                    
+                        if len(trip_query.trip_requests) == seats:
+                            trip_query.status = TripState.MATCHED
+                            db.session.commit()
+
+                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                    else:
+                        return make_response("Your current trip is full.", 400)
 
                 else:
                     return make_response("This is no longer a trip request or trip.", 400)
@@ -342,7 +361,14 @@ class ApproveRequest(Resource):
 class Test(Resource):
     def get(self):
         result = distance_query( -123.4194, 37.7749, 90)
-        return make_response(f"distance = {result}", 200)
+
+        worked = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "735eb991-1c24-4108-896d-0f08c32eb226")
+        worked2 = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "50eb1230-8e50-4ec9-93ac-179121c254a1")
+
+        trip = db.session.execute(db.select(Trip).filter_by(id="a5cade10-3b8b-4ff2-80db-eab01946e4c8")).scalars().first()
+
+        return make_response("Num trip requests" + str(len(trip.trip_requests)), 205)
+        # return make_response(f"distance = {result}", 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
