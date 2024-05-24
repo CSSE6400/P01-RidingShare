@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
-import bcrypt from 'bcryptjs'; 
 import '../styles/LoginEmail.css';
 
 function LoginEmail() {
@@ -25,17 +24,13 @@ function LoginEmail() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
     try {
       const response = await fetch('/profile', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password: hashedPassword, user_type }) // Send the username, password, and userType
+        body: JSON.stringify({ username, password, user_type }) // Send the username, password, and userType
       });
       const data = await response.json();
       if (response.status === 200) {
