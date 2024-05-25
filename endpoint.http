@@ -5,8 +5,8 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "jDoe11",
-  "password": "53%32",
+  "username": "jDoe13",
+  "password": "5332",
   "name": "John Doe",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com",
