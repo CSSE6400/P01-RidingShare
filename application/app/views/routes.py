@@ -14,7 +14,7 @@ from sqlalchemy import update
 from models.states_types import TripRequestState, TripState
 
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
+from .helpers.args_parser import *
 from .helpers.helpers import *
 
 from tasks.matching import run_request_matching, run_trip_matching
@@ -277,6 +277,24 @@ class GetAllTripRequests(Resource):
             return make_response("There is no passenger under this username.", 400)
 
 
+class GetTripRequestById(Resource):
+    def post(self):
+        contents = get_trip_request_by_id_parser.parse_args()
+        trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
+        if trip_request:
+            trip = trip_request.trip
+            return_contents = trip_request.to_dict()
+            return_contents["driver_username"] = None
+            if trip != None:
+                return_contents["driver_username"] = trip.driver.user[0].username
+
+            return make_response(return_contents, 200)
+        else:
+            return make_response({"error": "There is no Trip Request with this given ID"}, 400)
+
+
+
+
 class GetPendingTripRequests(Resource):
         def post(self):
             contents = get_user_parser.parse_args()
@@ -383,6 +401,7 @@ api.add_resource(GetUser, "/profile")
 api.add_resource(GetAllTrips, "/trips/get/all")
 api.add_resource(GetPendingTrips, "/trips/get/pending")
 api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
+api.add_resource(GetTripRequestById, "/trip_requests/get")
 api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
