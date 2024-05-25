@@ -10,6 +10,8 @@ import  TripDetail  from './components/TripDetail'
 import  TripList  from './components/TripList'
 import SimpleMap from './components/Map';
 import RideRequest from './components/RideRequest';
+import TripsPage from './pages/TripsPage';
+import TripInformation from './pages/TripInformationPage';
 
 /**
  * App component - the main component of the application.
@@ -43,6 +45,11 @@ const App = () => {
               <TripDetail />
             </PrivateRoute>
           } />
+          <Route path="/trips/:tripId" element={
+            <PrivateRoute userType="driver">
+              <TripInformation />
+            </PrivateRoute>
+          } />
           <Route path="/ride-request" element={
             <PrivateRoute userType="passenger">
               <RideRequest />
@@ -50,6 +57,11 @@ const App = () => {
           } />
           <Route path="/rides/:tripId" element={
               <RideRequests />
+          } />
+          <Route path="/trips" element={
+            <PrivateRoute userType="driver">
+              <TripsPage />
+            </PrivateRoute>
           } />
         </Routes>
       </Router>
