@@ -19,6 +19,7 @@ from .helpers.helpers import *
 
 from tasks.matching import run_request_matching, run_trip_matching
 
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -91,9 +92,10 @@ class CreateDriver(Resource):
             db.session.add(driver)
 
             if user == None:
+                hashed_password = generate_password_hash(contents.get("password"), method='pbkdf2')
                 user = User(
                     username = contents.get("username"),
-                    password = contents.get("password"),
+                    password = hashed_password,
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -118,9 +120,10 @@ class CreatePassenger(Resource):
             db.session.add(passenger)
 
             if user == None:
+                hashed_password = generate_password_hash(contents.get("password"), method='pbkdf2')
                 user = User(
                     username = contents.get("username"),
-                    password = contents.get("password"),
+                    password = hashed_password,
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -140,7 +143,7 @@ class GetUser(Resource):
         contents = get_user_details_parser.parse_args()
         
         user = get_user_from_username(contents.get("username"))
-        if user == None or user.password != contents.get("password"):
+        if user == None or not check_password_hash(user.password, contents.get("password")):
             return make_response({"error": "That user does not exist or has incorrect password"}, 301)
        
         user_type = contents.get("user_type")
