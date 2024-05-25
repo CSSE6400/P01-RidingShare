@@ -272,3 +272,4 @@ fabric.properties
 .DS_Store
 
 application/data/
+aws/
