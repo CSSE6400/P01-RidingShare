@@ -148,7 +148,7 @@ Content-Type: application/json
 {
   "username": "jDoe12",
   "trip_request_id": "0789e17c-0b53-4d1f-ba91-c381b28ef9dd",
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
+  "trip_id": "0789e17c-0b53-4d1f-ba91-c381b28ef9dd"
 }
 
 ### GET THE TEST
