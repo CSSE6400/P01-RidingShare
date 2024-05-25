@@ -102,6 +102,7 @@ def distance_query(set_long, set_lat, distance, offers):
 	return [trip.to_dict() for trip in trip_requests]
 
 
+
 def link_trip_request_to_trip(trip_id: str, trip_request_id: str) -> bool:
 	trip = db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
 	trip_req = db.session.execute(db.select(TripRequest).filter_by(id=trip_request_id)).scalars().first()

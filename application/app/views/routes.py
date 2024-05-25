@@ -310,7 +310,6 @@ class GetNearbyTripRequests(Resource):
                 choices = []
             return make_response(choices, 200)
 
-
 class GetApprovedTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
