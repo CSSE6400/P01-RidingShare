@@ -360,7 +360,7 @@ class ApproveRequest(Resource):
 
 class Test(Resource):
     def get(self):
-        result = distance_query( -123.4194, 37.7749, 90)
+        result = distance_query(-123.4194, 37.7749, 90)
 
         worked = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "735eb991-1c24-4108-896d-0f08c32eb226")
         worked2 = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "50eb1230-8e50-4ec9-93ac-179121c254a1")
@@ -384,4 +384,24 @@ api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approved")
+
+### trip/get_route_pos
+### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)
+
+# {
+# "time": start_time,
+# "passanger": [
+#     { "lat"
+#         "long"
+#         "name"
+#         "pickup or dropoff"
+#     }
+#     ,{
+
+#     }
+#     ]
+# }
+
+###### 
+
 api.add_resource(Test, "/test")
