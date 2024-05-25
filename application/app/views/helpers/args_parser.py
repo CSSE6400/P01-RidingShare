@@ -47,4 +47,7 @@ approve_requests_parser.add_argument('username', type=str, required=True, help="
 approve_requests_parser.add_argument('trip_request_id', type=str, required=True, help="Request ID cannot be blank!")
 approve_requests_parser.add_argument('trip_id', type=str, required=True, help="Trip ID cannot be blank!")
 
+get_trip_request_by_id_parser = reqparse.RequestParser()
+get_trip_request_by_id_parser.add_argument("trip_request_id", type=str, required=True, help="Trip Request ID cannot be blank!")
+
 
