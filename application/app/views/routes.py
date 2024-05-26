@@ -306,8 +306,9 @@ class GetNearbyTripRequests(Resource):
             else: 
                 willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
             
+            start_time = trip.start_time
             if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * seats_remaining))
+                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * seats_remaining), start_time,)
             else:
                 choices = []
             return make_response(choices, 200)

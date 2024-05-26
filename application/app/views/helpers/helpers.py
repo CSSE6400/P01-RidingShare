@@ -81,10 +81,19 @@ def haversine(lon1, lat1, lon2, lat2):
 	distance = radius_earth_km * c
 	return distance
 
-def distance_query(set_long, set_lat, distance, offers):
+def distance_query(set_long, set_lat, distance, offers, start_time):
 	nearby_requests = []
-	## Only search for PENDING to reduce search space
-	trip_requests = db.session.execute(db.select(TripRequest).filter_by(status='PENDING').order_by(TripRequest.requested_time)).scalars().all() 
+	
+	trip_requests = db.session.execute(
+		db.select(TripRequest)
+		.filter(
+			TripRequest.status == 'PENDING',
+			TripRequest.window_start_time <= start_time,
+			TripRequest.window_end_time >= start_time
+		)
+		.order_by(TripRequest.requested_time)
+	).scalars().all()
+
 
 	for request in trip_requests:
 		start_point = to_shape(request.pickup_location)
