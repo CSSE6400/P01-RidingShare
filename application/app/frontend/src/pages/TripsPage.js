@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
-import TripCard from '../components/TripCard';
 import '../styles/TripCard.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
 
