@@ -114,6 +114,14 @@ Content-Type: application/json
   "username": "jDoe12"
 }
 
+### Get a trip requests by its id
+POST {{baseUrl}}/trip_requests/get
+Content-Type: application/json
+
+{
+  "trip_request_id": "735eb991-1c24-4108-896d-0f08c32eb226"
+}
+
 ### Get all PENDING trip requests for a user
 POST {{baseUrl}}/trip_requests/get/pending
 Content-Type: application/json
