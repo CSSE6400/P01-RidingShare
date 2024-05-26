@@ -1,23 +1,23 @@
 import React from 'react';
-import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import '../styles/RiderCard.css';
 
 const RiderCard = ({ riderName, startingPoint, destination, onApprove }) => {
   return (
     <div className="rider-card">
+      <h3 style={{marginBottom:40}}>{riderName}</h3>
+      <div className="rider-cards">
       <div className="rider-info">
-        <h3>{riderName}</h3>
         <p>{startingPoint}</p>
         <p>{destination}</p>
       </div>
       <div className="actions">
-        <button className="decline">
-          <CloseRoundedIcon style={{ color: 'red' }} />
-        </button>
+        <center>
         <button className="approve" onClick={onApprove}>
-          <DoneRoundedIcon style={{ color: 'green' }} />
+          <CheckCircleIcon style={{ color: 'green' }} />
         </button>
+        </center>
+      </div>
       </div>
     </div>
   );

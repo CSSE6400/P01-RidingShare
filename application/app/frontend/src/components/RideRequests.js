@@ -3,6 +3,7 @@ import RiderCard from './RiderCard';
 import { getNearbyTripRequests, approveRequest } from '../api/api';
 import { UserContext } from './UserContext';
 import { useParams } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 
 function RideRequests() {
   const { user } = useContext(UserContext);
@@ -46,9 +47,10 @@ function RideRequests() {
 
   return (
     <div>
-      <h1>Available Ride Requests</h1>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      <center><h1>Available Ride Requests</h1></center>
+      {errorMessage && <Alert severity="info">{errorMessage}</Alert>}
+      {successMessage &&   <Alert severity="success">{successMessage}</Alert>}
+      <center>
       <div>
         {tripRequests.length > 0 ? (
           tripRequests.map(tripRequest => (
@@ -64,6 +66,7 @@ function RideRequests() {
           <p>No ride requests available.</p>
         )}
       </div>
+      </center>
     </div>
   );
 };

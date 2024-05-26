@@ -60,7 +60,7 @@ const TripsPage = () => {
       <h1>Trips</h1>
       <div className="trip-list">
         {trips.map((trip) => (
-          <ApporvedTripCard 
+          <ApprovedTripCard 
             riderName={trip}
             startingPoint={"starting"}
             destination={"destination"}
