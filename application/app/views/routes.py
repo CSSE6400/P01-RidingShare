@@ -297,6 +297,8 @@ class GetNearbyTripRequests(Resource):
                return make_response("There is no trip under this ID.", 400)
             start_point = to_shape(trip.start_location)
             willing_distance_to_travel = trip.seats_remaining 
+            seats_remaining = trip.seats_remaining
+
             if trip.seats_remaining is not None: 
                 if trip.seats_remaining == 0:
                     return make_response([], 200)
@@ -372,6 +374,41 @@ class Test(Resource):
         return make_response("Num trip requests" + str(len(trip.trip_requests)), 205)
         # return make_response(f"distance = {result}", 200)
 
+
+class GetTripPositions(Resource):
+        def post(self):
+            contents = nearby_trip_requests_parser.parse_args()
+            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+            if trip is None:
+                return make_response("There is no trip with this id.", 200)
+            
+            start_point = to_shape(trip.start_location)
+            passengers = trip.trip_requests
+            # Sort passengers by the Haversine distance from the start point
+            sorted_passengers = sorted(
+                passengers,  
+                key=lambda p: haversine(
+                    start_point.x, start_point.y, 
+                    to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
+                )
+            )
+
+            # Construct the response
+            response = {
+                "trip_time": trip.start_time,
+                "passengers": [
+                    {
+                        "lat": to_shape(p.pickup_location).y,
+                        "long": to_shape(p.pickup_location).x,
+                        "name": p.passenger.user[0].name,
+                        "pickup": p.start_address
+                    }
+                    for p in sorted_passengers
+                ]
+            }
+
+            return make_response(response, 200)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -386,6 +423,8 @@ api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approved")
+api.add_resource(GetTripPositions, "/trip/get_route_positions")
+
 
 ### trip/get_route_pos
 ### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)

@@ -26,6 +26,19 @@ Content-Type: application/json
   "email": "john.doe1@example.com"
 }
 
+### Create a passenger for Bailey
+POST {{baseUrl}}/passenger/create
+Content-Type: application/json
+
+{
+  "username": "Bailey45",
+  "password": "53%32",
+  "name": "Bailey Doe",
+  "phone_number": "47383926",
+  "email": "Bails.doe1@example.com"
+}
+
+
 ### Get a user by username
 POST {{baseUrl}}/profile
 Content-Type: application/json
@@ -106,6 +119,19 @@ Content-Type: application/json
     "pickup_window_end": "2024-05-10T08:00:00"
 }
 
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "Bailey45",
+    "requested_time": "2024-05-10T08:01:00",
+    "pickup_location": {"latitude": 37.7749, "longitude": -123.4193, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -123.4193, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-10T07:31:00",
+    "pickup_window_end": "2024-05-10T08:00:00"
+}
+
 ### Get all trip requests for a user
 POST {{baseUrl}}/trip_requests/get/all
 Content-Type: application/json
@@ -113,6 +139,15 @@ Content-Type: application/json
 {
   "username": "jDoe12"
 }
+
+### Get all trip requests for a user
+POST {{baseUrl}}/trip_requests/get/all
+Content-Type: application/json
+
+{
+  "username": "Bailey45"
+}
+
 
 ### Get all PENDING trip requests for a user
 POST {{baseUrl}}/trip_requests/get/pending
@@ -147,9 +182,18 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_request_id": "0789e17c-0b53-4d1f-ba91-c381b28ef9dd",
-  "trip_id": "0789e17c-0b53-4d1f-ba91-c381b28ef9dd"
+  "trip_request_id": "e7f8fc4b-8cca-4ca0-97d1-725a4cefe4fd",
+  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
 }
 
 ### GET THE TEST
 GET {{baseUrl}}/test
+
+### GET NEW END POINT POSITIONING ALONG ROUTES
+POST {{baseUrl}}/trip/get_route_positions
+Content-Type: application/json
+
+{
+  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
+  "username": "jDoe12"
+}
