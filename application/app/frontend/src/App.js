@@ -56,7 +56,9 @@ const App = () => {
             </PrivateRoute>
           } />
           <Route path="/rides/:tripId" element={
+            <PrivateRoute userType="driver">
               <RideRequests />
+              </PrivateRoute>
           } />
           <Route path="/trips" element={
             <PrivateRoute userType="driver">
