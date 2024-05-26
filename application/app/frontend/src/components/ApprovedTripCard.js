@@ -2,7 +2,6 @@ import React from 'react';
 import '../styles/TripCard.css';
 
 const ApporvedTripCard = ({ riderName, startingPoint, destination, onClickCard }) => {
-  console.log(startingPoint)
   return (
     <div className="trip-card" onClick={onClickCard}>
         <div className="trip-info">

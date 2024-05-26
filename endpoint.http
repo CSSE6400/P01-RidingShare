@@ -36,6 +36,15 @@ Content-Type: application/json
   "user_type": "driver"
 }
 
+### Get a user information without password
+POST {{baseUrl}}/user/get/information
+Content-Type: application/json
+
+{
+  "username": "test1",
+  "user_type": "driver"
+}
+
 ### Add Trip
 POST {{baseUrl}}/trip/create
 Content-Type: application/json
@@ -70,6 +79,14 @@ Content-Type: application/json
 
 {
   "username": "test1"
+}
+
+### Get trips by ID
+POST {{baseUrl}}/trips/get/id
+Content-Type: application/json
+
+{
+  "trip_id": "72dc7c9e-54ac-48cd-a402-df86ae1585f0"
 }
 
 ### Get all PENDING trips for a user

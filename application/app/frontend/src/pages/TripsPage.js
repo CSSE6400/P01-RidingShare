@@ -1,8 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { MapContainer, TileLayer} from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
-import '../styles/TripInformationPage.css';
+import "leaflet/dist/leaflet.css";
+import 'leaflet/dist/images/marker-shadow.png';
+import '../styles/ApprovedTrips.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
+import Routing from "../components/Routing";
+
+const locations = [
+  { lat: -27.4679, lng: 153.0215, name: "Start Point" },
+  { lat: -27.4705, lng: 153.0265, name: "Mid Point" },
+  { lat: -27.4517, lng: 153.0412, name: "End Point" }
+];
 
 const TripsPage = () => {
   const [trips, setTrips] = useState([]);
@@ -10,11 +20,15 @@ const TripsPage = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
   const [tripsLoaded, setTripsLoaded] = useState(false);
+  // const [locations, setLocations] = useState([]);
 
   const navigate = useNavigate();
   const tripInfo = (passengerId) => {
     navigate(`/trips/${passengerId}`);
   };
+  const mapRef = useRef(null);
+  const latitude = -27.4679;
+  const longitude = 153.0215;
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -82,21 +96,38 @@ const TripsPage = () => {
     }
   }, [trips]);
 
+  if (loading) {
+    return <div>Loading trips...</div>;
+  }
+
+  if (!trips.length) {
+    return <div>No trips available.</div>;
+  }
+
   return (
-    <div>
-      <div>
+    <div className="container">
+      <div className="header">
         <h1>Trips</h1>
       </div>
-      <div class="container">
+      <div className="trip-list">
         {tripDetails.map((trip, index) => (
           <ApprovedTripCard
             key={index}
             riderName={trip.passenger_name}
             startingPoint={trip.start_address}
             destination={"test"}
-            onClickCard={() => tripInfo(trip.passenger_name)}
+            onClickCard={() => tripInfo(trip.id)}
           />
         ))}
+      </div>
+      <div className="map-container">
+        <MapContainer center={[latitude, longitude]} zoom={13} ref={mapRef} className="map-container">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Routing waypoints={locations} />
+        </MapContainer>
       </div>
     </div>
   );

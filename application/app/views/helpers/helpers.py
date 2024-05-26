@@ -4,6 +4,7 @@ from models.driver import Driver
 from models.trip import Trip
 from models.passenger import Passenger
 from models.trip_request import TripRequest
+from models.car import Car
 from datetime import datetime
 from typing import Optional
 from math import radians, sin, cos, sqrt, atan2
@@ -13,6 +14,9 @@ from geoalchemy2.shape import to_shape
 
 def get_trip_request_from_id(trip_request_id: str) -> Optional[TripRequest]:
 	return db.session.execute(db.select(TripRequest).filter_by(id=trip_request_id)).scalars().first()
+
+def get_trip_from_id(trip_id: str) -> Optional[Trip]:
+	return db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
 
 
 def get_user_from_username(username) -> User:
@@ -30,6 +34,14 @@ def get_passenger_id_from_username(username):
 
 def get_driver_from_driver_id(driver_id):
 	return db.session.execute(db.select(Driver).filter_by(id=driver_id)).scalars().first()
+
+def get_car_id_from_driver_id(driver_id):
+	result = get_driver_from_driver_id(driver_id)
+	if result:
+		return result.car_id
+
+def get_car_from_car_id(car_id):
+	return db.session.execute(db.select(Car).filter_by(id=car_id)).scalars().first()
 
 def get_passenger_from_driver_id(passenger_id):
 	return db.session.execute(db.select(Passenger).filter_by(id=passenger_id)).scalars().first()
