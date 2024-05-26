@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/TripCard.css';
 
-const ApporvedTripCard = ({ riderName, startingPoint, destination, onClickCard }) => {
+const ApprovedTripCard = ({ riderName, startingPoint, destination, onClickCard }) => {
   return (
     <div className="trip-card" onClick={onClickCard}>
         <div className="trip-info">
@@ -14,4 +14,4 @@ const ApporvedTripCard = ({ riderName, startingPoint, destination, onClickCard }
   );
 };
 
-export default ApporvedTripCard;
+export default ApprovedTripCard;
