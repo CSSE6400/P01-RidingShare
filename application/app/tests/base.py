@@ -11,3 +11,8 @@ class RideTest(unittest.TestCase):
             'TESTING': True
         })
         self.client = self.app.test_client()
+
+
+    def assertDictSubset(self, expected_subset: dict, whole: dict): 
+        for key, value in expected_subset.items(): 
+            self.assertEqual(whole[key], value)

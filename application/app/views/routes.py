@@ -135,7 +135,7 @@ class CreatePassenger(Resource):
             return make_response(user.to_dict(), 201)
 
         elif user.passenger != None:
-            return make_response("User account is already a passenger", 202)
+            return make_response({"message":"User account is already a passenger"}, 202)
 
 
 class GetUser(Resource):
