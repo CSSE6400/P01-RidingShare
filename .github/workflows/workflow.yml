@@ -44,8 +44,7 @@ jobs:
     - name: Run tests
       run: |
         export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
-        python -m unittest discover -s application/app/tests
+        cd application/app/tests
+        python -m unittest discover
 
-    - name: Docker Compose Down
-      if: always()
-      run: docker-compose down
+
