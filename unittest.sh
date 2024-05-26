@@ -7,13 +7,13 @@ cd application
 docker-compose up -d database
 
 # Wait for 10 seconds to allow the database to initialize
-echo "Waiting for the database service to initialize... Sleeping for 15 seconds"
-sleep 15
+echo "Waiting for the database service to initialize... Sleeping for 20 seconds"
+sleep 20
 
 # Navigate to the tests directory and run unittests
 echo "Running tests..."
 cd app/tests
-python -m unittest discover
+python -W ignore -m unittest discover
 
 # Navigate back to the application directory
 echo "Shutting down services..."
