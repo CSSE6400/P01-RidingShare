@@ -272,3 +272,5 @@ fabric.properties
 .DS_Store
 
 application/data/
+
+application/app/frontend/node_modules/
