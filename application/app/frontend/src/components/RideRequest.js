@@ -15,9 +15,6 @@ function RideRequest() {
     const [errors, setErrors] = useState({});
     const [tripRequestId, setTripRequestId] = useState('');
     const navigate = useNavigate();
-    const tripInfo = (tripRequestId) => {
-        navigate(`/trip-info/${tripRequestId}`);
-    };
 
     const handleTimeChange = (event) => {
         const { name, value } = event.target;
@@ -96,10 +93,10 @@ function RideRequest() {
 
     useEffect(() => {
         console.log('API response updated:', tripRequestId);
-        if (tripRequestId != '') {
-            tripInfo(tripRequestId);
+        if (tripRequestId !== '') {
+            navigate(`/trip-info/${tripRequestId}`);
         }
-    }, [tripRequestId]);
+    }, [tripRequestId, navigate]);
 
     const handleLogout = () => {
         setUser(null);

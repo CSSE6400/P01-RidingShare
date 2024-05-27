@@ -60,7 +60,7 @@ const TripsPage = () => {
     };
 
     fetchTrips();
-  }, [user.username]);
+  }, [user.username, tripId]);
 
   const fetchTripDetails = async (trip_id) => {
     try {

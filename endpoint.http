@@ -141,7 +141,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "jDoe12",
+    "username": "passenger",
     "pickup_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "125 street road, brisbane, qld"},
     "pickup_window_start": "2024-05-11T07:30:00",
@@ -207,8 +207,8 @@ Content-Type: application/json
 
 {
   "username": "driver",
-  "trip_request_id": "8db16b8e-e585-49dd-a9ff-fd31535a8103",
-  "trip_id": "411ea3fa-2ba2-4aab-9df1-7f19b8c27898"
+  "trip_request_id": "7730b79f-7aa9-4682-a0ba-da4257860682",
+  "trip_id": "8da7168d-81df-4ded-9681-9be7acd20ddb"
 }
 
 ### GET THE TEST
