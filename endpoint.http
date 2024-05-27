@@ -82,7 +82,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-  "username": "jDoe13"
+  "username": "jDoe12"
 }
 
 ### Get all PENDING trips for a user
@@ -180,7 +180,7 @@ POST {{baseUrl}}/trip/get/approved
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
   "username": "jDoe12"
 }
 
@@ -190,8 +190,8 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_request_id": "e7f8fc4b-8cca-4ca0-97d1-725a4cefe4fd",
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
+  "trip_request_id": "df2cb79c-0e02-45f2-a1f2-51ed8249a76e",
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3"
 }
 
 ### GET THE TEST
