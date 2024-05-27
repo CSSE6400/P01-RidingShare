@@ -185,7 +185,7 @@ Content-Type: application/json
 }
 
 ### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
-POST {{baseUrl}}/trip/post/approved
+POST {{baseUrl}}/trip/post/approve
 Content-Type: application/json
 
 {

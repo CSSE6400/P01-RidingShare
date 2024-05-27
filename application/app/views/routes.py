@@ -373,6 +373,7 @@ class ApproveRequest(Resource):
 
                         if len(trip_query.trip_requests) == seats:
                             trip_query.status = TripState.MATCHED
+                            trip_query.seats_remaining = trip_query.seats_remaining - 1
                             db.session.commit()
 
                         return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
@@ -446,7 +447,7 @@ api.add_resource(GetTripRequestById, "/trip_requests/get")
 api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
-api.add_resource(ApproveRequest, "/trip/post/approved")
+api.add_resource(ApproveRequest, "/trip/post/approve")
 api.add_resource(GetTripPositions, "/trip/get_route_positions")
 
 
