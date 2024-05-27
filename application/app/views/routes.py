@@ -135,7 +135,7 @@ class CreatePassenger(Resource):
             return make_response(user.to_dict(), 201)
 
         elif user.passenger != None:
-            return make_response("User account is already a passenger", 202)
+            return make_response({"message":"User account is already a passenger"}, 202)
 
 
 class GetUser(Resource):
@@ -192,7 +192,7 @@ class CreateTrip(Resource):
         contents = create_trip_parser.parse_args()
         driver_id = get_driver_id_from_username(contents.get("username"))
         if not driver_id:
-            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
+            return make_response({"message":"Invalid Driver! Please ensure the username is linked to a driver account."}, 404)
         
         driver = get_driver_from_driver_id(driver_id)
         if not driver:
@@ -353,7 +353,10 @@ class GetNearbyTripRequests(Resource):
             if trip is None:
                return make_response("There is no trip under this ID.", 400)
             start_point = to_shape(trip.start_location)
+            end_point = to_shape(trip.end_location)
             willing_distance_to_travel = trip.seats_remaining 
+            seats_remaining = trip.seats_remaining
+
             if trip.seats_remaining is not None: 
                 if trip.seats_remaining == 0:
                     return make_response([], 200)
@@ -361,9 +364,12 @@ class GetNearbyTripRequests(Resource):
             else: 
                 willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
             
-            choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel)
+            start_time = trip.start_time
+            if (seats_remaining):
+                choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time,)
+            else:
+                choices = []
             return make_response(choices, 200)
-
 
 class GetApprovedTripRequests(Resource):
         def post(self):
@@ -405,19 +411,19 @@ class ApproveRequest(Resource):
                             trip_query.status = TripState.MATCHED
                             db.session.commit()
 
-                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
                     else:
-                        return make_response("Your current trip is full.", 400)
+                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
                 else:
-                    return make_response("This is no longer a trip request or trip.", 400)
+                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
 
             else:
-                return make_response(f"There is no driver under the username: {username}", 400)
+                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
 
 class Test(Resource):
     def get(self):
-        result = distance_query( -123.4194, 37.7749, 90)
+        result = distance_query(-123.4194, 37.7749, 90)
 
         worked = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "735eb991-1c24-4108-896d-0f08c32eb226")
         worked2 = link_trip_request_to_trip("a5cade10-3b8b-4ff2-80db-eab01946e4c8", "50eb1230-8e50-4ec9-93ac-179121c254a1")
@@ -426,6 +432,41 @@ class Test(Resource):
 
         return make_response("Num trip requests" + str(len(trip.trip_requests)), 205)
         # return make_response(f"distance = {result}", 200)
+
+
+class GetTripPositions(Resource):
+        def post(self):
+            contents = nearby_trip_requests_parser.parse_args()
+            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+            if trip is None:
+                return make_response("There is no trip with this id.", 200)
+            
+            start_point = to_shape(trip.start_location)
+            passengers = trip.trip_requests
+            # Sort passengers by the Haversine distance from the start point
+            sorted_passengers = sorted(
+                passengers,  
+                key=lambda p: haversine(
+                    start_point.x, start_point.y, 
+                    to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
+                )
+            )
+
+            # Construct the response
+            response = {
+                "trip_time": trip.start_time,
+                "passengers": [
+                    {
+                        "lat": to_shape(p.pickup_location).y,
+                        "long": to_shape(p.pickup_location).x,
+                        "name": p.passenger.user[0].name,
+                        "pickup": p.start_address
+                    }
+                    for p in sorted_passengers
+                ]
+            }
+
+            return make_response(response, 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
@@ -444,4 +485,26 @@ api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approved")
+api.add_resource(GetTripPositions, "/trip/get_route_positions")
+
+
+### trip/get_route_pos
+### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)
+
+# {
+# "time": start_time,
+# "passanger": [
+#     { "lat"
+#         "long"
+#         "name"
+#         "pickup or dropoff"
+#     }
+#     ,{
+
+#     }
+#     ]
+# }
+
+###### 
+
 api.add_resource(Test, "/test")

@@ -4,6 +4,7 @@ import TripRequest from './components/TripRequest';
 import LoginEmail from './components/loginEmail';
 import { UserProvider, UserContext } from './components/UserContext';
 import './App.css';
+import RideRequests from './components/RideRequests';
 import { useContext } from 'react';
 import  TripDetail  from './components/TripDetail'
 import  TripList  from './components/TripList'
@@ -53,6 +54,11 @@ const App = () => {
             <PrivateRoute userType="passenger">
               <RideRequest />
             </PrivateRoute>
+          } />
+          <Route path="/rides/:tripId" element={
+            <PrivateRoute userType="driver">
+              <RideRequests />
+              </PrivateRoute>
           } />
           <Route path="/trips" element={
             <PrivateRoute userType="driver">
