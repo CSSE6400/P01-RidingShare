@@ -296,6 +296,7 @@ class GetNearbyTripRequests(Resource):
             if trip is None:
                return make_response("There is no trip under this ID.", 400)
             start_point = to_shape(trip.start_location)
+            end_point = to_shape(trip.end_location)
             willing_distance_to_travel = trip.seats_remaining 
             seats_remaining = trip.seats_remaining
 
@@ -308,7 +309,7 @@ class GetNearbyTripRequests(Resource):
             
             start_time = trip.start_time
             if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * seats_remaining), start_time,)
+                choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time,)
             else:
                 choices = []
             return make_response(choices, 200)
