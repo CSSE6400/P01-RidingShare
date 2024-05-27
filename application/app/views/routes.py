@@ -176,7 +176,7 @@ class CreateTrip(Resource):
         ## Check the driver does not have a conflicting schedule
         conflicting = check_for_conflicting_times_driver(driver_id, contents.get("start_time"), contents.get("end_time"))
         if conflicting:
-            return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
+            return make_response({"message":"Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip."}, 400)
 
         if contents.get("seats_available") is None:
             car = Car.query.get(driver.car_id)
@@ -219,7 +219,7 @@ class CreateTripRequest(Resource):
         
         conflicting = check_for_conflicting_times_passenger(passenger_id, contents.get("pickup_window_start"), contents.get("pickup_window_end"))
         if conflicting:
-            return make_response("Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip.", 400)
+            return make_response({"message":"Conflicting trips scheduled. Please remove the prior logged trip before requesting a trip."}, 400)
 
         new_trip_request = TripRequest(
             passenger_id=passenger_id,

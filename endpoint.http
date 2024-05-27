@@ -19,7 +19,7 @@ POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "jDoe11",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
@@ -54,9 +54,9 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "jDoe13",
-  "start_time": "2024-05-10T10:00:00Z",
-  "end_time": "2024-05-10T11:00:00Z",
+  "username": "jDoe12",
+  "start_time": "2024-05-10T14:00:00Z",
+  "end_time": "2024-05-10T15:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -102,8 +102,8 @@ Content-Type: application/json
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-10T09:30:00",
-    "pickup_window_end": "2024-05-10T10:30:00"
+    "pickup_window_start": "2024-05-10T14:00:00",
+    "pickup_window_end": "2024-05-10T15:00:00"
 }
 
 ### Add trip request
@@ -154,7 +154,7 @@ POST {{baseUrl}}/trip_requests/get
 Content-Type: application/json
 
 {
-  "trip_request_id": "735eb991-1c24-4108-896d-0f08c32eb226"
+  "trip_request_id": "f5ec33f3-784f-4db6-bd94-4e2f7c04abe2"
 }
 
 ### Get all PENDING trip requests for a user
@@ -171,7 +171,7 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
+  "trip_id": "5efb8fb7-f9e9-4787-8b91-fdaf24e21b9b",
   "username": "jDoe12"
 }
 
@@ -180,8 +180,8 @@ POST {{baseUrl}}/trip/get/approved
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
-  "username": "jDoe12"
+  "trip_id": "240d68db-0f59-40ac-a985-d82e1a289a8e",
+  "username": "Bailey45"
 }
 
 ### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
@@ -190,8 +190,8 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_request_id": "e7f8fc4b-8cca-4ca0-97d1-725a4cefe4fd",
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
+  "trip_request_id": "f5ec33f3-784f-4db6-bd94-4e2f7c04abe2",
+  "trip_id": "5efb8fb7-f9e9-4787-8b91-fdaf24e21b9b"
 }
 
 ### GET THE TEST
