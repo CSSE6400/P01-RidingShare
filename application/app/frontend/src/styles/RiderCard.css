@@ -1,15 +1,41 @@
 .rider-card {
     border: 1px solid #ccc;
+    background-color: #ffffff;
     border-radius: 8px;
-    padding: 16px;
+    padding: 10px;
     margin: 10px;
-    width: 300px;
+    width: 25vh;
+    height: 25vh;
     display: inline-block;
     vertical-align: top;
-}
-
-.rider-card img {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rider-card img {
     width: 100%;
     height: auto;
     margin-top: 8px;
-}
+  }
+  
+  .actions {
+    margin-top: 30px;
+  }
+  
+  .approve, .decline {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    font-size: 16px;
+  }
+  
+  .approve svg, .decline svg {
+    margin-right: 5px;
+  }
+
+  .rider-cards {
+    margin-left: 15px;
+    margin-right: 15px;
+  }

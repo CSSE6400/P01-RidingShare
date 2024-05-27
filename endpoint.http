@@ -54,7 +54,7 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "jDoe13",
   "start_time": "2024-05-10T10:00:00Z",
   "end_time": "2024-05-10T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
@@ -82,7 +82,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-  "username": "jDoe12"
+  "username": "jDoe13"
 }
 
 ### Get all PENDING trips for a user
@@ -125,11 +125,10 @@ Content-Type: application/json
 
 {
     "username": "jDoe12",
-    "requested_time": "2024-05-10T08:00:00",
     "pickup_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-10T07:30:00",
-    "pickup_window_end": "2024-05-10T08:00:00"
+    "pickup_window_start": "2024-05-11T07:30:00",
+    "pickup_window_end": "2024-05-11T08:00:00"
 }
 
 
@@ -149,6 +148,14 @@ Content-Type: application/json
   "username": "Bailey45"
 }
 
+
+### Get a trip requests by its id
+POST {{baseUrl}}/trip_requests/get
+Content-Type: application/json
+
+{
+  "trip_request_id": "735eb991-1c24-4108-896d-0f08c32eb226"
+}
 
 ### Get all PENDING trip requests for a user
 POST {{baseUrl}}/trip_requests/get/pending

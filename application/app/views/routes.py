@@ -14,11 +14,12 @@ from sqlalchemy import update
 from models.states_types import TripRequestState, TripState
 
 
-from .helpers.args_parser import create_driver_parser, create_passenger_parser, get_user_parser, create_trip_parser, create_trip_request_parser, get_user_details_parser, nearby_trip_requests_parser, approve_requests_parser
+from .helpers.args_parser import *
 from .helpers.helpers import *
 
 from tasks.matching import run_request_matching, run_trip_matching
 
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -91,9 +92,10 @@ class CreateDriver(Resource):
             db.session.add(driver)
 
             if user == None:
+                hashed_password = generate_password_hash(contents.get("password"), method='pbkdf2')
                 user = User(
                     username = contents.get("username"),
-                    password = contents.get("password"),
+                    password = hashed_password,
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -118,9 +120,10 @@ class CreatePassenger(Resource):
             db.session.add(passenger)
 
             if user == None:
+                hashed_password = generate_password_hash(contents.get("password"), method='pbkdf2')
                 user = User(
                     username = contents.get("username"),
-                    password = contents.get("password"),
+                    password = hashed_password,
                     email = contents.get("email"),
                     name = contents.get("name"),
                     phone_number = contents.get("phone_number"),
@@ -132,7 +135,7 @@ class CreatePassenger(Resource):
             return make_response(user.to_dict(), 201)
 
         elif user.passenger != None:
-            return make_response("User account is already a passenger", 202)
+            return make_response({"message":"User account is already a passenger"}, 202)
 
 
 class GetUser(Resource):
@@ -140,7 +143,7 @@ class GetUser(Resource):
         contents = get_user_details_parser.parse_args()
         
         user = get_user_from_username(contents.get("username"))
-        if user == None or user.password != contents.get("password"):
+        if user == None or not check_password_hash(user.password, contents.get("password")):
             return make_response({"error": "That user does not exist or has incorrect password"}, 301)
        
         user_type = contents.get("user_type")
@@ -164,7 +167,7 @@ class CreateTrip(Resource):
         contents = create_trip_parser.parse_args()
         driver_id = get_driver_id_from_username(contents.get("username"))
         if not driver_id:
-            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
+            return make_response({"message":"Invalid Driver! Please ensure the username is linked to a driver account."}, 404)
         
         driver = get_driver_from_driver_id(driver_id)
         if not driver:
@@ -274,6 +277,24 @@ class GetAllTripRequests(Resource):
             return make_response("There is no passenger under this username.", 400)
 
 
+class GetTripRequestById(Resource):
+    def post(self):
+        contents = get_trip_request_by_id_parser.parse_args()
+        trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
+        if trip_request:
+            trip = trip_request.trip
+            return_contents = trip_request.to_dict()
+            return_contents["driver_username"] = None
+            if trip != None:
+                return_contents["driver_username"] = trip.driver.user[0].username
+
+            return make_response(return_contents, 200)
+        else:
+            return make_response({"error": "There is no Trip Request with this given ID"}, 400)
+
+
+
+
 class GetPendingTripRequests(Resource):
         def post(self):
             contents = get_user_parser.parse_args()
@@ -323,7 +344,7 @@ class GetApprovedTripRequests(Resource):
                 trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query:
                     ans = [trip.id for trip in trip_query.trip_requests]
-                    return make_response({"accepted trips": ans}, 200)
+                    return make_response({"accepted_trips": ans}, 200)
                 else:
                     return make_response(f"This is not a valid trip id.", 400)
             else:
@@ -354,15 +375,15 @@ class ApproveRequest(Resource):
                             trip_query.status = TripState.MATCHED
                             db.session.commit()
 
-                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
                     else:
-                        return make_response("Your current trip is full.", 400)
+                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
                 else:
-                    return make_response("This is no longer a trip request or trip.", 400)
+                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
 
             else:
-                return make_response(f"There is no driver under the username: {username}", 400)
+                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
 
 class Test(Resource):
     def get(self):
@@ -421,6 +442,7 @@ api.add_resource(GetUser, "/profile")
 api.add_resource(GetAllTrips, "/trips/get/all")
 api.add_resource(GetPendingTrips, "/trips/get/pending")
 api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
+api.add_resource(GetTripRequestById, "/trip_requests/get")
 api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")

@@ -5,9 +5,15 @@ from models.trip import Trip
 from models.passenger import Passenger
 from models.trip_request import TripRequest
 from datetime import datetime
+from typing import Optional
 from math import radians, sin, cos, sqrt, atan2
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
+
+
+def get_trip_request_from_id(trip_request_id: str) -> Optional[TripRequest]:
+	return db.session.execute(db.select(TripRequest).filter_by(id=trip_request_id)).scalars().first()
+
 
 def get_user_from_username(username) -> User:
 	return db.session.execute(db.select(User).filter_by(username=username)).scalars().first()

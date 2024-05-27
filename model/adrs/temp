@@ -221,3 +221,38 @@ Dependence on community support and updates for new features and optimizations.
 Negative:
 Potentially higher learning curve for developers not familiar with geospatial databases.
 Increased complexity in database management due to the advanced features and functions of PostGIS.
+------------------------------------------------------------------------------------------------------------------
+Title: Adoption of Self-Hosted Nominatim API for Geocoding
+Date: 24/05/2024
+Status: Superseded
+
+Summary:
+This ADR revises our previous decision to use the Nominatim API as an external service by transitioning to a self-hosted solution on an EC2 instance. This shift will provide us with greater control over the geocoding process and data, enhancing our ability to customize and optimize the service for our specific needs in the ride-sharing application.
+
+Context:
+As our application's scale and complexity grow, so does the need for more controlled and reliable geocoding services. Self-hosting allows us to manage the geocoding data directly, offering better customization and potentially improved performance.
+
+Decision:
+We will deploy the Nominatim API on an Amazon EC2 instance to handle our application's geocoding needs. This approach will give us full control over the geocoding process, including data management, updates, and system configuration.
+
+Rationale for Self-Hosting:
+Although previously deemed impractical for a smaller scale project, our evolving requirements and growth prospects justify the investment in self-hosting. The decision is driven by:
+
+Increased need for customization and control over the geocoding data.
+Potential cost savings in the long term with increased usage.
+Elimination of reliance on external API's availability and performance constraints.
+Consequences:
+
+Positive:
+
+Full control over the geocoding process allows for tailored configurations and optimizations.
+Direct access to manage and update the data as needed without waiting for third-party updates.
+Potentially better performance and reliability by optimizing server resources and configurations.
+Neutral:
+
+Increased initial setup and maintenance efforts required.
+Need for in-house expertise to manage and operate the geocoding server effectively.
+Negative:
+
+Higher upfront costs for server setup and ongoing operational expenses.
+Increased responsibility for ensuring high availability and data integrity, which could require additional resources and planning.
