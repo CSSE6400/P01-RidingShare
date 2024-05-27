@@ -112,7 +112,7 @@ const TripInformation = () => {
     <div className="trip-info-container">
       <h1>Trip Information</h1>
       <div className="trip-details">
-        {driverInformation == [] && carInformation == [] && TripInformation == [] ?
+        {driverInformation.name != null ?
           <DriverInformationCard
             driversName={driverInformation.name}
             carRepoNo={carInformation.licence_plate}
