@@ -234,7 +234,7 @@ class CreateTripRequest(Resource):
 
         ## Run the reverse matching algorithm here 
         outcome = run_trip_matching(new_trip_request)
-        return make_response({'Outcome': outcome}, 200)
+        #return make_response({'Outcome': outcome}, 200)
         return make_response(new_trip_request.to_dict(), 201)
 
 
