@@ -327,8 +327,8 @@ class GetNearbyTripRequests(Resource):
             else: 
                 willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
             
-            if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * seats_remaining))
+            if (trip.seats_remaining):
+                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * trip.seats_remaining))
             else:
                 choices = []
             return make_response(choices, 200)
@@ -342,7 +342,7 @@ class GetApprovedTripRequests(Resource):
                 trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query:
                     ans = [trip.id for trip in trip_query.trip_requests]
-                    return make_response({"accepted trips": ans}, 200)
+                    return make_response({"accepted_trips": ans}, 200)
                 else:
                     return make_response(f"This is not a valid trip id.", 400)
             else:
@@ -373,15 +373,15 @@ class ApproveRequest(Resource):
                             trip_query.status = TripState.MATCHED
                             db.session.commit()
 
-                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
+                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
                     else:
-                        return make_response("Your current trip is full.", 400)
+                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
                 else:
-                    return make_response("This is no longer a trip request or trip.", 400)
+                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
 
             else:
-                return make_response(f"There is no driver under the username: {username}", 400)
+                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
 
 class Test(Resource):
     def get(self):
