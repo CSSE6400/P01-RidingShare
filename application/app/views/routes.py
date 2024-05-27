@@ -135,7 +135,7 @@ class CreatePassenger(Resource):
             return make_response(user.to_dict(), 201)
 
         elif user.passenger != None:
-            return make_response("User account is already a passenger", 202)
+            return make_response({"message":"User account is already a passenger"}, 202)
 
 
 class GetUser(Resource):
@@ -167,7 +167,7 @@ class CreateTrip(Resource):
         contents = create_trip_parser.parse_args()
         driver_id = get_driver_id_from_username(contents.get("username"))
         if not driver_id:
-            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
+            return make_response({"message":"Invalid Driver! Please ensure the username is linked to a driver account."}, 404)
         
         driver = get_driver_from_driver_id(driver_id)
         if not driver:
