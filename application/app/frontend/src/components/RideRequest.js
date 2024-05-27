@@ -97,29 +97,29 @@ function RideRequest() {
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h1>Create Ride Request</h1>
+            <form onSubmit={handleSubmit} className={styles.formContainer}>
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
-                    <div className={styles.formText}>Pickup Window Start:</div>
+                        Pickup Window Start:
                         <input type="datetime-local" name="pickup_window_start" value={tripWindows.pickup_window_start.replace(':00', '')} onChange={handleTimeChange} className={errors.pickup_window_start ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                    <div className={styles.formText}>Pickup Window End:</div>
+                        Pickup Window End:
                         <input type="datetime-local" name="pickup_window_end" value={tripWindows.pickup_window_end.replace(':00', '')} onChange={handleTimeChange} className={errors.pickup_window_end ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                    <div className={styles.formText}>Pickup Address:</div>
+                        Pickup Address:
                         <input type="text" value={pickupAddress} onChange={(e) => handleAddressChange(e, "pickup")} className={errors.pickup ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                    <div className={styles.formText}>Dropoff Address:</div>
+                        Dropoff Address:
                         <input type="text" value={dropoffAddress} onChange={(e) => handleAddressChange(e, "dropoff")} className={errors.dropoff ? styles.errorInput : styles.inputField} />
                     </label>
                 </div>
-                <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
+                <button type="submit" className={styles.button}>Create Trip Request</button>
             </form>
-            <center><button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
+            <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
         </div>
     );
 }

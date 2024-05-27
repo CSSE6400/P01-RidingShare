@@ -51,9 +51,9 @@ function LoginEmail() {
   return (
     <div className="login-container">
       <form onSubmit={handleSubmit}>
-        <center><h1>Login</h1></center>
+        <h2>Login</h2>
+        <div>
           <label>Username<br></br></label>
-          <div className="form-input-box">
           <input 
             type="text" 
             value={username} 
@@ -61,9 +61,9 @@ function LoginEmail() {
             placeholder="Please input your username..."
             required
           />
-         </div>
+        </div>
+        <div>
           <label>Password<br></br></label>
-          <div className="form-input-box">
           <input 
             type="password" 
             value={password} 
@@ -71,14 +71,14 @@ function LoginEmail() {
             placeholder="Please input your password here..."
             required
           />
-          </div>
+        </div>
+        <div>
           <label>User Type<br></br></label>
-          <div className="form-input-box">
           <select value={user_type} onChange={handleUserTypeChange} required>
             <option value="driver">Driver</option>
             <option value="passenger">Passenger</option>
           </select>
-          </div>
+        </div>
         <button type="submit">Log In</button>
       </form>
     </div>

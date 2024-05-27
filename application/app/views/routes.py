@@ -135,7 +135,7 @@ class CreatePassenger(Resource):
             return make_response(user.to_dict(), 201)
 
         elif user.passenger != None:
-            return make_response({"message":"User account is already a passenger"}, 202)
+            return make_response("User account is already a passenger", 202)
 
 
 class GetUser(Resource):
@@ -167,7 +167,7 @@ class CreateTrip(Resource):
         contents = create_trip_parser.parse_args()
         driver_id = get_driver_id_from_username(contents.get("username"))
         if not driver_id:
-            return make_response({"message":"Invalid Driver! Please ensure the username is linked to a driver account."}, 404)
+            return make_response("Invalid Driver! Please ensure the username is linked to a driver account.", 404)
         
         driver = get_driver_from_driver_id(driver_id)
         if not driver:
@@ -317,7 +317,6 @@ class GetNearbyTripRequests(Resource):
             if trip is None:
                return make_response("There is no trip under this ID.", 400)
             start_point = to_shape(trip.start_location)
-            end_point = to_shape(trip.end_location)
             willing_distance_to_travel = trip.seats_remaining 
             seats_remaining = trip.seats_remaining
 
@@ -328,9 +327,8 @@ class GetNearbyTripRequests(Resource):
             else: 
                 willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
             
-            start_time = trip.start_time
             if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time,)
+                choices = distance_query(start_point.x, start_point.y, willing_distance_to_travel, (2 * seats_remaining))
             else:
                 choices = []
             return make_response(choices, 200)
@@ -344,7 +342,7 @@ class GetApprovedTripRequests(Resource):
                 trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
                 if trip_query:
                     ans = [trip.id for trip in trip_query.trip_requests]
-                    return make_response({"accepted_trips": ans}, 200)
+                    return make_response({"accepted trips": ans}, 200)
                 else:
                     return make_response(f"This is not a valid trip id.", 400)
             else:
@@ -375,15 +373,15 @@ class ApproveRequest(Resource):
                             trip_query.status = TripState.MATCHED
                             db.session.commit()
 
-                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
+                        return make_response(f"Trip {contents.get('trip_request_id')} has successfully been added to the trip.", 200)
                     else:
-                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
+                        return make_response("Your current trip is full.", 400)
 
                 else:
-                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
+                    return make_response("This is no longer a trip request or trip.", 400)
 
             else:
-                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
+                return make_response(f"There is no driver under the username: {username}", 400)
 
 class Test(Resource):
     def get(self):
