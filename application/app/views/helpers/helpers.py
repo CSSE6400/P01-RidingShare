@@ -94,7 +94,6 @@ def distance_query(set_long, set_lat, distance, offers):
 
 	for request in trip_requests:
 		start_point = to_shape(request.pickup_location)
-		end_point = to_shape(request.dropoff_location)
 
 		# Calculate distance between set point and pickup location of the request
 		dist = haversine(start_point.x, start_point.y, set_long, set_lat)
