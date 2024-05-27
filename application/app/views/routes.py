@@ -12,14 +12,11 @@ from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy import update
 from models.states_types import TripRequestState, TripState
-
-
 from .helpers.args_parser import *
 from .helpers.helpers import *
-
 from tasks.matching import run_request_matching, run_trip_matching
-
 from werkzeug.security import generate_password_hash, check_password_hash
+from celery.result import AsyncResult 
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -235,6 +232,9 @@ class CreateTripRequest(Resource):
         db.session.add(new_trip_request)
         db.session.commit()
 
+        ## Run the reverse matching algorithm here 
+        outcome = run_trip_matching(new_trip_request)
+        return make_response({'Outcome': outcome}, 200)
         return make_response(new_trip_request.to_dict(), 201)
 
 
@@ -292,9 +292,6 @@ class GetTripRequestById(Resource):
         else:
             return make_response({"error": "There is no Trip Request with this given ID"}, 400)
 
-
-
-
 class GetPendingTripRequests(Resource):
         def post(self):
             contents = get_user_parser.parse_args()
@@ -307,32 +304,10 @@ class GetPendingTripRequests(Resource):
             else:
                 return make_response("There is no passenger under this username.", 400)
 
-
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
-            user = (contents.get("username"))
-            driver_id = get_driver_id_from_username(contents.get("username"))   
-            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
-            if trip is None:
-               return make_response("There is no trip under this ID.", 400)
-            start_point = to_shape(trip.start_location)
-            end_point = to_shape(trip.end_location)
-            willing_distance_to_travel = trip.seats_remaining 
-            seats_remaining = trip.seats_remaining
-
-            if trip.seats_remaining is not None: 
-                if trip.seats_remaining == 0:
-                    return make_response([], 200)
-                willing_distance_to_travel = trip.distance_addition / trip.seats_remaining 
-            else: 
-                willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
-            
-            start_time = trip.start_time
-            if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time,)
-            else:
-                choices = []
+            choices = run_request_matching(contents)
             return make_response(choices, 200)
 
 class GetApprovedTripRequests(Resource):

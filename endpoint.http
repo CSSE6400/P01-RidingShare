@@ -26,6 +26,18 @@ Content-Type: application/json
   "email": "john.doe1@example.com"
 }
 
+### Create a passenger
+POST {{baseUrl}}/passenger/create
+Content-Type: application/json
+
+{
+  "username": "Henry66",
+  "password": "53%32",
+  "name": "Henry Doe",
+  "phone_number": "4444555777",
+  "email": "Henry.doe1@example.com"
+}
+
 ### Create a passenger for Bailey
 POST {{baseUrl}}/passenger/create
 Content-Type: application/json
@@ -54,7 +66,7 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "jDoe13",
+  "username": "jDoe12",
   "start_time": "2024-05-10T10:00:00Z",
   "end_time": "2024-05-10T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
@@ -69,8 +81,8 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "start_time": "2024-05-10T11:00:00Z",
-  "end_time": "2024-05-10T12:00:00Z",
+  "start_time": "2024-05-20T11:00:00Z",
+  "end_time": "2024-05-20T12:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -98,7 +110,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "Bailey45",
+    "username": "jDoe12",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -111,7 +123,46 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "Bailey45",
+    "username": "jDoe12",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-20T09:30:00",
+    "pickup_window_end": "2024-05-20T11:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "Henry66",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-10T09:30:00",
+    "pickup_window_end": "2024-05-10T10:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "Henry66",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-10T11:30:00",
+    "pickup_window_end": "2024-05-10T12:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "jDoe12",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -190,7 +241,7 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_request_id": "df2cb79c-0e02-45f2-a1f2-51ed8249a76e",
+  "trip_request_id": "3df9fa33-5722-404f-b7db-62bc468e6fcc",
   "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3"
 }
 
@@ -202,6 +253,6 @@ POST {{baseUrl}}/trip/get_route_positions
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
   "username": "jDoe12"
 }

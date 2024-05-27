@@ -100,7 +100,6 @@ def distance_query(start_long, start_lat, end_long, end_lat, distance, offers, s
 		.order_by(TripRequest.requested_time)
 	).scalars().all()
 
-
 	for request in trip_requests:
 		start_point = to_shape(request.pickup_location)
 		end_point = to_shape(request.dropoff_location)
