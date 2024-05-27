@@ -1,17 +1,16 @@
 .trip-card {
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 16px;
+    padding: 25px;
     margin: 16px;
     cursor: pointer;
     transition: box-shadow 0.3s;
-  }
-  
-  .trip-card:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .trip-card h3 {
-    margin-top: 0;
+    margin-bottom: 40px;
+    text-align: center;
+    color: #333;
   }
-  

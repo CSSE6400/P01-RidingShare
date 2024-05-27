@@ -1,16 +1,18 @@
 /* LoginEmail.css */
 .login-container {
-    width: 100%;
+    width: 20vw;
     border-radius: 8px;
     background-color: #ffffff;
-    padding: 20px; 
+    padding: 40px 50px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     
 }
 
 .login-container h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px; 
+    margin-bottom: 40px; 
 }
 
 .login-container form {
@@ -19,7 +21,7 @@
 }
 
 .login-container label {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
     color: #666;
 }
 
@@ -46,7 +48,7 @@
 }
 
 .login-container button {
-    padding: 10px;
+    padding: 15px;
     color: #fff;
     background-color: #007BFF;
     border: none;
@@ -55,6 +57,7 @@
     transition: background-color 0.3s;
     width: 100%; 
     box-sizing: border-box; 
+    margin-top: 15px;
 
 }
 
