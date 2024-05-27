@@ -274,3 +274,4 @@ fabric.properties
 application/data/
 
 application/app/frontend/node_modules/
+node_modules
