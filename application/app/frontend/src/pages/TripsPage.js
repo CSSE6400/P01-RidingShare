@@ -19,7 +19,6 @@ const TripsPage = () => {
   const [tripDetails, setTripDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
-  const [tripsLoaded, setTripsLoaded] = useState(false);
   // const [locations, setLocations] = useState([]);
 
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ const TripsPage = () => {
       } catch (error) {
         console.error('Error:', error);
       } finally {
-        setTripsLoaded(true);
+        setLoading(false);
       }
     };
 

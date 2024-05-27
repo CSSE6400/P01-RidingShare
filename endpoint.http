@@ -5,9 +5,9 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
-  "password": "53%32",
-  "name": "John Doe",
+  "username": "driver",
+  "password": "password",
+  "name": "Driver Name",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com",
   "max_available_seats": 3,
@@ -19,9 +19,9 @@ POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
-  "password": "53%32",
-  "name": "John Doe",
+  "username": "passenger",
+  "password": "password",
+  "name": "Passenger 1",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com"
 }
