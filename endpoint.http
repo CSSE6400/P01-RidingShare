@@ -21,7 +21,7 @@ Content-Type: application/json
 {
   "username": "passenger",
   "password": "password",
-  "name": "Passenger 1",
+  "name": "Passenger",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com"
 }
@@ -63,7 +63,7 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "jDoe13",
+  "username": "driver",
   "start_time": "2024-05-10T10:00:00Z",
   "end_time": "2024-05-10T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
@@ -115,7 +115,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "Bailey45",
+    "username": "passenger",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -197,8 +197,8 @@ POST {{baseUrl}}/trip/get/approved
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
-  "username": "jDoe12"
+  "trip_id": "86cc2ca0-5546-407c-86c2-eabcfc62fbe6",
+  "username": "driver"
 }
 
 ### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
@@ -206,9 +206,9 @@ POST {{baseUrl}}/trip/post/approved
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
-  "trip_request_id": "e7f8fc4b-8cca-4ca0-97d1-725a4cefe4fd",
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c"
+  "username": "driver",
+  "trip_request_id": "99a43c57-0b5b-4cd9-94c8-e73aba7df4b4",
+  "trip_id": "86cc2ca0-5546-407c-86c2-eabcfc62fbe6"
 }
 
 ### GET THE TEST

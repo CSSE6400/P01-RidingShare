@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { MapContainer, TileLayer} from "react-leaflet";
+import { useParams } from 'react-router-dom';
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
 import "leaflet/dist/leaflet.css";
@@ -15,6 +16,7 @@ const locations = [
 ];
 
 const TripsPage = () => {
+  const { tripId } = useParams();
   const [trips, setTrips] = useState([]);
   const [tripDetails, setTripDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,8 +24,8 @@ const TripsPage = () => {
   // const [locations, setLocations] = useState([]);
 
   const navigate = useNavigate();
-  const tripInfo = (passengerId) => {
-    navigate(`/trips/${passengerId}`);
+  const tripInfo = (tripRequestId) => {
+    navigate(`/trip-info/${tripRequestId}`);
   };
   const mapRef = useRef(null);
   const latitude = -27.4679;
@@ -39,7 +41,7 @@ const TripsPage = () => {
             'Accept': 'application/json',
           },
           body: JSON.stringify({
-            trip_id: "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb",
+            trip_id: tripId,
             username: user.username
           }),
         });
