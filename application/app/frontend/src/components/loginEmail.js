@@ -41,7 +41,13 @@ function LoginEmail() {
           navigate('/ride-request');
         }
       } else if (response.status === 201) {
-        navigate('/trip-list')
+        setUser({ username, user_type });
+        if (user_type === 'driver') {
+          navigate(`/rides/${data.id}`); 
+        }
+        if (user_type === 'passenger'){
+          navigate(`/trip-info/${data.id}`);
+        }
       } else {
         alert(data.error);
       }

@@ -92,6 +92,7 @@ function TripRequest() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Trip created successfully:', data);
+                navigate(`/rides/${data.id}`);
             } else {
                 throw new Error('Failed to create trip');
             }

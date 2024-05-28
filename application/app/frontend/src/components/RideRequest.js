@@ -83,6 +83,7 @@ function RideRequest() {
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
                 setTripRequestId(data.id);
+                navigate(`/trip-info/${data.id}`);
             } else {
                 throw new Error('Failed to create trip request');
             }
@@ -128,7 +129,8 @@ function RideRequest() {
                 </div>
                 <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
             </form>
-            <center><button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
+            <center>
+                <button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
         </div>
     );
 }

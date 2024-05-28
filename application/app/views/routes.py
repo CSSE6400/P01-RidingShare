@@ -156,7 +156,7 @@ class GetUser(Resource):
                 return make_response({"error": "Driver does not exist"}, 404)
             trips = db.session.execute(db.select(Trip).filter_by(driver_id=driver_id)).scalars().all()
             if trips:
-                return make_response({"error": "Having trips"}, 201)
+                return make_response(trips[0].to_dict(), 201)
             return make_response(user.to_dict(), 200)
         elif user_type == "passenger":
             passenger_id = get_passenger_id_from_username(contents.get("username"))
@@ -164,7 +164,7 @@ class GetUser(Resource):
                 return make_response({"error": "Passenger does not exist"}, 404)
             trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
             if trips:
-                return make_response({"error": "Having trips"}, 201)
+                return make_response(trips[0].to_dict(), 201)
         return make_response(user.to_dict(), 200)
 
 class GetUserInformation(Resource):
@@ -265,7 +265,6 @@ class CreateTripRequest(Resource):
 
         db.session.add(new_trip_request)
         db.session.commit()
-
         return make_response(new_trip_request.to_dict(), 201)
 
 
