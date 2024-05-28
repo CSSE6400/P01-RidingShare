@@ -40,6 +40,8 @@ function LoginEmail() {
         } else if (user_type === 'passenger') {
           navigate('/ride-request');
         }
+      } else if (response.status === 201) {
+        navigate('/trip-list')
       } else {
         alert(data.error);
       }
