@@ -26,6 +26,18 @@ Content-Type: application/json
   "email": "john.doe1@example.com"
 }
 
+### Create a passenger
+POST {{baseUrl}}/passenger/create
+Content-Type: application/json
+
+{
+  "username": "Henry66",
+  "password": "53%32",
+  "name": "Henry Doe",
+  "phone_number": "4444555777",
+  "email": "Henry.doe1@example.com"
+}
+
 ### Create a passenger for Bailey
 POST {{baseUrl}}/passenger/create
 Content-Type: application/json
@@ -63,13 +75,29 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "driver",
   "start_time": "2024-05-10T14:00:00Z",
   "end_time": "2024-05-10T15:00:00Z",
+  "username": "jDoe12",
+  "start_time": "2024-05-18T10:00:00Z",
+  "end_time": "2024-05-18T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
   "distance_addition": 200
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "driver",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-18T09:30:00Z",
+    "pickup_window_end": "2024-05-18T11:30:00Z"
 }
 
 ### Add Trip
@@ -78,8 +106,8 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "start_time": "2024-05-10T11:00:00Z",
-  "end_time": "2024-05-10T12:00:00Z",
+  "start_time": "2024-05-20T11:00:00Z",
+  "end_time": "2024-05-20T12:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -91,15 +119,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-  "username": "jDoe13"
-}
-
-### Get trips by ID
-POST {{baseUrl}}/trips/get/id
-Content-Type: application/json
-
-{
-  "trip_id": "72dc7c9e-54ac-48cd-a402-df86ae1585f0"
+  "username": "test1"
 }
 
 ### Get all PENDING trips for a user
@@ -115,12 +135,12 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "passenger1",
+    "username": "jDoe12",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-10T14:00:00",
-    "pickup_window_end": "2024-05-10T15:00:00"
+    "pickup_window_start": "2024-05-10T09:30:00",
+    "pickup_window_end": "2024-05-10T10:30:00"
 }
 
 ### Add trip request
@@ -128,7 +148,46 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "Bailey45",
+    "username": "jDoe12",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-20T09:30:00",
+    "pickup_window_end": "2024-05-20T11:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "Henry66",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-10T09:30:00",
+    "pickup_window_end": "2024-05-10T10:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "Henry66",
+    "requested_time": "2024-05-10T11:00:00Z",
+    "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
+    "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
+    "pickup_window_start": "2024-05-1T11:30:00",
+    "pickup_window_end": "2024-05-10T12:30:00"
+}
+
+### Add trip request
+POST {{baseUrl}}/trip_request/create
+Content-Type: application/json
+
+{
+    "username": "jDoe12",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -154,7 +213,7 @@ POST {{baseUrl}}/trip_requests/get/all
 Content-Type: application/json
 
 {
-  "username": "Bailey45"
+  "username": "jDoe12"
 }
 
 ### Get all trip requests for a user
@@ -180,15 +239,17 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_id": "1e866c7c-39a1-4b2e-a810-8b2b5edb1d90"
+  "trip_id": "65db70b9-7a85-4329-84e4-f2c09fbd36dd"
 }
 
+
+### 65db70b9-7a85-4329-84e4-f2c09fbd36dd
 ### Get all Nearby Trip Requests for a Driver
 POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "5efb8fb7-f9e9-4787-8b91-fdaf24e21b9b",
+  "trip_id": "198959b3-0143-4729-9ccc-263f41ce8491",
   "username": "jDoe12"
 }
 
@@ -197,18 +258,18 @@ POST {{baseUrl}}/trip/get/approved
 Content-Type: application/json
 
 {
-  "trip_id": "240d68db-0f59-40ac-a985-d82e1a289a8e",
-  "username": "Bailey45"
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
+  "username": "jDoe12"
 }
 
 ### POST a Approved trip requests for a drivers trip based off time and location (could also be just time)
-POST {{baseUrl}}/trip/post/approved
+POST {{baseUrl}}/trip/post/approve
 Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "trip_request_id": "f5ec33f3-784f-4db6-bd94-4e2f7c04abe2",
-  "trip_id": "5efb8fb7-f9e9-4787-8b91-fdaf24e21b9b"
+  "trip_request_id": "3df9fa33-5722-404f-b7db-62bc468e6fcc",
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3"
 }
 
 ### GET THE TEST
@@ -219,6 +280,15 @@ POST {{baseUrl}}/trip/get_route_positions
 Content-Type: application/json
 
 {
-  "trip_id": "c84fbfc3-3d2f-4f3f-a3ff-15286d31c51c",
+  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
   "username": "jDoe12"
+}
+
+### GET calculate cost for a trip request 
+POST {{baseUrl}}/trip_request/cost
+Content-Type: application/json
+
+{
+  "start_location": {"latitude": 37.7749, "longitude": -122.4194},
+  "end_location": {"latitude": 37.7749, "longitude": -122.4194}
 }

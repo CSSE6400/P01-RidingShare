@@ -57,4 +57,8 @@ get_trip_request_by_id_parser.add_argument("trip_request_id", type=str, required
 get_trip_by_id_parser = reqparse.RequestParser()
 get_trip_by_id_parser.add_argument("trip_id", type=str, required=True, help="Trip ID cannot be blank!")
 
+get_cost_parser = reqparse.RequestParser()
+get_cost_parser.add_argument('start_location',           type=dict, required=True, help="Start location cannot be blank!")
+get_cost_parser.add_argument('end_location',             type=dict, required=True, help="End location cannot be blank!")
+
 
