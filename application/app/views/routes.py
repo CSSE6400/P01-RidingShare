@@ -462,7 +462,7 @@ class RequestCost(Resource):
             start_point = to_shape(new_trip_request.pickup_location)
             end_point = to_shape(new_trip_request.dropoff_location)
             distance = haversine(start_point.x, start_point.y, end_point.x, end_point.y)
-            return make_response({"Price": str(10 + distance * 0.5)}, 200)
+            return make_response({"Message": str(10 + distance * 0.5)}, 200)
         return make_response("Failed", 400)
 
 ### Resources for methods that have POST and specific get methods ###
