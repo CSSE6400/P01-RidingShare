@@ -238,9 +238,7 @@ class CreateTripRequest(Resource):
         db.session.add(new_trip_request)
         db.session.commit()
 
-        ## Run the reverse matching algorithm here 
-        outcome = run_trip_matching(new_trip_request)
-        #return make_response({'Outcome': outcome}, 200)
+        run_trip_matching.apply_async((new_trip_request,), queue="matching.fifo")
         return make_response(new_trip_request.to_dict(), 201)
 
 

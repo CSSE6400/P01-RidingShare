@@ -19,7 +19,6 @@ from views.helpers.helpers import *
 
 @shared_task(ignore_result=True, retry=3, max_retries=5, retry_backoff=True, retry_jitter=True)
 def run_trip_matching(new_trip_request) -> None:
-	## TODO discuss how to handle this 
 	with db.session.begin():
 		trips = db.session.execute(
 			db.select(Trip)
@@ -55,11 +54,10 @@ def run_trip_matching(new_trip_request) -> None:
 			distance = willing_distance_to_travel / 2
 			
 			if abs(start_dist) <= distance and abs(end_dist) <= distance:
-				return "Successful Match Found"
-			
-			if len(nearby_requests) == offers:
+				trip.optional_trip_requests["Trips"].append(trip.id)
+				db.session.commit()
 				break
-					
+				
 		return "No successful Match Found"
 
 @shared_task(ignore_result=True, retry=3, max_retries=5, retry_backoff=True, retry_jitter=True)
@@ -88,3 +86,4 @@ def run_request_matching(contents) -> None:
 		else:
 			choices = []
 		trip.optional_trip_requests["Trips"] = choices
+		db.session.commit()
