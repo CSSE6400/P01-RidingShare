@@ -18,6 +18,10 @@ get_user_details_parser.add_argument("username", 	                type=str, requ
 get_user_details_parser.add_argument("password", 	                type=str, required=True, help="Password cannot be blank!")
 get_user_details_parser.add_argument("user_type", 	                type=str, required=True, help="User type cannot be blank!")
 
+get_user_details_by_username_parser = reqparse.RequestParser()
+get_user_details_by_username_parser.add_argument("username", 	                type=str, required=True, help="Username cannot be blank!")
+get_user_details_by_username_parser.add_argument("user_type", 	                type=str, required=True, help="User type cannot be blank!")
+
 get_user_parser = reqparse.RequestParser()
 get_user_parser.add_argument("username", 	                type=str, required=True, help="Username cannot be blank!")
 
@@ -49,5 +53,12 @@ approve_requests_parser.add_argument('trip_id', type=str, required=True, help="T
 
 get_trip_request_by_id_parser = reqparse.RequestParser()
 get_trip_request_by_id_parser.add_argument("trip_request_id", type=str, required=True, help="Trip Request ID cannot be blank!")
+
+get_trip_by_id_parser = reqparse.RequestParser()
+get_trip_by_id_parser.add_argument("trip_id", type=str, required=True, help="Trip ID cannot be blank!")
+
+get_cost_parser = reqparse.RequestParser()
+get_cost_parser.add_argument('start_location',           type=dict, required=True, help="Start location cannot be blank!")
+get_cost_parser.add_argument('end_location',             type=dict, required=True, help="End location cannot be blank!")
 
 

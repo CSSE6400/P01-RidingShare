@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RiderCard from './RiderCard';
 import { getNearbyTripRequests, approveRequest } from '../api/api';
 import { UserContext } from './UserContext';
 import { useParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import styles from '../styles/TripRequest.module.css';
 
 function RideRequests() {
   const { user } = useContext(UserContext);
@@ -12,6 +14,7 @@ function RideRequests() {
   const [tripRequests, setTripRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTripRequests = async () => {
@@ -49,23 +52,24 @@ function RideRequests() {
     <div>
       <center><h1>Available Ride Requests</h1></center>
       {errorMessage && <Alert severity="info">{errorMessage}</Alert>}
-      {successMessage &&   <Alert severity="success">{successMessage}</Alert>}
+      {successMessage && <Alert severity="success">{successMessage}</Alert>}
       <center>
-      <div>
-        {tripRequests.length > 0 ? (
-          tripRequests.map(tripRequest => (
-          <RiderCard
-            key={tripRequest.id}
-            riderName={tripRequest.passenger_name}
-            startingPoint={tripRequest.start_address}
-            destination={tripRequest.end_address}
-            onApprove={() => handleApprove(tripRequest.id)}
-          />
-        ))
-      ) : (
-          <p>No ride requests available.</p>
-        )}
-      </div>
+        <div>
+          {tripRequests.length > 0 ? (
+            tripRequests.map(tripRequest => (
+              <RiderCard
+                key={tripRequest.id}
+                riderName={tripRequest.passenger_name}
+                startingPoint={tripRequest.start_address}
+                destination={tripRequest.end_address}
+                onApprove={() => handleApprove(tripRequest.id)}
+              />
+            ))
+          ) : (
+            <p>No ride requests available.</p>
+          )}
+        </div>
+        <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to Trips</button>
       </center>
     </div>
   );

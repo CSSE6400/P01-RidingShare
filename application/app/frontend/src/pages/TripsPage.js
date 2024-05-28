@@ -1,30 +1,36 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
-import '../styles/TripCard.css';
+import "leaflet/dist/leaflet.css";
+import 'leaflet/dist/images/marker-shadow.png';
+import '../styles/ApprovedTrips.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
 
+
 const TripsPage = () => {
-  const [trips, setTrips] = useState('');
+  const { tripId } = useParams();
+  const [trips, setTrips] = useState([]);
+  const [tripDetails, setTripDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
 
-  const navigate = useNavigate()
-  const tripInfo = (passengerId) => {
-    navigate(`/trips/${passengerId}`);
-  }
+  const navigate = useNavigate();
+  const tripInfo = (tripRequestId) => {
+    navigate(`/trip-info/${tripRequestId}`);
+  };
 
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch('/trip/get/approved', { // Use your actual base URL here
+        const response = await fetch('/trip/get/approved', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
-          body: JSON.stringify({ 
-            trip_id: "d0c0db22-b4ce-4578-8be5-14f5cc2b30fb",
+          body: JSON.stringify({
+            trip_id: tripId,
             username: user.username
           }),
         });
@@ -39,35 +45,78 @@ const TripsPage = () => {
         console.error('Error:', error);
       } finally {
         setLoading(false);
-        console.log(trips);
       }
     };
 
     fetchTrips();
-  }, [trips, user.username]);
+  }, [user.username, tripId]);
+
+  const fetchTripDetails = async (trip_id) => {
+    try {
+      const response = await fetch('/trip_requests/get', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          trip_request_id: trip_id
+        }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    const fetchAllTripDetails = async () => {
+      setLoading(true);
+      const allDetails = await Promise.all(trips.map(trip => fetchTripDetails(trip)));
+      setTripDetails(allDetails.filter(detail => detail !== null));
+      setLoading(false);
+    };
+
+    if (trips.length > 0) {
+      fetchAllTripDetails();
+    }
+  }, [trips]);
 
   if (loading) {
-    return <div>Loading approved trips...</div>;
+    return <div>Loading trips...</div>;
   }
 
   if (!trips.length) {
-    return <div>Driver hasn't approve any trips</div>;
+    return (
+      <div className="container">
+        No trips available.
+      </div>
+    );
   }
 
   return (
-    <div class="container">
-      <h1>Trips</h1>
+    <div className="container">
+      <div className="header">
+        <h1>Trips</h1>
+      </div>
       <div className="trip-list">
-        {trips.map((trip) => (
-          <ApprovedTripCard 
-            riderName={trip}
-            startingPoint={"starting"}
-            destination={"destination"}
-            onClickCard={() => tripInfo(trip)}
+        {tripDetails.map((trip, index) => (
+          <ApprovedTripCard
+            key={index}
+            riderName={trip.passenger_name}
+            startingPoint={trip.start_address}
+            destination={"test"}
+            onClickCard={() => tripInfo(trip.id)}
           />
         ))}
       </div>
+      <button onClick={() => navigate(`/map/${tripId}`)} className={"blueButton"}>Go to Map</button>
     </div>
   );
 };
+
 export default TripsPage;
