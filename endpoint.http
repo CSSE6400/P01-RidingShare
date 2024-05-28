@@ -283,3 +283,11 @@ Content-Type: application/json
   "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
   "username": "jDoe12"
 }
+
+### GET calculate cost for a trip request 
+POST {{baseUrl}}/trip_request/cost
+Content-Type: application/json
+
+{
+  "trip_request_id": "f5ae3f4e-3188-44ef-b2e4-aa435e5d28d1"
+}
