@@ -78,9 +78,6 @@ Content-Type: application/json
   "username": "driver",
   "start_time": "2024-05-10T14:00:00Z",
   "end_time": "2024-05-10T15:00:00Z",
-  "username": "jDoe12",
-  "start_time": "2024-05-18T10:00:00Z",
-  "end_time": "2024-05-18T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -175,11 +172,10 @@ Content-Type: application/json
 
 {
     "username": "Henry66",
-    "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-1T11:30:00",
-    "pickup_window_end": "2024-05-10T12:30:00"
+    "pickup_window_start": "2024-05-10T14:0:00",
+    "pickup_window_end": "2024-05-10T15:00:00"
 }
 
 ### Add trip request
@@ -249,8 +245,8 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "198959b3-0143-4729-9ccc-263f41ce8491",
-  "username": "jDoe12"
+  "trip_id": "71edcb1b-45a4-438d-80dc-fccd1606a595",
+  "username": "driver"
 }
 
 ### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)

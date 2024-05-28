@@ -80,10 +80,10 @@ TRIP_REQUEST_LEO = {
                         "username": "lSmith88",
                         "start_time": "2024-05-10T07:00:00Z",
                         "end_time": "2024-05-10T07:30:00Z",
-                        "start_location": {"latitude": -27.4705, "longitude": 153.0260, "address": "Queen Street Mall, Brisbane, QLD"},
-                        "end_location": {"latitude": -27.4828, "longitude": 153.0283, "address": "Roma Street Parkland, Brisbane, QLD"},
+                        "start_location": {"latitude": -27.4711, "longitude": 153.0235, "address": "Post Office Square, Brisbane, QLD"},
+                        "end_location": {"latitude": -27.4817, "longitude": 153.0292, "address": "The Brisbane Showgrounds, QLD"},
                         "seats_remaining": 2,
-                        "distance_addition": 10
+                        "distance_addition": 20
                     }
 
 RIDE_REQUEST_KYLIE = {
