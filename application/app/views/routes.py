@@ -21,7 +21,6 @@ from celery.result import AsyncResult
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
 
-
 class Health(Resource):
     def get(self):
         return make_response({"status": "ok"})
@@ -456,14 +455,13 @@ class GetTripPositions(Resource):
 
 class RequestCost(Resource):
     def post(self):
-        contents = get_trip_request_by_id_parser.parse_args()
-        new_trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
-        if new_trip_request:
-            start_point = to_shape(new_trip_request.pickup_location)
-            end_point = to_shape(new_trip_request.dropoff_location)
-            distance = haversine(start_point.x, start_point.y, end_point.x, end_point.y)
-            return make_response({"Message": str(10 + distance * 0.5)}, 200)
-        return make_response("Failed", 400)
+        contents = get_cost_parser.parse_args()
+        
+        start_location = contents.get("start_location")
+        end_location = contents.get("end_location")
+
+        distance = haversine(start_location.get("longitude"), start_location.get("latitude"), end_location.get("longitude"), end_location.get("latitude"))
+        return make_response({"Message": str(10 + distance * 0.5)}, 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
@@ -484,4 +482,3 @@ api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approve")
 api.add_resource(GetTripPositions, "/trip/get_route_positions")
 api.add_resource(RequestCost, "/trip_request/cost")
-api.add_resource(Test, "/test")

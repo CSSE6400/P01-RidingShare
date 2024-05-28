@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Make a blank credentials and move it
+touch credentials
+chmod +x credentials
+cp credentials ./application
+
 # Change into correct directory
 cd application
 
