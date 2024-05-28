@@ -127,7 +127,7 @@ def distance_query(start_long, start_lat, end_long, end_lat, distance, offers, s
 		if len(nearby_requests) == offers:
 			break
 
-	return [trip.to_dict() for trip in trip_requests]
+	return [trip.to_dict() for trip in nearby_requests]
 
 
 
