@@ -55,7 +55,7 @@ def run_trip_matching(new_trip_request_id) -> None:
 			end_dist = haversine(end_point.x, end_point.y, end_point_trip.x, end_point_trip.y)
 			
 
-			if abs(start_dist) <= willing_distance_to_travel and abs(end_dist) <= willing_distance_to_travel:
+			if abs(start_dist) <= willing_distance_to_travel and abs(end_dist) <= willing_distance_to_travel and new_trip_request.window_start_time <= trip.start_time and new_trip_request.window_end_time <= trip.end_time:
 				trip.optional_trip_requests += "," + new_trip_request_id
 				db.session.commit()
 				return "Successful Match Found"
@@ -67,7 +67,10 @@ def run_request_matching(contents) -> None:
 	with db.session.begin():
 		user = (contents.get("username"))
 		driver_id = get_driver_id_from_username(contents.get("username"))   
+
 		trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+
+
 		if trip is None:
 			return "No successful Match Found"
 
