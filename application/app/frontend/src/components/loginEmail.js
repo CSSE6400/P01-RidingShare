@@ -40,14 +40,6 @@ function LoginEmail() {
         } else if (user_type === 'passenger') {
           navigate('/ride-request');
         }
-      } else if (response.status === 201) {
-        setUser({ username, user_type });
-        if (user_type === 'driver') {
-          navigate(`/rides/${data.id}`); 
-        }
-        if (user_type === 'passenger'){
-          navigate(`/trip-info/${data.id}`);
-        }
       } else {
         alert(data.error);
       }
