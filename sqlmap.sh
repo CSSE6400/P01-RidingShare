@@ -30,7 +30,8 @@ Content-Type: application/json
 EOF
 
 # Run sqlmap specifically targeting PostgreSQL
-python sqlmap.py -r request.txt --dbms=PostgreSQL --level=5 --risk=3 --batch
+python sqlmap.py -r request.txt --dbms=PostgreSQL --level=5 --risk=3 --batch --random-agent --tamper=space2comment
+
 
 # Cleanup: delete the sqlmap directory
 cd ..

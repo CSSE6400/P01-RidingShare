@@ -4,6 +4,7 @@ from models.driver import Driver
 from models.trip import Trip
 from models.passenger import Passenger
 from models.trip_request import TripRequest
+from models.car import Car
 from datetime import datetime
 from typing import Optional
 from math import radians, sin, cos, sqrt, atan2
@@ -31,6 +32,14 @@ def get_passenger_id_from_username(username):
 
 def get_driver_from_driver_id(driver_id):
 	return db.session.execute(db.select(Driver).filter_by(id=driver_id)).scalars().first()
+
+def get_car_id_from_driver_id(driver_id):
+	result = get_driver_from_driver_id(driver_id)
+	if result:
+		return result.car_id
+
+def get_car_from_car_id(car_id):
+	return db.session.execute(db.select(Car).filter_by(id=car_id)).scalars().first()
 
 def get_passenger_from_driver_id(passenger_id):
 	return db.session.execute(db.select(Passenger).filter_by(id=passenger_id)).scalars().first()
@@ -115,7 +124,7 @@ def distance_query(start_long, start_lat, end_long, end_lat, distance, offers, s
 		if len(nearby_requests) == offers:
 			break
 
-	return [trip.to_dict() for trip in trip_requests]
+	return [trip.to_dict() for trip in nearby_requests]
 
 
 
