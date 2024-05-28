@@ -237,7 +237,7 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "4483f13c-fdbd-473c-ae8e-20e1949ea02b",
+  "trip_id": "198959b3-0143-4729-9ccc-263f41ce8491",
   "username": "jDoe12"
 }
 
