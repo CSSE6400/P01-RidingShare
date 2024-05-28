@@ -1,6 +1,46 @@
 # P01-RidingShare
 
-## Current Scripts Available
+# Deploying the Application
+
+## Installing the Environment
+To deploy the application both Terraform and the AWS cli tools must be installed.  
+
+Some installation scripts have been provided to streamline the process for specific OSes.
+
+The following script installs the Terraform cli tool using the apt package manager. If you use something other than apt, follow the installation guide link.
+```shell
+./install_terraform.sh
+```
+
+The following script installs the AWS cli tool. It supports both Linux and MacOS installation.
+```shell
+./install_aws.sh
+```
+
+The links for installation documentation can be found below.   
+- [Terraform Installer](https://developer.hashicorp.com/terraform/install)    
+- [AWS cli Installer](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+
+## Deploying the Application
+
+### Credentials
+To deploy the application your AWS credentials must be supplied. Running the `install_aws.sh` script setups up the appropriate environment and creates a blank credentials file.   
+The credentials file must export your credentials as environment variables such as below.
+```shell
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_SESSION_TOKEN=...
+```
+
+### Deployment
+Once the credentials are properly stored run the deployment script.
+```shell
+./deploy.sh
+```
+
+
+## Additional Local Scripts Available
 
 ### Deploy in local container
 The default option to run the application locally is through docker compose. A provided script makes the deployment easy.  
