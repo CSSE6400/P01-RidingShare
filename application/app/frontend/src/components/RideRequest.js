@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCoordinates } from '../api/api';
 import styles from '../styles/TripRequest.module.css';
@@ -13,6 +13,7 @@ function RideRequest() {
         pickup_window_end: ""
     });
     const [errors, setErrors] = useState({});
+    const [tripRequestId, setTripRequestId] = useState('');
     const navigate = useNavigate();
 
     const handleTimeChange = (event) => {
@@ -53,7 +54,7 @@ function RideRequest() {
         event.preventDefault();
         if (!validateForm()) {
             console.log('Validation failed');
-            return; 
+            return;
         }
 
         try {
@@ -62,8 +63,8 @@ function RideRequest() {
 
             const tripData = {
                 username: user.username,
-                pickup_location: {...pickupCoords, "address": pickupAddress},
-                dropoff_location: {...dropoffCoords, "address": dropoffAddress},
+                pickup_location: { ...pickupCoords, "address": pickupAddress },
+                dropoff_location: { ...dropoffCoords, "address": dropoffAddress },
                 ...tripWindows
             };
             console.log(tripData);
@@ -77,10 +78,11 @@ function RideRequest() {
                 },
                 body: JSON.stringify(tripData)
             });
-            
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
+                setTripRequestId(data.id);
             } else {
                 throw new Error('Failed to create trip request');
             }
@@ -88,6 +90,13 @@ function RideRequest() {
             console.error('Error creating trip request:', error);
         }
     };
+
+    useEffect(() => {
+        console.log('API response updated:', tripRequestId);
+        if (tripRequestId !== '') {
+            navigate(`/trip-info/${tripRequestId}`);
+        }
+    }, [tripRequestId, navigate]);
 
     const handleLogout = () => {
         setUser(null);
@@ -97,29 +106,29 @@ function RideRequest() {
 
     return (
         <div>
-            <h1>Create Ride Request</h1>
             <form onSubmit={handleSubmit} className={styles.formContainer}>
+                <h1>Create Ride Request</h1>
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
-                        Pickup Window Start:
+                        <div className={styles.formText}>Pickup Window Start:</div>
                         <input type="datetime-local" name="pickup_window_start" value={tripWindows.pickup_window_start.replace(':00', '')} onChange={handleTimeChange} className={errors.pickup_window_start ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        Pickup Window End:
+                        <div className={styles.formText}>Pickup Window End:</div>
                         <input type="datetime-local" name="pickup_window_end" value={tripWindows.pickup_window_end.replace(':00', '')} onChange={handleTimeChange} className={errors.pickup_window_end ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        Pickup Address:
+                        <div className={styles.formText}>Pickup Address:</div>
                         <input type="text" value={pickupAddress} onChange={(e) => handleAddressChange(e, "pickup")} className={errors.pickup ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        Dropoff Address:
+                        <div className={styles.formText}>Dropoff Address:</div>
                         <input type="text" value={dropoffAddress} onChange={(e) => handleAddressChange(e, "dropoff")} className={errors.dropoff ? styles.errorInput : styles.inputField} />
                     </label>
                 </div>
-                <button type="submit" className={styles.button}>Create Trip Request</button>
+                <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
             </form>
-            <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
+            <center><button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
         </div>
     );
 }

@@ -107,36 +107,40 @@ function TripRequest() {
     };
 
     return (
-        <div>
-            <h1>Create Trip </h1>
+        <div className="tripRequest">
+            
             <form onSubmit={handleSubmit} className={styles.formContainer}>
+            <h1>Create Trip </h1>
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
-                        Start Time:
+                        <div className={styles.formText}>Start Time:</div>
                         <input type="datetime-local" name="start_time" value={tripDetails.start_time.replace(':00Z', '')} onChange={handleTimeChange} className={errors.start_time ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        End Time:
+                    <div className={styles.formText}>End Time:</div>
                         <input type="datetime-local" name="end_time" value={tripDetails.end_time.replace(':00Z', '')} onChange={handleTimeChange} className={errors.end_time ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        Start Address:
+                    <div className={styles.formText}>Start Address:</div>
                         <input type="text" value={startAddress} onChange={(e) => handleAddressChange(e, "start")} className={errors.start ? styles.errorInput : styles.inputField} />
                     </label>
                     <label className={styles.fullWidth}>
-                        End Address:
+                    <div className={styles.formText}>End Address:</div>
                         <input type="text" value={endAddress} onChange={(e) => handleAddressChange(e, "end")} className={errors.end ? styles.errorInput : styles.inputField} />
                     </label>
-                    <label>
-                        Max Distance (km):
+                    <label className={styles.fullWidth}>
+                    <div className={styles.formText}>Max Distance (km):</div>
                         <input type="number" name="distance_addition" value={tripDetails.distance_addition} onChange={handleChange} className={errors.distance_addition ? styles.errorInput : styles.inputField} />
                     </label>
                 </div>
-                <button type="submit" className={styles.button}>Create Trip</button>
+                <center><button type="submit" className={styles.button}>Create Trip</button></center>
             </form>
+            <center>
             <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
+            <button onClick={() => navigate('/trips')} className={styles.blueButton}>Go to Trips</button>
             <button onClick={() => navigate('/map')} className={styles.blueButton}>Show Map</button>
             <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
+            </center>
         </div>
     );
 }
