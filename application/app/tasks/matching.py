@@ -18,8 +18,9 @@ from views.helpers.args_parser import *
 from views.helpers.helpers import *
 
 @shared_task(ignore_result=True, retry=3, max_retries=5, retry_backoff=True, retry_jitter=True)
-def run_trip_matching(new_trip_request) -> None:
+def run_trip_matching(new_trip_request_id) -> None:
 	with db.session.begin():
+		new_trip_request = get_trip_request_from_id(new_trip_request_id)
 		trips = db.session.execute(
 			db.select(Trip)
 			.filter(
@@ -67,7 +68,7 @@ def run_request_matching(contents) -> None:
 		driver_id = get_driver_id_from_username(contents.get("username"))   
 		trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
 		if trip is None:
-			return make_response("There is no trip under this ID.", 400)
+			return 
 		start_point = to_shape(trip.start_location)
 		end_point = to_shape(trip.end_location)
 		willing_distance_to_travel = trip.seats_remaining 
@@ -75,7 +76,7 @@ def run_request_matching(contents) -> None:
 
 		if trip.seats_remaining is not None: 
 			if trip.seats_remaining == 0:
-				return make_response([], 200)
+				return
 			willing_distance_to_travel = trip.distance_addition / trip.seats_remaining 
 		else: 
 			willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats

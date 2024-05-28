@@ -238,7 +238,7 @@ class CreateTripRequest(Resource):
         db.session.add(new_trip_request)
         db.session.commit()
 
-        run_trip_matching.apply_async((new_trip_request,), queue="matching.fifo")
+        run_trip_matching.apply_async((new_trip_request.id,), queue="matching.fifo")
         return make_response(new_trip_request.to_dict(), 201)
 
 
@@ -308,11 +308,15 @@ class GetPendingTripRequests(Resource):
             else:
                 return make_response("There is no passenger under this username.", 400)
 
+
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
             trip = get_trip_from_id(contents.get("trip_id"))
-            return make_response(trip.optional_trip_requests["Trips"], 200)
+            if trip:
+                return make_response(trip.optional_trip_requests["Trips"], 200)
+            return make_response({"error": "There is no Trip under this ID."}, 400)
+
 
 class GetApprovedTripRequests(Resource):
         def post(self):
