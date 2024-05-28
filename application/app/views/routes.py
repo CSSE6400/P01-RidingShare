@@ -12,14 +12,11 @@ from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy import update
 from models.states_types import TripRequestState, TripState
-
-
 from .helpers.args_parser import *
 from .helpers.helpers import *
-
 from tasks.matching import run_request_matching, run_trip_matching
-
 from werkzeug.security import generate_password_hash, check_password_hash
+from celery.result import AsyncResult 
 
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
@@ -227,6 +224,12 @@ class CreateTrip(Resource):
 
         db.session.add(new_trip)
         db.session.commit()
+
+        worker_contents = {
+            "trip_id": new_trip.id,
+            "username": contents.get("username")
+        }
+        run_request_matching.apply_async((worker_contents,), queue="matching.fifo")
         return make_response(new_trip.to_dict(), 201)
 
 
@@ -260,6 +263,7 @@ class CreateTripRequest(Resource):
         db.session.add(new_trip_request)
         db.session.commit()
 
+        run_trip_matching.apply_async((new_trip_request.id,), queue="matching.fifo")
         return make_response(new_trip_request.to_dict(), 201)
 
 
@@ -328,9 +332,6 @@ class GetTripRequestById(Resource):
         else:
             return make_response({"error": "There is no Trip Request with this given ID"}, 400)
 
-
-
-
 class GetPendingTripRequests(Resource):
         def post(self):
             contents = get_user_parser.parse_args()
@@ -347,29 +348,11 @@ class GetPendingTripRequests(Resource):
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
-            user = (contents.get("username"))
-            driver_id = get_driver_id_from_username(contents.get("username"))   
-            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
-            if trip is None:
-               return make_response("There is no trip under this ID.", 400)
-            start_point = to_shape(trip.start_location)
-            end_point = to_shape(trip.end_location)
-            willing_distance_to_travel = trip.seats_remaining 
-            seats_remaining = trip.seats_remaining
+            trip = get_trip_from_id(contents.get("trip_id"))
+            if trip:
+                return make_response(trip.optional_trip_requests.split(",")[1:], 200)
+            return make_response({"error": "There is no Trip under this ID."}, 400)
 
-            if trip.seats_remaining is not None: 
-                if trip.seats_remaining == 0:
-                    return make_response([], 200)
-                willing_distance_to_travel = trip.distance_addition / trip.seats_remaining 
-            else: 
-                willing_distance_to_travel =  trip.distance_addition / trip.driver.car.max_available_seats
-            
-            start_time = trip.start_time
-            if (seats_remaining):
-                choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time,)
-            else:
-                choices = []
-            return make_response(choices, 200)
 
 class GetApprovedTripRequests(Resource):
         def post(self):
@@ -409,6 +392,9 @@ class ApproveRequest(Resource):
 
                         if len(trip_query.trip_requests) == seats:
                             trip_query.status = TripState.MATCHED
+                            trip_query.seats_remaining = trip_query.seats_remaining - 1
+                            if trip_req_id in trip.optional_trip_requests["Trips"]:
+                                trip.optional_trip_requests["Trips"].remove(trip_req_id)
                             db.session.commit()
 
                         return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
@@ -468,6 +454,17 @@ class GetTripPositions(Resource):
 
             return make_response(response, 200)
 
+class RequestCost(Resource):
+    def post(self):
+        contents = get_trip_request_by_id_parser.parse_args()
+        new_trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
+        if new_trip_request:
+            start_point = to_shape(new_trip_request.pickup_location)
+            end_point = to_shape(new_trip_request.dropoff_location)
+            distance = haversine(start_point.x, start_point.y, end_point.x, end_point.y)
+            return make_response({"Message": str(10 + distance * 0.5)}, 200)
+        return make_response("Failed", 400)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -484,27 +481,7 @@ api.add_resource(GetTripRequestById, "/trip_requests/get")
 api.add_resource(GetPendingTripRequests, "/trip_requests/get/pending")
 api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
-api.add_resource(ApproveRequest, "/trip/post/approved")
+api.add_resource(ApproveRequest, "/trip/post/approve")
 api.add_resource(GetTripPositions, "/trip/get_route_positions")
-
-
-### trip/get_route_pos
-### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)
-
-# {
-# "time": start_time,
-# "passanger": [
-#     { "lat"
-#         "long"
-#         "name"
-#         "pickup or dropoff"
-#     }
-#     ,{
-
-#     }
-#     ]
-# }
-
-###### 
-
+api.add_resource(RequestCost, "/trip_request/cost")
 api.add_resource(Test, "/test")
