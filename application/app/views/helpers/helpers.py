@@ -11,15 +11,13 @@ from math import radians, sin, cos, sqrt, atan2
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 
+def get_trip_from_id(trip_id: str) -> Optional[Trip]:
+	return db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
 
 def get_trip_request_from_id(trip_request_id: str) -> Optional[TripRequest]:
 	return db.session.execute(db.select(TripRequest).filter_by(id=trip_request_id)).scalars().first()
 
-def get_trip_from_id(trip_id: str) -> Optional[Trip]:
-	return db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
-
-
-def get_user_from_username(username) -> User:
+def get_user_from_username(username: str) -> Optional[User]:
 	return db.session.execute(db.select(User).filter_by(username=username)).scalars().first()
 
 def get_driver_id_from_username(username):
@@ -111,7 +109,6 @@ def distance_query(start_long, start_lat, end_long, end_lat, distance, offers, s
 		)
 		.order_by(TripRequest.requested_time)
 	).scalars().all()
-
 
 	for request in trip_requests:
 		start_point = to_shape(request.pickup_location)
