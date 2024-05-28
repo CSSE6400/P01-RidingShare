@@ -199,6 +199,12 @@ class CreateTrip(Resource):
 
         db.session.add(new_trip)
         db.session.commit()
+
+        worker_contents = {
+            "trip_id" = new_trip.id,
+            "username" = contents.get("username")
+        }
+        run_request_matching.apply_async((worker_contents,), queue="matching.fifo")
         return make_response(new_trip.to_dict(), 201)
 
 
@@ -307,7 +313,7 @@ class GetPendingTripRequests(Resource):
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
-            choices = run_request_matching(contents)
+            get_trip_from_id(contents.get("trip_id"))
             return make_response(choices, 200)
 
 class GetApprovedTripRequests(Resource):

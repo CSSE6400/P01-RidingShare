@@ -27,6 +27,7 @@ class Trip(db.Model):
     seats_remaining = db.Column(db.Integer, nullable=False)
 
     trip_requests = db.relationship("TripRequest", back_populates="trip", uselist=True)
+    optional_trip_requests = db.Column(db.String, uselist=True)
 
     def __repr__(self):
         return f"<Trip {self.id}>"
