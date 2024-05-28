@@ -30,7 +30,7 @@ const App = () => {
               <TripRequest />
             </PrivateRoute>
           } />
-          <Route path="/map" element={
+          <Route path="/map/:tripId" element={
             <PrivateRoute userType={["driver"]}>
               <SimpleMap />
             </PrivateRoute>
