@@ -454,6 +454,17 @@ class GetTripPositions(Resource):
 
             return make_response(response, 200)
 
+class RequestCost(Resource):
+    def post(self):
+        contents = get_trip_request_by_id_parser.parse_args()
+        new_trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
+        if new_trip_request:
+            start_point = to_shape(new_trip_request.pickup_location)
+            end_point = to_shape(new_trip_request.dropoff_location)
+            distance = haversine(start_point.x, start_point.y, end_point.x, end_point.y)
+            return make_response({"Message": str(10 + distance * 0.5)}, 200)
+        return make_response("Failed", 400)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -472,25 +483,5 @@ api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approve")
 api.add_resource(GetTripPositions, "/trip/get_route_positions")
-
-
-### trip/get_route_pos
-### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)
-
-# {
-# "time": start_time,
-# "passanger": [
-#     { "lat"
-#         "long"
-#         "name"
-#         "pickup or dropoff"
-#     }
-#     ,{
-
-#     }
-#     ]
-# }
-
-###### 
-
+api.add_resource(RequestCost, "/trip_request/cost")
 api.add_resource(Test, "/test")
