@@ -28,11 +28,11 @@ resource "aws_lb" "riding_share" {
 
 resource "aws_security_group" "load_balancer" { 
     name        = "load_balancer" 
-    description = "RidingShare Security Group" 
+    description = "RidingShare Security Group"
 
     ingress { 
-        from_port     = 80 
-        to_port       = 80 
+        from_port     = 443
+        to_port       = 443
         protocol      = "tcp" 
         cidr_blocks   = ["0.0.0.0/0"] 
     } 
@@ -45,23 +45,12 @@ resource "aws_security_group" "load_balancer" {
     } 
 }
 
-resource "aws_lb_listener" "app_http" { 
-    load_balancer_arn   = aws_lb.riding_share.arn 
-    port                = "80" 
-    protocol            = "HTTP" 
- 
-    default_action { 
-        type              = "forward" 
-        target_group_arn  = aws_lb_target_group.app.arn 
-    } 
-}
 
-resource "aws_lb_listener" "app" { 
-    load_balancer_arn   = aws_lb.riding_share.arn 
-    port                = "443" 
-    protocol            = "HTTPS" 
-
-    certificate_arn = "arn:aws:acm:us-east-1:590183807676:certificate/336a8af4-2190-4605-a19a-2adab8363c14"
+resource "aws_lb_listener" "app_https" { 
+    load_balancer_arn = aws_lb.riding_share.arn 
+    port              = "443" 
+    protocol          = "HTTPS" 
+    certificate_arn   = "arn:aws:acm:us-east-1:590183807676:certificate/336a8af4-2190-4605-a19a-2adab8363c14"
  
     default_action { 
         type              = "forward" 
