@@ -27,7 +27,7 @@ class Trip(db.Model):
     seats_remaining = db.Column(db.Integer, nullable=False)
 
     trip_requests = db.relationship("TripRequest", back_populates="trip", uselist=True)
-    optional_trip_requests = db.Column(db.JSON, default={"Trips":[]})
+    optional_trip_requests = db.Column(db.String, nullable=False, default="")
 
     def __repr__(self):
         return f"<Trip {self.id}>"
@@ -48,6 +48,7 @@ class Trip(db.Model):
             "status": self.status,
             "distance_addition": self.distance_addition,
             "driver_id": self.driver_id,
-            "seats_remaining": self.seats_remaining
+            "seats_remaining": self.seats_remaining,
+            "pending_trips": self.optional_trip_requests ##TODO come back and remove this 
         }
 

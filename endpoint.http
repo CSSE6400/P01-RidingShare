@@ -67,8 +67,8 @@ Content-Type: application/json
 
 {
   "username": "jDoe12",
-  "start_time": "2024-05-10T10:00:00Z",
-  "end_time": "2024-05-10T11:00:00Z",
+  "start_time": "2024-05-18T10:00:00Z",
+  "end_time": "2024-05-18T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -84,8 +84,8 @@ Content-Type: application/json
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-10T09:30:00",
-    "pickup_window_end": "2024-05-10T10:30:00"
+    "pickup_window_start": "2024-05-18T09:30:00Z",
+    "pickup_window_end": "2024-05-18T11:30:00Z"
 }
 
 ### Add Trip
@@ -166,7 +166,7 @@ Content-Type: application/json
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-10T11:30:00",
+    "pickup_window_start": "2024-05-1T11:30:00",
     "pickup_window_end": "2024-05-10T12:30:00"
 }
 
@@ -237,7 +237,7 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "35adb425-d241-4895-ab36-583d8a90fbb5",
+  "trip_id": "4483f13c-fdbd-473c-ae8e-20e1949ea02b",
   "username": "jDoe12"
 }
 

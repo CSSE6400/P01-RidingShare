@@ -314,7 +314,7 @@ class GetNearbyTripRequests(Resource):
             contents = nearby_trip_requests_parser.parse_args()
             trip = get_trip_from_id(contents.get("trip_id"))
             if trip:
-                return make_response(trip.optional_trip_requests["Trips"], 200)
+                return make_response(trip.optional_trip_requests.split(",")[1:], 200)
             return make_response({"error": "There is no Trip under this ID."}, 400)
 
 
