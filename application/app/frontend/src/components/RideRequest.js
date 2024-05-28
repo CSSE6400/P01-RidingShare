@@ -130,6 +130,7 @@ function RideRequest() {
                 <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
             </form>
             <center>
+                <button onClick={() => navigate('/request-list')} className={styles.blueButton}>Your Requests List</button>
                 <button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
         </div>
     );
