@@ -75,19 +75,14 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "driver",
+  "username": "jDoe12",
   "start_time": "2024-05-10T14:00:00Z",
   "end_time": "2024-05-10T15:00:00Z",
-<<<<<<< HEAD
-  "start_location": {"latitude": -27.469618, "longitude": 153.025892, "address": "123 street road, brisbane, qld"},
-  "end_location": {"latitude": -27.469330, "longitude": 153.045411, "address": "125 street road, brisbane, qld"},
-=======
   "username": "jDoe12",
   "start_time": "2024-05-18T10:00:00Z",
   "end_time": "2024-05-18T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
->>>>>>> a69c72dd58a11b75a16182fcf8c3f816d5117d25
   "seats_remaining": 3,
   "distance_addition": 200
 }
@@ -124,19 +119,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
-  "username": "jDoe13"
-}
-
-### Get trips by ID
-POST {{baseUrl}}/trips/get/id
-Content-Type: application/json
-
-{
-  "trip_id": "aa8cddc5-ec0f-47e1-b164-bc843119d9fc"
-=======
   "username": "jDoe12"
->>>>>>> a69c72dd58a11b75a16182fcf8c3f816d5117d25
 }
 
 ### Get all PENDING trips for a user
@@ -297,10 +280,6 @@ POST {{baseUrl}}/trip/get_route_positions
 Content-Type: application/json
 
 {
-<<<<<<< HEAD
-  "trip_id": "aa8cddc5-ec0f-47e1-b164-bc843119d9fc",
-  "username": "driver"
-=======
   "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
   "username": "jDoe12"
 }
@@ -311,5 +290,4 @@ Content-Type: application/json
 
 {
   "trip_request_id": "f5ae3f4e-3188-44ef-b2e4-aa435e5d28d1"
->>>>>>> a69c72dd58a11b75a16182fcf8c3f816d5117d25
 }
