@@ -3,7 +3,7 @@ import { check, sleep, group } from "k6";
 
 const ENDPOINT = __ENV.ENDPOINT;
 
-function simulateUserLogin() {
+function simulateUserLoginTest() {
   let url = `${ENDPOINT}/profile`;
   const payload = JSON.stringify({
     "username": "jDoe11",
@@ -17,7 +17,7 @@ function simulateUserLogin() {
   sleep(1);
 }
 
-function simulateTripCreation() {
+function simulateTripCreationTest() {
   let url = `${ENDPOINT}/trip/create`;
   const now = new Date();
     // Randomize the start time to be within the next 1 to 10 days
@@ -101,11 +101,11 @@ export const options = {
 
 export function simulateUserLogin() {
     group('User Actions', function () {
-      simulateUserLogin();
+      simulateUserLoginTest();
     });
 }
 export function simulateTripCreation() {
     group('User Actions', function () {
-        simulateTripCreation();
+        simulateTripCreationTest();
     });
 }
