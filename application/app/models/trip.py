@@ -49,6 +49,5 @@ class Trip(db.Model):
             "distance_addition": self.distance_addition,
             "driver_id": self.driver_id,
             "seats_remaining": self.seats_remaining,
-            "pending_trips": self.optional_trip_requests ##TODO come back and remove this 
         }
 
