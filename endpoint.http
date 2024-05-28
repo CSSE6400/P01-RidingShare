@@ -5,9 +5,9 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
-  "password": "53%32",
-  "name": "John Doe",
+  "username": "driver",
+  "password": "password",
+  "name": "Driver Name",
   "phone_number": "1234567890",
   "email": "john.doe1@example.com",
   "max_available_seats": 3,
@@ -44,9 +44,18 @@ POST {{baseUrl}}/profile
 Content-Type: application/json
 
 {
-  "username": "jDoe12",
+  "username": "jDoe11",
   "password": "53%32",
-  "user_type": "passenger"
+  "user_type": "driver"
+}
+
+### Get a user information without password
+POST {{baseUrl}}/user/get/information
+Content-Type: application/json
+
+{
+  "username": "test1",
+  "user_type": "driver"
 }
 
 ### Add Trip
@@ -85,6 +94,14 @@ Content-Type: application/json
   "username": "jDoe13"
 }
 
+### Get trips by ID
+POST {{baseUrl}}/trips/get/id
+Content-Type: application/json
+
+{
+  "trip_id": "72dc7c9e-54ac-48cd-a402-df86ae1585f0"
+}
+
 ### Get all PENDING trips for a user
 POST {{baseUrl}}/trips/get/pending
 Content-Type: application/json
@@ -98,7 +115,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "Bailey45",
+    "username": "passenger1",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
@@ -124,7 +141,7 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "jDoe12",
+    "username": "passenger",
     "pickup_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -123.4194, "address": "125 street road, brisbane, qld"},
     "pickup_window_start": "2024-05-11T07:30:00",

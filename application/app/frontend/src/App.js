@@ -6,8 +6,8 @@ import { UserProvider, UserContext } from './components/UserContext';
 import './App.css';
 import RideRequests from './components/RideRequests';
 import { useContext } from 'react';
-import  TripDetail  from './components/TripDetail'
-import  TripList  from './components/TripList'
+import TripDetail from './components/TripDetail'
+import TripList from './components/TripList'
 import SimpleMap from './components/Map';
 import RideRequest from './components/RideRequest';
 import TripsPage from './pages/TripsPage';
@@ -26,42 +26,42 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LoginEmail />} />
           <Route path="/trip-request" element={
-            <PrivateRoute userType="driver">
+            <PrivateRoute userType={["driver"]}>
               <TripRequest />
             </PrivateRoute>
           } />
           <Route path="/map" element={
-            <PrivateRoute userType="driver">
+            <PrivateRoute userType={["driver"]}>
               <SimpleMap />
             </PrivateRoute>
           } />
           <Route path="/trip-list" element={
-            <PrivateRoute userType="driver">
+            <PrivateRoute userType={["driver"]}>
               <TripList />
             </PrivateRoute>
           } />
           <Route path="/trip/:tripId" element={
-            <PrivateRoute userType="driver">
+            <PrivateRoute userType={["driver"]}>
               <TripDetail />
             </PrivateRoute>
           } />
-          <Route path="/trips/:tripId" element={
-            <PrivateRoute userType="driver">
+          <Route path="/trip-info/:tripId" element={
+            <PrivateRoute userType={["driver", "passenger"]}>
               <TripInformation />
             </PrivateRoute>
           } />
           <Route path="/ride-request" element={
-            <PrivateRoute userType="passenger">
+            <PrivateRoute userType={["passenger"]}>
               <RideRequest />
             </PrivateRoute>
           } />
           <Route path="/rides/:tripId" element={
-            <PrivateRoute userType="driver">
+            <PrivateRoute userType={["driver"]}>
               <RideRequests />
-              </PrivateRoute>
+            </PrivateRoute>
           } />
-          <Route path="/trips" element={
-            <PrivateRoute userType="driver">
+          <Route path="/trips/:tripId" element={
+            <PrivateRoute userType={["driver"]}>
               <TripsPage />
             </PrivateRoute>
           } />
@@ -72,9 +72,15 @@ const App = () => {
 };
 
 const PrivateRoute = ({ children, userType }) => {
-  const { user } = useContext(UserContext);
-    
-  if (!user || user.user_type !== userType) {
+  const { user, setUser } = useContext(UserContext);
+
+  const isAllowed = Array.isArray(userType)
+    ? userType.includes(user.user_type)
+    : user.user_type === userType;
+
+  if (!user || !isAllowed) {
+    setUser(null);
+    localStorage.removeItem('user');
     return <Navigate to="/" />;
   }
 

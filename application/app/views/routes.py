@@ -161,6 +161,31 @@ class GetUser(Resource):
 
         return make_response(user.to_dict(), 200)
 
+class GetUserInformation(Resource):
+    def post(self):
+        contents = get_user_details_by_username_parser.parse_args()
+
+        user = get_user_from_username(contents.get("username"))
+        if user == None:
+            return make_response({"error": "That user does not exist"}, 301)
+        
+        user_type = contents.get("user_type")
+        if user_type not in ["driver", "passenger"]:
+            return make_response({"error": "user_type must be provided and be either 'driver' or 'passenger'"}, 400)
+        
+        if user_type == "driver":
+            driver_id = get_driver_id_from_username(contents.get("username"))
+            if driver_id is None:
+                return make_response({"error": "Driver does not exist"}, 404)
+            car_id = get_car_id_from_driver_id(driver_id)
+            car = get_car_from_car_id(car_id)
+        elif user_type == "passenger":
+            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            if passenger_id is None:
+                return make_response({"error": "Passenger does not exist"}, 404)
+            
+        return make_response({"user_info": user.to_dict(), "car_info": car.to_dict()}, 200)
+
 
 class CreateTrip(Resource):
     def post(self):
@@ -249,6 +274,17 @@ class GetAllTrips(Resource):
             return make_response({"trips": trips_data}, 200)
         else:
             return make_response("There is no driver under this username.", 400)
+        
+class GetTripById(Resource):
+    def post(self):
+        contents = get_trip_by_id_parser.parse_args()
+        trip = get_trip_from_id(contents.get("trip_id"))
+        if trip:
+            return_contents = trip.to_dict()
+            return make_response(return_contents, 200)
+        else:
+            return make_response({"error": "There is no Trip with this given ID"}, 400)
+            
 
 
 class GetPendingTrips(Resource):
@@ -439,7 +475,9 @@ api.add_resource(CreatePassenger, "/passenger/create")
 api.add_resource(CreateTrip, "/trip/create")
 api.add_resource(CreateTripRequest, "/trip_request/create")
 api.add_resource(GetUser, "/profile")
+api.add_resource(GetUserInformation, "/user/get/information")
 api.add_resource(GetAllTrips, "/trips/get/all")
+api.add_resource(GetTripById, "/trips/get/id")
 api.add_resource(GetPendingTrips, "/trips/get/pending")
 api.add_resource(GetAllTripRequests, "/trip_requests/get/all")
 api.add_resource(GetTripRequestById, "/trip_requests/get")
