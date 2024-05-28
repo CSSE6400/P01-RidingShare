@@ -5,37 +5,16 @@
     padding: 20px;
 }
 
-.header {
-    text-align: center;
+.title {
+    font-size: 24px;
     margin-bottom: 20px;
 }
 
-.trip-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.trip-card {
-    background-color: #f0f0f0;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px;
-    flex: 1;
-    max-width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.trip-card h3 {
-    margin: 10px 0;
-}
-
-.map-container {
-    width: 1000px;
-    height: 500px;
+.small-map {
+    height: 75vh;
+    /* 50% of the viewport height */
+    width: 75vw;
+    /* 50% of the viewport width */
     border: 2px solid #ccc;
     border-radius: 8px;
 }
