@@ -78,3 +78,20 @@
 .formText {
     margin-bottom: 10px;
 }
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    font-weight: bold;
+    background-color: #d4edda; /* Success background color */
+    border: 1px solid #c3e6cb; /* Success border color */
+    color: #155724; /* Success text color */
+}
+
+.error {
+    background-color: #f8d7da; /* Error background color */
+    border: 1px solid #f5c6cb; /* Error border color */
+    color: #721c24; /* Error text color */
+}

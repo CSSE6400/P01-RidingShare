@@ -14,6 +14,7 @@ function RideRequest() {
     });
     const [errors, setErrors] = useState({});
     const [tripRequestId, setTripRequestId] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');  // New state for alert message
     const navigate = useNavigate();
 
     const handleTimeChange = (event) => {
@@ -83,21 +84,15 @@ function RideRequest() {
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
                 setTripRequestId(data.id);
-                navigate(`/trip-info/${data.id}`);
+                setAlertMessage('Ride request created successfully!');  // Set alert message
             } else {
                 throw new Error('Failed to create trip request');
             }
         } catch (error) {
             console.error('Error creating trip request:', error);
+            setAlertMessage('Failed to create ride request.');  // Set alert message
         }
     };
-
-    useEffect(() => {
-        console.log('API response updated:', tripRequestId);
-        if (tripRequestId !== '') {
-            navigate(`/trip-info/${tripRequestId}`);
-        }
-    }, [tripRequestId, navigate]);
 
     const handleLogout = () => {
         setUser(null);
@@ -107,6 +102,11 @@ function RideRequest() {
 
     return (
         <div>
+            {alertMessage && (
+                <div className={styles.alert}>
+                    {alertMessage}
+                </div>
+            )}
             <form onSubmit={handleSubmit} className={styles.formContainer}>
                 <h1>Create Ride Request</h1>
                 <div className={styles.gridContainer}>

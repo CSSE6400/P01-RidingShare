@@ -29,7 +29,7 @@ const TripCard = ({ trip }) => {
           <p>End Time: {new Date(trip.end_time).toLocaleString()}</p>
         </div>
         <center>
-          <button onClick={() => navigate(`/rides/${trip.id}`)} className={styles.blueButton}>Go to Trips</button>
+          <button onClick={() => navigate(`/rides/${trip.id}`)} className={styles.blueButton}>Available Ride Requests</button>
         </center>
       </div>
     );
