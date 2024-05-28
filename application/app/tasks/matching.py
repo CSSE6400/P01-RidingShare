@@ -87,4 +87,4 @@ def run_request_matching(contents) -> None:
 			choices = distance_query(start_point.x, start_point.y, end_point.x, end_point.y, willing_distance_to_travel / 2, (2 * seats_remaining), start_time)
 		else:
 			choices = []
-		return choices
+		trip.optional_trip_requests["Trips"] = choices

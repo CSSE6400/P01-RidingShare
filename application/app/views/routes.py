@@ -201,8 +201,8 @@ class CreateTrip(Resource):
         db.session.commit()
 
         worker_contents = {
-            "trip_id" = new_trip.id,
-            "username" = contents.get("username")
+            "trip_id": new_trip.id,
+            "username": contents.get("username")
         }
         run_request_matching.apply_async((worker_contents,), queue="matching.fifo")
         return make_response(new_trip.to_dict(), 201)
@@ -313,8 +313,8 @@ class GetPendingTripRequests(Resource):
 class GetNearbyTripRequests(Resource):
         def post(self):
             contents = nearby_trip_requests_parser.parse_args()
-            get_trip_from_id(contents.get("trip_id"))
-            return make_response(choices, 200)
+            trip = get_trip_from_id(contents.get("trip_id"))
+            return make_response(trip.optional_trip_requests["Trips"], 200)
 
 class GetApprovedTripRequests(Resource):
         def post(self):
@@ -355,6 +355,8 @@ class ApproveRequest(Resource):
                         if len(trip_query.trip_requests) == seats:
                             trip_query.status = TripState.MATCHED
                             trip_query.seats_remaining = trip_query.seats_remaining - 1
+                            if trip_req_id in trip.optional_trip_requests["Trips"]:
+                                trip.optional_trip_requests["Trips"].remove(trip_req_id)
                             db.session.commit()
 
                         return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
