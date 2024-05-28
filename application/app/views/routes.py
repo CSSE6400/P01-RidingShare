@@ -21,7 +21,6 @@ from celery.result import AsyncResult
 api_bp = Blueprint("api", __name__)
 api = Api(api_bp)
 
-
 class Health(Resource):
     def get(self):
         return make_response({"status": "ok"})
@@ -454,6 +453,16 @@ class GetTripPositions(Resource):
 
             return make_response(response, 200)
 
+class RequestCost(Resource):
+    def post(self):
+        contents = get_cost_parser.parse_args()
+        
+        start_location = contents.get("start_location")
+        end_location = contents.get("end_location")
+
+        distance = haversine(start_location.get("longitude"), start_location.get("latitude"), end_location.get("longitude"), end_location.get("latitude"))
+        return make_response({"Message": str(10 + distance * 0.5)}, 200)
+
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")
 api.add_resource(CreateDriver, "/driver/create")
@@ -472,25 +481,4 @@ api.add_resource(GetNearbyTripRequests, "/trip/get/pending_nearby")
 api.add_resource(GetApprovedTripRequests, "/trip/get/approved")
 api.add_resource(ApproveRequest, "/trip/post/approve")
 api.add_resource(GetTripPositions, "/trip/get_route_positions")
-
-
-### trip/get_route_pos
-### trip id --> list of lat/long  + start time of trip + name of passanger (sort them based on distance chains)
-
-# {
-# "time": start_time,
-# "passanger": [
-#     { "lat"
-#         "long"
-#         "name"
-#         "pickup or dropoff"
-#     }
-#     ,{
-
-#     }
-#     ]
-# }
-
-###### 
-
-api.add_resource(Test, "/test")
+api.add_resource(RequestCost, "/trip_request/cost")
