@@ -83,7 +83,7 @@ TRIP_REQUEST_LEO = {
                         "start_location": {"latitude": -27.4705, "longitude": 153.0260, "address": "Queen Street Mall, Brisbane, QLD"},
                         "end_location": {"latitude": -27.4828, "longitude": 153.0283, "address": "Roma Street Parkland, Brisbane, QLD"},
                         "seats_remaining": 2,
-                        "distance_addition": 4
+                        "distance_addition": 10
                     }
 
 RIDE_REQUEST_KYLIE = {

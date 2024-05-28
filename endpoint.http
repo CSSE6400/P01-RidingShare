@@ -154,7 +154,7 @@ POST {{baseUrl}}/trip_requests/get
 Content-Type: application/json
 
 {
-  "trip_request_id": "f5ec33f3-784f-4db6-bd94-4e2f7c04abe2"
+  "trip_request_id": "dd28add7-9316-47bf-8035-5ce5dacf68f6"
 }
 
 ### Get all PENDING trip requests for a user
