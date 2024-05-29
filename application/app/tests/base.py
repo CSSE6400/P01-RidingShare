@@ -8,6 +8,7 @@ class RideTest(unittest.TestCase):
     def setUp(self):
         self.app = create_app(config_overrides={
             'SQLALCHEMY_DATABASE_URI': 'postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride',
+            # 'CELERY_BROKER_URL': 'redis://localhost:6379',
             'TESTING': True
         })
         self.client = self.app.test_client()
