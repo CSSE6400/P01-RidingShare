@@ -465,7 +465,7 @@ class RequestCost(Resource):
         end_location = contents.get("end_location")
 
         distance = haversine(start_location.get("longitude"), start_location.get("latitude"), end_location.get("longitude"), end_location.get("latitude"))
-        return make_response({"Message": str(10 + distance * 0.5)}, 200)
+        return make_response({"Message": str(round((10 + distance * 0.5), 2))}, 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")

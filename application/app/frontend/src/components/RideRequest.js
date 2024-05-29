@@ -14,9 +14,8 @@ function RideRequest() {
         pickup_window_end: ""
     });
     const [errors, setErrors] = useState({});
-    const [tripRequestId, setTripRequestId] = useState('');
-    const [alertMessage, setAlertMessage] = useState('');  // New state for alert message
     const navigate = useNavigate();
+    const [infoMessage, setInfoMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
@@ -82,10 +81,16 @@ function RideRequest() {
             });
 
             if (response.ok) {
+                setErrorMessage('');
+                setInfoMessage('');
+                setSuccessMessage('');
                 const data = await response.json();
                 console.log('Cost requested created successfully:', data);
+                setInfoMessage(data.Message);
+            } 
+            else {
+                const data = await response.json();
                 setErrorMessage(data.Message);
-            } else {
                 throw new Error('Failed to send cost request');
             }
         } catch (error) {
@@ -123,17 +128,22 @@ function RideRequest() {
             });
 
             if (response.ok) {
+                setErrorMessage('');
+                setInfoMessage('');
+                setSuccessMessage('');
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
                 setSuccessMessage('Your ride request has been created successfully.');
                 setTripRequestId(data.id);
-                setAlertMessage('Ride request created successfully!');  // Set alert message
             } else {
+                setInfoMessage('');
+                setSuccessMessage('');
+                const data = await response.json();
+                setErrorMessage(data.message);
                 throw new Error('Failed to create trip request');
             }
         } catch (error) {
             console.error('Error creating trip request:', error);
-            setAlertMessage('Failed to create ride request.');  // Set alert message
         }
     };
 
@@ -145,14 +155,10 @@ function RideRequest() {
 
     return (
         <div className={styles.tripRequest}>
-            {alertMessage && (
-                <div className={styles.alert}>
-                    {alertMessage}
-                </div>
-            )}
             <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h1>Create Ride Request</h1>
-                {errorMessage && <Alert severity="info">Your trip will cost ${errorMessage}</Alert>}
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {infoMessage && <Alert severity="info">Your trip will cost ${infoMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>

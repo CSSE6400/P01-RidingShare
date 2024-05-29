@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css";
 import 'leaflet/dist/images/marker-shadow.png';
 import '../styles/ApprovedTrips.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
+import Alert from '@mui/material/Alert';
 
 
 const TripsPage = () => {
@@ -93,7 +94,7 @@ const TripsPage = () => {
   if (!trips.length) {
     return (
       <div className="container">
-        No trips available.
+        <Alert severity="info">No approved trips available.</Alert>
       </div>
     );
   }
@@ -109,7 +110,7 @@ const TripsPage = () => {
             key={index}
             riderName={trip.passenger_name}
             startingPoint={trip.start_address}
-            destination={"test"}
+            destination={trip.end_address}
             onClickCard={() => tripInfo(trip.id)}
           />
         ))}

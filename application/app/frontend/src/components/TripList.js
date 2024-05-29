@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import TripCard from './TripCard';
 import { UserContext } from './UserContext';
 import '../styles/TripList.css';
+import Alert from '@mui/material/Alert';
 
 const TripList = () => {
   const [trips, setTrips] = useState([]);
@@ -41,7 +42,7 @@ const TripList = () => {
   }
 
   if (!trips.length) {
-    return <div>No trips available.</div>;
+    return <Alert severity="info">No trips available.</Alert>
   }
 
   return (

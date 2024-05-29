@@ -19,15 +19,9 @@ function RideRequests() {
   useEffect(() => {
     const fetchTripRequests = async () => {
       try {
-        const response = await getNearbyTripRequests(tripId, username);
-
-        if (response && Array.isArray(response)) {
-          setTripRequests(response);
-        } else {
-          setErrorMessage('Data received is not valid');
-          console.error('Data received is not an array:', response);
-        }
-      } catch (error) {
+        const data = await getNearbyTripRequests(tripId, username);
+        setTripRequests(data.Trips);
+    } catch (error) {
         setErrorMessage('Failed to fetch trip requests.');
         console.error('Failed to fetch trip requests:', error);
       }
@@ -66,7 +60,7 @@ function RideRequests() {
               />
             ))
           ) : (
-            <p>No ride requests available.</p>
+            <Alert severity="info">No ride requests available.</Alert>
           )}
         </div>
         <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to your Trips Page</button>
