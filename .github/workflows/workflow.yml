@@ -52,6 +52,8 @@ jobs:
     
     - name: Simulate Matching Worker
       run: |
+        export CELERY_BROKER_URL=redis://localhost:6379
+        export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
         cd application/app
         celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo --uid=nobody --gid=nogroup &
     
