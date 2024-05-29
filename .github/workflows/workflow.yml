@@ -21,9 +21,18 @@ jobs:
           POSTGRES_PASSWORD: verySecretPassword
         ports:
           - 5432:5432
-        # Options to keep the container running until the end of the job
         options: >-
           --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -41,10 +50,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r application/requirements.txt
     
+    - name: Simulate Matching Worker
+      run: |
+        export CELERY_BROKER_URL=redis://localhost:6379
+        export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
+        cd application/app
+        celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo &
+    
     - name: Run tests
       run: |
         export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
+        export CELERY_BROKER_URL=redis://localhost:6379
         cd application/app/tests
         python -m unittest discover
-
-
