@@ -97,10 +97,10 @@ function TripRequest() {
                 setSuccessMessage('');
                 const data = await response.json();
                 console.log('Trip created successfully:', data);
-                navigate(`/rides/${data.id}`);
                 setSuccessMessage(data.message);
             } else {
                 const data = await response.json();
+                setSuccessMessage('');
                 setErrorMessage(data.message);
                 throw new Error('Failed to create trip');
             }
@@ -119,8 +119,8 @@ function TripRequest() {
         <div className="tripRequest">
             <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h1>Create Trip </h1>
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
                         <div className={styles.formText}>Start Time:</div>

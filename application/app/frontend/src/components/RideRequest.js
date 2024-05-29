@@ -134,7 +134,6 @@ function RideRequest() {
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
                 setSuccessMessage('Your ride request has been created successfully.');
-                setTripRequestId(data.id);
             } else {
                 setInfoMessage('');
                 setSuccessMessage('');
