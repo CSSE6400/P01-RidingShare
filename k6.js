@@ -13,7 +13,7 @@ function simulateUserLoginTest() {
 
   const params = { headers: { 'Content-Type': 'application/json' } };
   let response = http.post(url, payload, params);
-  check(response, { 'is status 201': (r) => r.status === 200 });
+  check(response, { 'is status 200': (r) => r.status === 200 });
   sleep(1);
 }
 
