@@ -13,6 +13,7 @@ import SimpleMap from './components/Map';
 import RideRequest from './components/RideRequest';
 import TripsPage from './pages/TripsPage';
 import TripInformation from './pages/TripInformationPage';
+import SignUpPage from './pages/SignUpPage';
 
 /**
  * App component - the main component of the application.
@@ -26,6 +27,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<LoginEmail />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/trip-request" element={
             <PrivateRoute userType={["driver"]}>
               <TripRequest />
