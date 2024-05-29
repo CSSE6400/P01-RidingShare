@@ -63,6 +63,7 @@ function RideRequests() {
             <Alert severity="info">No ride requests available.</Alert>
           )}
         </div>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
         <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to your Trips Page</button>
       </center>
     </div>

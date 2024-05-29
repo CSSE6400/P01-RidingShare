@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import DriverInformationCard from '../components/DriverInformationCard';
 import '../styles/TripInformationPage.css'
 import { useParams } from 'react-router-dom';
+import styles from '../styles/TripRequest.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const TripInformation = () => {
   const { tripId } = useParams();
@@ -10,6 +12,7 @@ const TripInformation = () => {
   const [carInformation, setCarInformation] = useState([]);
   const [TripInformation, setTripInformation] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchTripDetails = async (trip_request_id) => {
     try {
@@ -129,6 +132,9 @@ const TripInformation = () => {
           <h3>{tripDetails.end_address}</h3>
         </div>
       </div>
+      <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      </center>
     </div>
   )
 }

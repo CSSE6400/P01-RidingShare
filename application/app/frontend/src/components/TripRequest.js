@@ -78,7 +78,7 @@ function TripRequest() {
             const tripData = {
                 ...tripDetails,
                 username: user.username,
-                start_location: {...startCoords,"address": startAddress},
+                start_location: {...startCoords, "address": startAddress},
                 end_location: {...endCoords, "address": endAddress}
             };
 
@@ -94,14 +94,13 @@ function TripRequest() {
             
             if (response.ok) {
                 setErrorMessage('');
-                setSuccessMessage('');
                 const data = await response.json();
                 console.log('Trip created successfully:', data);
-                setSuccessMessage(data.message);
+                setSuccessMessage(data.message || 'Trip created successfully');
             } else {
                 const data = await response.json();
                 setSuccessMessage('');
-                setErrorMessage(data.message);
+                setErrorMessage(data.message || 'Failed to create trip');
                 throw new Error('Failed to create trip');
             }
         } catch (error) {
@@ -147,7 +146,6 @@ function TripRequest() {
             </form>
             <center>
             <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
-            <button onClick={() => navigate('/map')} className={styles.blueButton}>Show Map</button>
             <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
             </center>
         </div>

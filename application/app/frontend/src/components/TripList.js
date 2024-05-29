@@ -3,11 +3,14 @@ import TripCard from './TripCard';
 import { UserContext } from './UserContext';
 import '../styles/TripList.css';
 import Alert from '@mui/material/Alert';
+import styles from '../styles/TripRequest.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const TripList = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -46,10 +49,13 @@ const TripList = () => {
   }
 
   return (
-    <div className="trip-list">
-      {trips.map((trip) => (
-        <TripCard key={trip.id} trip={trip} />
-      ))}
+    <div>
+      <div className="trip-list">
+        {trips.map((trip) => (
+          <TripCard key={trip.id} trip={trip} />
+        ))}
+      </div>
+      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
     </div>
   );
 };

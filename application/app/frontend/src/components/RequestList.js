@@ -2,11 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import RequestCard from './RequestCard';
 import { UserContext } from './UserContext';
 import '../styles/TripList.css';
+import styles from '../styles/TripRequest.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const RequestList = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -45,10 +48,13 @@ const RequestList = () => {
   }
 
   return (
-    <div className="trip-list">
-      {trips.map((trip) => (
-        <RequestCard key={trip.id} trip={trip} />
-      ))}
+    <div>
+      <div className="trip-list">
+        {trips.map((trip) => (
+          <RequestCard key={trip.id} trip={trip} />
+        ))}
+      </div>
+      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
     </div>
   );
 };

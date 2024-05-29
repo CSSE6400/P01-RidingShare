@@ -7,6 +7,7 @@ import 'leaflet/dist/images/marker-shadow.png';
 import '../styles/ApprovedTrips.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
 import Alert from '@mui/material/Alert';
+import styles from '../styles/TripRequest.module.css';
 
 
 const TripsPage = () => {
@@ -95,6 +96,9 @@ const TripsPage = () => {
     return (
       <div className="container">
         <Alert severity="info">No approved trips available.</Alert>
+        <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+        </center>
       </div>
     );
   }
@@ -115,6 +119,7 @@ const TripsPage = () => {
           />
         ))}
       </div>
+      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
       <button onClick={() => navigate(`/map/${tripId}`)} className={"blueButton"}>Go to Map</button>
     </div>
   );
