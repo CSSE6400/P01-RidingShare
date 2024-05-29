@@ -55,7 +55,7 @@ jobs:
         export CELERY_BROKER_URL=redis://localhost:6379
         export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
         cd application/app
-        celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo 
+        celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo &
     
     - name: Run tests
       run: |
