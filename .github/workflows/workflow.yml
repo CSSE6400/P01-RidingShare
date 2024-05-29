@@ -59,7 +59,5 @@ jobs:
     
     - name: Run tests
       run: |
-        export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
-        export CELERY_BROKER_URL=redis://localhost:6379
         cd application/app/tests
         python -m unittest discover
