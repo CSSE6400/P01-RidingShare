@@ -1,10 +1,63 @@
-steps:
-- uses: actions/checkout@v2
+name: CI
 
-- name: Set up Python
-  uses: actions/setup-python@v2
-  with:
-    python-version: '3.10'
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
 
-- name: Execute Tests
-  run: ./unittest.sh
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgis/postgis
+        env:
+          POSTGRES_DB: ride
+          POSTGRES_USER: administrator
+          POSTGRES_PASSWORD: verySecretPassword
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r application/requirements.txt
+    
+    - name: Simulate Matching Worker
+      run: |
+        cd application/app
+        celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo --uid=nobody --gid=nogroup &
+    
+    - name: Run tests
+      run: |
+        export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
+        export CELERY_BROKER_URL=redis://localhost:6379
+        cd application/app/tests
+        python -m unittest discover
