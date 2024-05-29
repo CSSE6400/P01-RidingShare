@@ -4,11 +4,14 @@
 cd application
 
 # Start only the database service
-docker-compose up -d database
+docker-compose up -d database redis matching_worker
 
 # Wait for 10 seconds to allow the database to initialize
 echo "Waiting for the database service to initialize... Sleeping for 20 seconds"
 sleep 20
+
+export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
+export CELERY_BROKER_URL=redis://localhost:6379
 
 # Navigate to the tests directory and run unittests
 echo "Running tests..."
