@@ -38,6 +38,6 @@ touch credentials
 chmod +x credentials
 
 # Set the default region
+mkdir -p ~/.aws
 touch ~/.aws/config
-echo "[default]" > ~/.aws/config
-echo "region = us-east-1" >> ~/.aws/config
+printf "[default]\nregion = us-east-1" >> ~/.aws/config
