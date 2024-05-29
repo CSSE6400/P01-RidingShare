@@ -23,15 +23,12 @@ COPY credentials ./
 RUN printf '#!/bin/sh\n. ./credentials\nexec "$@"' > entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-# Copy application code
+# Copying our application into the container
 COPY app /app
 
 # Build the frontend with yarn
 RUN /bin/bash -c "source ~/.bashrc && cd frontend && yarn install && yarn build"
 
-# Return to the main work directory
-WORKDIR /app
-
-# Set up the entry point and default command
+# Running our application + entrypoint script
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["gunicorn", "--config", "gunicorn_config.py", "wsgi:app", "--preload"]
