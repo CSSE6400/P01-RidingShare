@@ -81,6 +81,7 @@ function LoginEmail() {
           </div>
         <button type="submit">Log In</button>
       </form>
+      <button onClick={() => navigate(`/sign-up`)} className={"blueButton"}>Sign Up</button>
     </div>
   );
 }
