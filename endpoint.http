@@ -5,7 +5,7 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "driver",
+  "username": "driver2",
   "password": "password",
   "name": "Driver Name",
   "phone_number": "1234567890",
@@ -19,7 +19,7 @@ POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
-  "username": "jDoe11",
+  "username": "jDoe15",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
@@ -78,9 +78,6 @@ Content-Type: application/json
   "username": "driver",
   "start_time": "2024-05-10T14:00:00Z",
   "end_time": "2024-05-10T15:00:00Z",
-  "username": "jDoe12",
-  "start_time": "2024-05-18T10:00:00Z",
-  "end_time": "2024-05-18T11:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -175,11 +172,10 @@ Content-Type: application/json
 
 {
     "username": "Henry66",
-    "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4192, "address": "125 street road, brisbane, qld"},
-    "pickup_window_start": "2024-05-1T11:30:00",
-    "pickup_window_end": "2024-05-10T12:30:00"
+    "pickup_window_start": "2024-05-10T14:0:00",
+    "pickup_window_end": "2024-05-10T15:00:00"
 }
 
 ### Add trip request
@@ -230,7 +226,7 @@ POST {{baseUrl}}/trip_requests/get
 Content-Type: application/json
 
 {
-  "trip_request_id": "f5ec33f3-784f-4db6-bd94-4e2f7c04abe2"
+  "trip_request_id": "dd28add7-9316-47bf-8035-5ce5dacf68f6"
 }
 
 ### Get all PENDING trip requests for a user
@@ -249,8 +245,8 @@ POST {{baseUrl}}/trip/get/pending_nearby
 Content-Type: application/json
 
 {
-  "trip_id": "198959b3-0143-4729-9ccc-263f41ce8491",
-  "username": "jDoe12"
+  "trip_id": "71edcb1b-45a4-438d-80dc-fccd1606a595",
+  "username": "driver"
 }
 
 ### Get all Approved trip requests for a drivers trip based off time and location (could also be just time)

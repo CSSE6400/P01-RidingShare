@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCoordinates } from '../api/api';
-import styles from '../styles/TripRequest.module.css';
+import styles from '../styles/RideRequest.module.css';
 import { UserContext } from './UserContext';
+import Alert from '@mui/material/Alert';
 
 function RideRequest() {
     const { user, setUser } = useContext(UserContext);
@@ -13,8 +14,10 @@ function RideRequest() {
         pickup_window_end: ""
     });
     const [errors, setErrors] = useState({});
-    const [tripRequestId, setTripRequestId] = useState('');
     const navigate = useNavigate();
+    const [infoMessage, setInfoMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleTimeChange = (event) => {
         const { name, value } = event.target;
@@ -50,6 +53,51 @@ function RideRequest() {
         return Object.keys(newErrors).length === 0;
     };
 
+    const requestCost = async (event) => {
+        event.preventDefault();
+        if (!validateForm()) {
+            console.log('Validation failed');
+            return;
+        }
+
+        try {
+            const pickupCoords = await fetchCoordinates(pickupAddress);
+            const dropoffCoords = await fetchCoordinates(dropoffAddress);
+
+            const tripData = {
+                start_location: { ...pickupCoords},
+                end_location: { ...dropoffCoords},
+            };
+            console.log(tripData);
+
+            const url = "/trip_request/cost";
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(tripData)
+            });
+
+            if (response.ok) {
+                setErrorMessage('');
+                setInfoMessage('');
+                setSuccessMessage('');
+                const data = await response.json();
+                console.log('Cost requested created successfully:', data);
+                setInfoMessage(data.Message);
+            } 
+            else {
+                const data = await response.json();
+                setErrorMessage(data.Message);
+                throw new Error('Failed to send cost request');
+            }
+        } catch (error) {
+            console.error('Error sending cost request:', error);
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (!validateForm()) {
@@ -80,23 +128,23 @@ function RideRequest() {
             });
 
             if (response.ok) {
+                setErrorMessage('');
+                setInfoMessage('');
+                setSuccessMessage('');
                 const data = await response.json();
                 console.log('Ride request created successfully:', data);
-                setTripRequestId(data.id);
+                setSuccessMessage('Your ride request has been created successfully.');
             } else {
+                setInfoMessage('');
+                setSuccessMessage('');
+                const data = await response.json();
+                setErrorMessage(data.message);
                 throw new Error('Failed to create trip request');
             }
         } catch (error) {
             console.error('Error creating trip request:', error);
         }
     };
-
-    useEffect(() => {
-        console.log('API response updated:', tripRequestId);
-        if (tripRequestId !== '') {
-            navigate(`/trip-info/${tripRequestId}`);
-        }
-    }, [tripRequestId, navigate]);
 
     const handleLogout = () => {
         setUser(null);
@@ -105,9 +153,12 @@ function RideRequest() {
     };
 
     return (
-        <div>
+        <div className={styles.tripRequest}>
             <form onSubmit={handleSubmit} className={styles.formContainer}>
-                <h1>Create Ride Request</h1>
+            <h1>Create Ride Request</h1>
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {infoMessage && <Alert severity="info">Your trip will cost ${infoMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
                         <div className={styles.formText}>Pickup Window Start:</div>
@@ -126,9 +177,12 @@ function RideRequest() {
                         <input type="text" value={dropoffAddress} onChange={(e) => handleAddressChange(e, "dropoff")} className={errors.dropoff ? styles.errorInput : styles.inputField} />
                     </label>
                 </div>
+                <center><button onClick={requestCost} className={styles.button}>Request Cost</button></center>
                 <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
             </form>
-            <center><button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
+            <center>
+                <button onClick={() => navigate('/request-list')} className={styles.blueButton}>Your Requests List</button>
+                <button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
         </div>
     );
 }
