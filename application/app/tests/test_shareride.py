@@ -96,7 +96,7 @@ class Test3(RideTest):
         ride_request_john = self.client.post('/trip_request/create', json=RIDE_REQUEST_JOHN_2) # John creates another ride request
         Test3.trip_request_id = ride_request_john.json['id']
 
-        time.sleep(1)
+        time.sleep(5)
         response = self.client.post('/trip/get/pending_nearby', json={"username": "lSmith88", "trip_id": Test3.trip_id})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         #Kylie's request should not be fetched since she is not nearby, Chris's request should not be fetched because it is oustide the trip's timeframe
