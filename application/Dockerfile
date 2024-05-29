@@ -1,34 +1,33 @@
 FROM pypy:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y libpq-dev postgresql-common gcc libgeos++-dev libgeos-3.9.0 libgeos-c1v5 libgeos-dev libgeos-doc openssl libcurl4-nss-dev libssl-dev curl gnupg && \
-    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g yarn
+# Installing dependencies for running the application
+RUN apt-get update && apt-get install -y libpq-dev postgresql-common gcc libgeos++-dev libgeos-3.9.0 libgeos-c1v5 libgeos-dev libgeos-doc
+RUN apt-get install -y openssl libcurl4-nss-dev libssl-dev curl
+
+# Install NVM to manage installing npm 20 and Yarn
+ENV NVM_DIR "$HOME/.nvm"
+RUN mkdir -p ${NVM_DIR}
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+RUN /bin/bash -c "source ~/.bashrc && nvm install 20 && npm install --global yarn"
 
 # Setting the working directory
 WORKDIR /app
 
-# Install Python dependencies
+# Install pipenv dependencies (Uses some separate precompiled wheels to avoid compiling)
 RUN pypy3 -m pip install --prefer-binary --extra-index-url https://pypy.kmtea.eu/simple pycurl==7.43.0 numpy
 COPY requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pypy3 -m pip install -r requirements.txt
 
-# Copy our AWS credentials and consturct an entrypoint script for them
+# Copy our AWS credentials and construct an entrypoint script to source them
 COPY credentials ./	
-RUN printf '#!/bin/sh\n. ./credentials\nexec "$@"' > entrypoint.sh && \
-    chmod +x entrypoint.sh
-
-# Environment variables (you can also set these using an ARG or ENV in the Dockerfile)
-RUN echo $ROUTING_API_URL
+RUN printf '#!/bin/sh\n. ./credentials\nexec "$@"' > entrypoint.sh
+RUN chmod +x entrypoint.sh
 
 # Copy application code
 COPY app /app
 
-# Setup and build the frontend
-WORKDIR /app/frontend
-RUN yarn install && yarn build
+# Build the frontend with yarn
+RUN /bin/bash -c "source ~/.bashrc && cd frontend && yarn install && yarn build"
 
 # Return to the main work directory
 WORKDIR /app
