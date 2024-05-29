@@ -15,6 +15,7 @@ function RideRequest() {
     });
     const [errors, setErrors] = useState({});
     const [tripRequestId, setTripRequestId] = useState('');
+    const [alertMessage, setAlertMessage] = useState('');  // New state for alert message
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
@@ -126,20 +127,15 @@ function RideRequest() {
                 console.log('Ride request created successfully:', data);
                 setSuccessMessage('Your ride request has been created successfully.');
                 setTripRequestId(data.id);
+                setAlertMessage('Ride request created successfully!');  // Set alert message
             } else {
                 throw new Error('Failed to create trip request');
             }
         } catch (error) {
             console.error('Error creating trip request:', error);
+            setAlertMessage('Failed to create ride request.');  // Set alert message
         }
     };
-
-    useEffect(() => {
-        console.log('API response updated:', tripRequestId);
-        if (tripRequestId !== '') {
-            navigate(`/trip-info/${tripRequestId}`);
-        }
-    }, [tripRequestId, navigate]);
 
     const handleLogout = () => {
         setUser(null);
@@ -149,6 +145,11 @@ function RideRequest() {
 
     return (
         <div className={styles.tripRequest}>
+            {alertMessage && (
+                <div className={styles.alert}>
+                    {alertMessage}
+                </div>
+            )}
             <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h1>Create Ride Request</h1>
                 {errorMessage && <Alert severity="info">Your trip will cost ${errorMessage}</Alert>}
@@ -174,7 +175,9 @@ function RideRequest() {
                 <center><button onClick={requestCost} className={styles.button}>Request Cost</button></center>
                 <center><button type="submit" className={styles.button}>Create Trip Request</button></center>
             </form>
-            <center><button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
+            <center>
+                <button onClick={() => navigate('/request-list')} className={styles.blueButton}>Your Requests List</button>
+                <button onClick={handleLogout} className={styles.blueButton}>Logout</button></center>
         </div>
     );
 }

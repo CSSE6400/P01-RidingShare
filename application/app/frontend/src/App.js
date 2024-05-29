@@ -8,6 +8,7 @@ import RideRequests from './components/RideRequests';
 import { useContext } from 'react';
 import TripDetail from './components/TripDetail'
 import TripList from './components/TripList'
+import RequestList from './components/RequestList'
 import SimpleMap from './components/Map';
 import RideRequest from './components/RideRequest';
 import TripsPage from './pages/TripsPage';
@@ -38,6 +39,11 @@ const App = () => {
           <Route path="/trip-list" element={
             <PrivateRoute userType={["driver"]}>
               <TripList />
+            </PrivateRoute>
+          } />
+          <Route path="/request-list" element={
+            <PrivateRoute userType={["passenger"]}>
+              <RequestList />
             </PrivateRoute>
           } />
           <Route path="/trip/:tripId" element={

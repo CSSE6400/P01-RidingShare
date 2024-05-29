@@ -69,7 +69,7 @@ function RideRequests() {
             <p>No ride requests available.</p>
           )}
         </div>
-        <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to Trips</button>
+        <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to your Trips Page</button>
       </center>
     </div>
   );

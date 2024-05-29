@@ -92,6 +92,7 @@ function TripRequest() {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Trip created successfully:', data);
+                navigate(`/rides/${data.id}`);
             } else {
                 throw new Error('Failed to create trip');
             }
@@ -137,7 +138,6 @@ function TripRequest() {
             </form>
             <center>
             <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
-            <button onClick={() => navigate('/trips')} className={styles.blueButton}>Go to Trips</button>
             <button onClick={() => navigate('/map')} className={styles.blueButton}>Show Map</button>
             <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
             </center>
