@@ -13,9 +13,6 @@ sleep 30
 export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
 export CELERY_BROKER_URL=redis://localhost:6379
 
-export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
-export CELERY_BROKER_URL=redis://localhost:6379
-
 # Navigate to the tests directory and run unittests
 echo "Running tests..."
 cd app/tests
