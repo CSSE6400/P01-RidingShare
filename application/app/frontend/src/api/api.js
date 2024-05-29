@@ -97,7 +97,7 @@ export const getNearbyTripRequests = async (tripId, username) => {
   };
 
   export const approveRequest = async (username, tripRequestId, tripId) => {
-    const url = "/trip/post/approved";
+    const url = "/trip/post/approve";
     try {
         const response = await fetch(url, {
             method: 'POST',

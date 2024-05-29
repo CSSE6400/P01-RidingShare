@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
-import TripCard from './TripCard';
+import RequestCard from './RequestCard';
 import { UserContext } from './UserContext';
 import '../styles/TripList.css';
-import Alert from '@mui/material/Alert';
 
-const TripList = () => {
+const RequestList = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
@@ -12,7 +11,7 @@ const TripList = () => {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch('/trips/get/all', { // Use your actual base URL here
+        const response = await fetch('/trip_requests/get/all', { // Use your actual base URL here
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -23,7 +22,7 @@ const TripList = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setTrips(data.trips);
+          setTrips(data.trip_requests);
         } else {
           console.error('Failed to fetch trips');
         }
@@ -42,16 +41,16 @@ const TripList = () => {
   }
 
   if (!trips.length) {
-    return <Alert severity="info">No trips available.</Alert>
+    return <div>No trips available.</div>;
   }
 
   return (
     <div className="trip-list">
       {trips.map((trip) => (
-        <TripCard key={trip.id} trip={trip} />
+        <RequestCard key={trip.id} trip={trip} />
       ))}
     </div>
   );
 };
 
-export default TripList;
+export default RequestList;

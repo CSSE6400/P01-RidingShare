@@ -5,7 +5,7 @@ POST {{baseUrl}}/driver/create
 Content-Type: application/json
 
 {
-  "username": "driver",
+  "username": "driver2",
   "password": "password",
   "name": "Driver Name",
   "phone_number": "1234567890",
@@ -19,7 +19,7 @@ POST {{baseUrl}}/passenger/create
 Content-Type: application/json
 
 {
-  "username": "jDoe11",
+  "username": "jDoe15",
   "password": "53%32",
   "name": "John Doe",
   "phone_number": "1234567890",
