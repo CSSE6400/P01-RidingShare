@@ -44,7 +44,12 @@ const RequestList = () => {
   }
 
   if (!trips.length) {
-    return <div>No trips available.</div>;
+    return (
+      <div>
+        <div>No trips available.</div>
+        <center><button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button></center>
+      </div>
+    );
   }
 
   return (
@@ -54,7 +59,9 @@ const RequestList = () => {
           <RequestCard key={trip.id} trip={trip} />
         ))}
       </div>
-      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      </center>
     </div>
   );
 };

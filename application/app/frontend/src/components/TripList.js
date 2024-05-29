@@ -45,7 +45,14 @@ const TripList = () => {
   }
 
   if (!trips.length) {
-    return <Alert severity="info">No trips available.</Alert>
+    return (
+      <div>
+        <Alert severity="info">No trips available.</Alert>
+        <center>
+          <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+        </center>
+      </div>
+    );
   }
 
   return (
@@ -55,7 +62,9 @@ const TripList = () => {
           <TripCard key={trip.id} trip={trip} />
         ))}
       </div>
-      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      </center>
     </div>
   );
 };
