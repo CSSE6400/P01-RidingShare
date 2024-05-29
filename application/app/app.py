@@ -78,7 +78,6 @@ def add_postgis_extension():
     try:
         db.session.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
         db.session.commit()
-        print("PostGIS extension added successfully")
     except Exception as e:
         db.session.rollback()
         print("Error adding PostGIS extension:", str(e))

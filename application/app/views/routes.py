@@ -348,7 +348,12 @@ class GetNearbyTripRequests(Resource):
             contents = nearby_trip_requests_parser.parse_args()
             trip = get_trip_from_id(contents.get("trip_id"))
             if trip:
-                return make_response(trip.optional_trip_requests.split(",")[1:], 200)
+                result = {"Trips": []}
+                for trip in trip.optional_trip_requests.split(",")[1:]:
+                    trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=trip)).scalars().first()
+                    result["Trips"].append(trip_request_query.to_dict())
+                return make_response(result, 200)
+
             return make_response({"error": "There is no Trip under this ID."}, 400)
 
 
