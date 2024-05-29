@@ -3,6 +3,7 @@ import unittest
 import json
 from data import *
 import time
+import time
 
 class Test1(RideTest):
 
@@ -96,14 +97,14 @@ class Test3(RideTest):
         ride_request_john = self.client.post('/trip_request/create', json=RIDE_REQUEST_JOHN_2) # John creates another ride request
         print("john",ride_request_john.json)
 
-        time.sleep(10)
+        time.sleep(1)
         response = self.client.post('/trip/get/pending_nearby', json={"username": "lSmith88", "trip_id": Test3.trip_id})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         print("hello",response.json)
         #Kylie's request should not be fetched since she is not nearby, Chris's request should not be fetched because it is oustide the trip's timeframe
         self.assertEqual(len(response.json), 1)
-        self.assertEqual(response.json[0]['passenger_name'], "John Doe")
-        Test3.trip_request_id = response.json[0]['id']
+        self.assertEqual(response.json['Trips'][0]['passenger_name'], "John Doe")
+        Test3.trip_request_id = response.json['Trips'][0]['id']
 
     def test_2_approve_trip_request(self):
         # test to verify that the driver can approve trip requests

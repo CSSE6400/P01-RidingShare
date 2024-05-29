@@ -4,11 +4,14 @@
 cd application
 
 # Start only the database service
-docker-compose up -d database redis 
+docker-compose up -d database redis matching_worker
 
 # Wait for 10 seconds to allow the database to initialize
 echo "Waiting for the database service to initialize... Sleeping for 20 seconds"
 sleep 30
+
+export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
+export CELERY_BROKER_URL=redis://localhost:6379
 
 export SQLALCHEMY_DATABASE_URI=postgresql+psycopg://administrator:verySecretPassword@localhost:5432/ride
 export CELERY_BROKER_URL=redis://localhost:6379
