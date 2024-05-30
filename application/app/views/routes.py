@@ -157,12 +157,17 @@ class GetUser(Resource):
 
 class GetUserInformation(Resource):
     def post(self):
-        user_information = fetch_other_user_details.parse_args()
+        user_information = handle_user_password.parse_args()
         possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
         if possible_response is not None:
             return possible_response
-        ### COME BACK TO THIS 
+
         contents = get_user_details_by_username_parser.parse_args()
+
+        user = get_user_from_username(contents.get("username"))
+        if user == None:
+            return make_response({"error": "That user does not exist"}, 301)
+
         user_type = contents.get("user_type")
         if user_type not in ["driver", "passenger"]:
             return make_response({"error": "user_type must be provided and be either 'driver' or 'passenger'"}, 400)
