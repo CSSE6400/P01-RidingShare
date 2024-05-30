@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useContext, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer } from "react-leaflet";
 import { UserContext } from '../components/UserContext';
-
+import styles from '../styles/TripRequest.module.css';
 import "leaflet/dist/leaflet.css";
 import 'leaflet/dist/images/marker-shadow.png';
 import Routing from "./Routing";
@@ -129,6 +129,7 @@ const SimpleMap = () => {
         />
         <Routing waypoints={locations} />
       </MapContainer>
+      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
       <button onClick={() => navigate(`/trips/${tripId}`)} className={"blueButton"}>Go to Trips</button>
     </div>
   );
