@@ -400,7 +400,7 @@ class ApproveRequest(Resource):
                                 trip.optional_trip_requests["Trips"].remove(trip_req_id)
                             db.session.commit()
 
-                        return make_response(jsonify({"message": f"Trip {contents.get('trip_request_id')} has successfully been added to the trip."}), 200)
+                        return make_response(jsonify({"message": f"Trip {trip_request_query.passenger.user[0].name} has successfully been added to the trip."}), 200)
                     else:
                         return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
