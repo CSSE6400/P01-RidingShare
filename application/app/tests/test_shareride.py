@@ -119,7 +119,7 @@ class Test3(RideTest):
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(response.json["accepted_trips"][0], Test3.trip_request_id)
 
-        response = self.client.post('/trip_requests/get', json={"trip_request_id": Test3.trip_request_id})
+        response = self.client.post('/trip_requests/get', json={"trip_request_id": Test3.trip_request_id, "username": "lSmith88", "password": "53%30"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(response.json["status"], "MATCHED")
         self.assertEqual(response.json["trip_id"], Test3.trip_id)
