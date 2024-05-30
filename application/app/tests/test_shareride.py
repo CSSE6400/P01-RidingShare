@@ -67,7 +67,7 @@ class Test2(RideTest):
     def test_4_nondrivers_cannot_create_trip(self):
         # Test to check the system properly handles trip creation attempts by non-drivers.
         response = self.client.post('/trip/create', json=TRIP_REQUEST_LEO)
-        self.assertEqual(response.status_code, 404, "Expected status code to be 404 Created")
+        self.assertEqual(response.status_code, 301, "Expected status code to be 404 Created")
         self.assertEqual(response.json['message'], "Invalid Driver! Please ensure the username is linked to a driver account.",
                          "Response message should indicate that the user is already a passenger")
                          

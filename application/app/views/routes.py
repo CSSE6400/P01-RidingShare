@@ -333,8 +333,8 @@ class GetAllTripRequests(Resource):
             return possible_response
 
         contents = get_user_parser.parse_args()
-        user = get_user_from_username(contents.get("username"))
-        passenger_id = get_passenger_id_from_username(contents.get("username"))
+        user = get_user_from_username(contents.get("username", user_information.get("username")))
+        passenger_id = get_passenger_id_from_username(contents.get("username", user_information.get("username")))
         if passenger_id:
             trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id)).scalars().all()
             trips_data = [trip.to_dict() for trip in trips]
