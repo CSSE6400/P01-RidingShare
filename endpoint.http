@@ -14,6 +14,20 @@ Content-Type: application/json
   "licence_plate": "319IRG"
 }
 
+### Create a driver
+POST {{baseUrl}}/driver/create
+Content-Type: application/json
+
+{
+  "username": "Bailey66",
+  "password": "password",
+  "name": "Driver Name",
+  "phone_number": "1234567890",
+  "email": "john.doe1@example.com",
+  "max_available_seats": 3,
+  "licence_plate": "319IRG"
+}
+
 ### Create a passenger
 POST {{baseUrl}}/passenger/create
 Content-Type: application/json
@@ -75,9 +89,25 @@ POST {{baseUrl}}/trip/create
 Content-Type: application/json
 
 {
-  "username": "driver",
-  "start_time": "2024-05-10T14:00:00Z",
-  "end_time": "2024-05-10T15:00:00Z",
+  "username": "driver2",
+  "password": "password3",
+  "start_time": "2024-05-10T16:00:00Z",
+  "end_time": "2024-05-10T17:00:00Z",
+  "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
+  "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
+  "seats_remaining": 3,
+  "distance_addition": 200
+}
+
+### Add Trip
+POST {{baseUrl}}/trip/create
+Content-Type: application/json
+
+{
+  "username": "Bailey66",
+  "password": "Bailey",
+  "start_time": "2024-05-10T16:00:00Z",
+  "end_time": "2024-05-10T17:00:00Z",
   "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
   "end_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},
   "seats_remaining": 3,
@@ -89,7 +119,8 @@ POST {{baseUrl}}/trip_request/create
 Content-Type: application/json
 
 {
-    "username": "driver",
+    "username": "driver2",
+    "password": "password",
     "requested_time": "2024-05-10T11:00:00Z",
     "pickup_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, brisbane, qld"},
     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, brisbane, qld"},

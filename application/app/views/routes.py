@@ -25,7 +25,6 @@ class Health(Resource):
     def get(self):
         return make_response({"status": "ok"})
 
-
 class PassengerResource(Resource):
     def post(self):
         try:
@@ -158,24 +157,24 @@ class GetUser(Resource):
 
 class GetUserInformation(Resource):
     def post(self):
+        user_information = fetch_other_user_details.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+        ### COME BACK TO THIS 
         contents = get_user_details_by_username_parser.parse_args()
-
-        user = get_user_from_username(contents.get("username"))
-        if user == None:
-            return make_response({"error": "That user does not exist"}, 301)
-        
         user_type = contents.get("user_type")
         if user_type not in ["driver", "passenger"]:
             return make_response({"error": "user_type must be provided and be either 'driver' or 'passenger'"}, 400)
         
         if user_type == "driver":
-            driver_id = get_driver_id_from_username(contents.get("username"))
+            driver_id = get_driver_id_from_username(contents.get("target_username"))
             if driver_id is None:
                 return make_response({"error": "Driver does not exist"}, 404)
             car_id = get_car_id_from_driver_id(driver_id)
             car = get_car_from_car_id(car_id)
         elif user_type == "passenger":
-            passenger_id = get_passenger_id_from_username(contents.get("username"))
+            passenger_id = get_passenger_id_from_username(contents.get("target_username"))
             if passenger_id is None:
                 return make_response({"error": "Passenger does not exist"}, 404)
             
@@ -184,6 +183,10 @@ class GetUserInformation(Resource):
 
 class CreateTrip(Resource):
     def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
         contents = create_trip_parser.parse_args()
         driver_id = get_driver_id_from_username(contents.get("username"))
         if not driver_id:
@@ -234,6 +237,10 @@ class CreateTrip(Resource):
 class CreateTripRequest(Resource):
     def post(self):
         contents = create_trip_request_parser.parse_args()
+
+        user_information = handle_user_password.parse_args()
+        check_username_password(user_information.get("username"), user_information.get("password"))
+
         passenger_id = get_passenger_id_from_username(contents.get("username"))
         if not passenger_id:
             return make_response("No passenger exists under this username", 400)
@@ -268,6 +275,10 @@ class CreateTripRequest(Resource):
 class GetAllTrips(Resource):
     def post(self):
         contents = get_user_parser.parse_args()
+
+        user_information = handle_user_password.parse_args()
+        check_username_password(user_information.get("username"), user_information.get("password"))
+
         user = get_user_from_username(contents.get("username"))
         driver_id = get_driver_id_from_username(contents.get("username"))
         if driver_id:
@@ -280,6 +291,10 @@ class GetAllTrips(Resource):
 class GetTripById(Resource):
     def post(self):
         contents = get_trip_by_id_parser.parse_args()
+
+        user_information = handle_user_password.parse_args()
+        check_username_password(user_information.get("username"), user_information.get("password"))
+
         trip = get_trip_from_id(contents.get("trip_id"))
         if trip:
             return_contents = trip.to_dict()
@@ -287,10 +302,13 @@ class GetTripById(Resource):
         else:
             return make_response({"error": "There is no Trip with this given ID"}, 400)
             
-
-
 class GetPendingTrips(Resource):
     def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         driver_id = get_driver_id_from_username(contents.get("username"))
@@ -304,6 +322,11 @@ class GetPendingTrips(Resource):
 
 class GetAllTripRequests(Resource):
     def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
         contents = get_user_parser.parse_args()
         user = get_user_from_username(contents.get("username"))
         passenger_id = get_passenger_id_from_username(contents.get("username"))
@@ -317,6 +340,11 @@ class GetAllTripRequests(Resource):
 
 class GetTripRequestById(Resource):
     def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
         contents = get_trip_request_by_id_parser.parse_args()
         trip_request = get_trip_request_from_id(contents.get("trip_request_id"))
         if trip_request:
@@ -331,85 +359,109 @@ class GetTripRequestById(Resource):
             return make_response({"error": "There is no Trip Request with this given ID"}, 400)
 
 class GetPendingTripRequests(Resource):
-        def post(self):
-            contents = get_user_parser.parse_args()
-            user = get_user_from_username(contents.get("username"))
-            passenger_id = get_passenger_id_from_username(contents.get("username"))
-            if passenger_id:
-                trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
-                trips_data = [trip.to_dict() for trip in trips]
-                return make_response({"trip_requests": trips_data}, 200)
-            else:
-                return make_response("There is no passenger under this username.", 400)
+    def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
+        contents = get_user_parser.parse_args()
+
+        user = get_user_from_username(contents.get("username"))
+        passenger_id = get_passenger_id_from_username(contents.get("username"))
+        if passenger_id:
+            trips = db.session.execute(db.select(TripRequest).filter_by(passenger_id=passenger_id, status="PENDING")).scalars().all()
+            trips_data = [trip.to_dict() for trip in trips]
+            return make_response({"trip_requests": trips_data}, 200)
+        else:
+            return make_response("There is no passenger under this username.", 400)
 
 
 class GetNearbyTripRequests(Resource):
-        def post(self):
-            contents = nearby_trip_requests_parser.parse_args()
-            trip = get_trip_from_id(contents.get("trip_id"))
-            if trip:
-                result = {"Trips": []}
-                for trip in trip.optional_trip_requests.split(",")[1:]:
-                    trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=trip)).scalars().first()
-                    if trip_request_query.status == "PENDING":  
-                        result["Trips"].append(trip_request_query.to_dict())
-                return make_response(result, 200)
+    def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
 
-            return make_response({"error": "There is no Trip under this ID."}, 400)
+        contents = nearby_trip_requests_parser.parse_args()
+        
+        trip = get_trip_from_id(contents.get("trip_id"))
+        if trip:
+            result = {"Trips": []}
+            for trip in trip.optional_trip_requests.split(",")[1:]:
+                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=trip)).scalars().first()
+                if trip_request_query.status == "PENDING":  
+                    result["Trips"].append(trip_request_query.to_dict())
+            return make_response(result, 200)
+
+        return make_response({"error": "There is no Trip under this ID."}, 400)
 
 
 class GetApprovedTripRequests(Resource):
-        def post(self):
-            contents = nearby_trip_requests_parser.parse_args()
-            driver_id = get_driver_id_from_username(contents.get("username"))
-            trip_id = contents.get("trip_id")
-            if driver_id:
-                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
-                if trip_query:
-                    ans = [trip.id for trip in trip_query.trip_requests]
-                    return make_response({"accepted_trips": ans}, 200)
-                else:
-                    return make_response(f"This is not a valid trip id.", 400)
+    def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
+        contents = nearby_trip_requests_parser.parse_args()
+
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        trip_id = contents.get("trip_id")
+        if driver_id:
+            trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+            if trip_query:
+                ans = [trip.id for trip in trip_query.trip_requests]
+                return make_response({"accepted_trips": ans}, 200)
             else:
-                return make_response("There is no driver under this username.", 400)
+                return make_response(f"This is not a valid trip id.", 400)
+        else:
+            return make_response("There is no driver under this username.", 400)
 
 
 class ApproveRequest(Resource):
-        def post(self):
-            contents = approve_requests_parser.parse_args()
-            username = contents.get("username")
-            trip_req_id = contents.get("trip_request_id")
-            driver_id = get_driver_id_from_username(contents.get("username"))
-            if driver_id:
-                trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().first()
-                trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
-                if trip_query and trip_request_query:
-                    if trip_query.seats_remaining is not None: 
-                        seats =  trip_query.seats_remaining 
-                    else:
-                        seats = trip_query.driver.car.max_available_seats
+    def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
 
-                    if len(trip_query.trip_requests) < seats:
-                        trip_request_query.status = TripRequestState.MATCHED
-                        db.session.commit()
-                        link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
+        contents = approve_requests_parser.parse_args()
 
-                        if len(trip_query.trip_requests) == seats:
-                            trip_query.status = TripState.MATCHED
-                            trip_query.seats_remaining = trip_query.seats_remaining - 1
-                            if trip_req_id in trip.optional_trip_requests["Trips"]:
-                                trip.optional_trip_requests["Trips"].remove(trip_req_id)
-                            db.session.commit()
-
-                        return make_response(jsonify({"message": f"Trip {trip_request_query.passenger.user[0].name} has successfully been added to the trip."}), 200)
-                    else:
-                        return make_response(jsonify({"message": "Your current trip is full."}), 400)
-
+        username = contents.get("username")
+        trip_req_id = contents.get("trip_request_id")
+        driver_id = get_driver_id_from_username(contents.get("username"))
+        if driver_id:
+            trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=contents.get("trip_request_id"), status="PENDING")).scalars().first()
+            trip_query = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+            if trip_query and trip_request_query:
+                if trip_query.seats_remaining is not None: 
+                    seats =  trip_query.seats_remaining 
                 else:
-                    return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
+                    seats = trip_query.driver.car.max_available_seats
+
+                if len(trip_query.trip_requests) < seats:
+                    trip_request_query.status = TripRequestState.MATCHED
+                    db.session.commit()
+                    link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
+
+                    if len(trip_query.trip_requests) == seats:
+                        trip_query.status = TripState.MATCHED
+                        trip_query.seats_remaining = trip_query.seats_remaining - 1
+                        if trip_req_id in trip.optional_trip_requests["Trips"]:
+                            trip.optional_trip_requests["Trips"].remove(trip_req_id)
+                        db.session.commit()
+
+                    return make_response(jsonify({"message": f"Trip {trip_request_query.passenger.user[0].name} has successfully been added to the trip."}), 200)
+                else:
+                    return make_response(jsonify({"message": "Your current trip is full."}), 400)
 
             else:
-                return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
+                return make_response(jsonify({"message": "This is no longer a trip request or trip."}), 400)
+
+        else:
+            return make_response(jsonify({"message": f"There is no driver under the username: {username}"}), 400)
 
 class Test(Resource):
     def get(self):
@@ -425,51 +477,62 @@ class Test(Resource):
 
 
 class GetTripPositions(Resource):
-        def post(self):
-            contents = nearby_trip_requests_parser.parse_args()
-            trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
-            if trip is None:
-                return make_response("There is no trip with this id.", 200)
-            
-            start_point = to_shape(trip.start_location)
-            passengers = trip.trip_requests
-            # Sorting passengers based on the nearest neighbor heuristic
-            sorted_passengers = []
-            current_point = start_point
-            remaining_passengers = passengers.copy()
+    def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
 
-            while remaining_passengers:
-                next_passenger = min(
-                    remaining_passengers,
-                    key=lambda p: haversine(
-                        current_point.x, current_point.y, 
-                        to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
-                    )
+        contents = nearby_trip_requests_parser.parse_args()
+
+        trip = db.session.execute(db.select(Trip).filter_by(id=contents.get("trip_id"))).scalars().first()
+        if trip is None:
+            return make_response("There is no trip with this id.", 200)
+        
+        start_point = to_shape(trip.start_location)
+        passengers = trip.trip_requests
+        # Sorting passengers based on the nearest neighbor heuristic
+        sorted_passengers = []
+        current_point = start_point
+        remaining_passengers = passengers.copy()
+
+        while remaining_passengers:
+            next_passenger = min(
+                remaining_passengers,
+                key=lambda p: haversine(
+                    current_point.x, current_point.y, 
+                    to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
                 )
-                sorted_passengers.append(next_passenger)
-                current_point = to_shape(next_passenger.pickup_location)
-                remaining_passengers.remove(next_passenger)
+            )
+            sorted_passengers.append(next_passenger)
+            current_point = to_shape(next_passenger.pickup_location)
+            remaining_passengers.remove(next_passenger)
 
-            # Construct the response
-            response = {
-                "trip_time": trip.start_time,
-                "passengers": [
-                    {
-                        "lat": to_shape(p.pickup_location).y,
-                        "long": to_shape(p.pickup_location).x,
-                        "name": p.passenger.user[0].name,
-                        "pickup": p.start_address
-                    }
-                    for p in sorted_passengers
-                ]
-            }
+        # Construct the response
+        response = {
+            "trip_time": trip.start_time,
+            "passengers": [
+                {
+                    "lat": to_shape(p.pickup_location).y,
+                    "long": to_shape(p.pickup_location).x,
+                    "name": p.passenger.user[0].name,
+                    "pickup": p.start_address
+                }
+                for p in sorted_passengers
+            ]
+        }
 
-            return make_response(response, 200)
+        return make_response(response, 200)
 
 class RequestCost(Resource):
     def post(self):
+        user_information = handle_user_password.parse_args()
+        possible_response = check_username_password(user_information.get("username"), user_information.get("password"))
+        if possible_response is not None:
+            return possible_response
+
         contents = get_cost_parser.parse_args()
-        
+
         start_location = contents.get("start_location")
         end_location = contents.get("end_location")
 
