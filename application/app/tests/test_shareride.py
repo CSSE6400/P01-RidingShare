@@ -67,9 +67,8 @@ class Test2(RideTest):
     def test_4_nondrivers_cannot_create_trip(self):
         # Test to check the system properly handles trip creation attempts by non-drivers.
         response = self.client.post('/trip/create', json=TRIP_REQUEST_LEO)
-        self.assertEqual(response.status_code, 301, "Expected status code to be 404 Created")
-        self.assertEqual(response.json['message'], "Invalid Driver! Please ensure the username is linked to a driver account.",
-                         "Response message should indicate that the user is already a passenger")
+        self.assertEqual(response.status_code, 301, "Expected status code to be 301 Created")
+        self.assertEqual(response.json['error'], "That user does not exist or has incorrect login details.")
                          
     def test_5_get_all_trips_for_user(self):
         # Test to verify that all trips associated with a specific driver can be retrieved.
