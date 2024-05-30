@@ -7,7 +7,7 @@ resource "aws_lb_target_group" "app" {
 
     health_check { 
         enabled = true
-        path                = "/api/v1/health" 
+        path                = "/health" 
         port                = "8080" 
         protocol            = "HTTP" 
         healthy_threshold   = 2 
