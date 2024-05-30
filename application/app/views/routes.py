@@ -433,14 +433,22 @@ class GetTripPositions(Resource):
             
             start_point = to_shape(trip.start_location)
             passengers = trip.trip_requests
-            # Sort passengers by the Haversine distance from the start point
-            sorted_passengers = sorted(
-                passengers,  
-                key=lambda p: haversine(
-                    start_point.x, start_point.y, 
-                    to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
+            # Sorting passengers based on the nearest neighbor heuristic
+            sorted_passengers = []
+            current_point = start_point
+            remaining_passengers = passengers.copy()
+
+            while remaining_passengers:
+                next_passenger = min(
+                    remaining_passengers,
+                    key=lambda p: haversine(
+                        current_point.x, current_point.y, 
+                        to_shape(p.pickup_location).x, to_shape(p.pickup_location).y
+                    )
                 )
-            )
+                sorted_passengers.append(next_passenger)
+                current_point = to_shape(next_passenger.pickup_location)
+                remaining_passengers.remove(next_passenger)
 
             # Construct the response
             response = {

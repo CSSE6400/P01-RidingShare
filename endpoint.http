@@ -119,7 +119,7 @@ POST {{baseUrl}}/trips/get/all
 Content-Type: application/json
 
 {
-  "username": "test1"
+  "username": "jDoe12"
 }
 
 ### Get all PENDING trips for a user
@@ -280,7 +280,7 @@ POST {{baseUrl}}/trip/get_route_positions
 Content-Type: application/json
 
 {
-  "trip_id": "40a7b51b-ec8b-4c09-86ac-2d0a2157bae3",
+  "trip_id": "b80739e6-0e82-4106-bb87-f40bf4667fbc",
   "username": "jDoe12"
 }
 
