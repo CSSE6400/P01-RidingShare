@@ -8,10 +8,12 @@ import RideRequests from './components/RideRequests';
 import { useContext } from 'react';
 import TripDetail from './components/TripDetail'
 import TripList from './components/TripList'
+import RequestList from './components/RequestList'
 import SimpleMap from './components/Map';
 import RideRequest from './components/RideRequest';
 import TripsPage from './pages/TripsPage';
 import TripInformation from './pages/TripInformationPage';
+import SignUpPage from './pages/SignUpPage';
 
 /**
  * App component - the main component of the application.
@@ -25,6 +27,7 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<LoginEmail />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/trip-request" element={
             <PrivateRoute userType={["driver"]}>
               <TripRequest />
@@ -38,6 +41,11 @@ const App = () => {
           <Route path="/trip-list" element={
             <PrivateRoute userType={["driver"]}>
               <TripList />
+            </PrivateRoute>
+          } />
+          <Route path="/request-list" element={
+            <PrivateRoute userType={["passenger"]}>
+              <RequestList />
             </PrivateRoute>
           } />
           <Route path="/trip/:tripId" element={

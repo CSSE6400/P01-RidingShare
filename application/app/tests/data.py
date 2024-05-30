@@ -83,7 +83,7 @@ TRIP_REQUEST_LEO = {
                         "start_location": {"latitude": -27.4711, "longitude": 153.0235, "address": "Post Office Square, Brisbane, QLD"},
                         "end_location": {"latitude": -27.4817, "longitude": 153.0292, "address": "The Brisbane Showgrounds, QLD"},
                         "seats_remaining": 2,
-                        "distance_addition": 4
+                        "distance_addition": 20
                     }
 
 RIDE_REQUEST_KYLIE = {

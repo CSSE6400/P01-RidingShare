@@ -154,7 +154,6 @@ class GetUser(Resource):
             passenger_id = get_passenger_id_from_username(contents.get("username"))
             if passenger_id is None:
                 return make_response({"error": "Passenger does not exist"}, 404)
-
         return make_response(user.to_dict(), 200)
 
 class GetUserInformation(Resource):
@@ -352,7 +351,8 @@ class GetNearbyTripRequests(Resource):
                 result = {"Trips": []}
                 for trip in trip.optional_trip_requests.split(",")[1:]:
                     trip_request_query = db.session.execute(db.select(TripRequest).filter_by(id=trip)).scalars().first()
-                    result["Trips"].append(trip_request_query.to_dict())
+                    if trip_request_query.status == "PENDING":  
+                        result["Trips"].append(trip_request_query.to_dict())
                 return make_response(result, 200)
 
             return make_response({"error": "There is no Trip under this ID."}, 400)
@@ -474,7 +474,7 @@ class RequestCost(Resource):
         end_location = contents.get("end_location")
 
         distance = haversine(start_location.get("longitude"), start_location.get("latitude"), end_location.get("longitude"), end_location.get("latitude"))
-        return make_response({"Message": str(10 + distance * 0.5)}, 200)
+        return make_response({"Message": str(round((10 + distance * 0.5), 2))}, 200)
 
 ### Resources for methods that have POST and specific get methods ###
 api.add_resource(Health, "/health")

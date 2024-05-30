@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchCoordinates } from '../api/api';
 import styles from '../styles/TripRequest.module.css';
 import { UserContext } from './UserContext';
+import Alert from '@mui/material/Alert';
 
 function TripRequest() {
     const { user, setUser } = useContext(UserContext);
@@ -15,6 +16,8 @@ function TripRequest() {
     });
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -75,7 +78,7 @@ function TripRequest() {
             const tripData = {
                 ...tripDetails,
                 username: user.username,
-                start_location: {...startCoords,"address": startAddress},
+                start_location: {...startCoords, "address": startAddress},
                 end_location: {...endCoords, "address": endAddress}
             };
 
@@ -90,9 +93,14 @@ function TripRequest() {
             });
             
             if (response.ok) {
+                setErrorMessage('');
                 const data = await response.json();
                 console.log('Trip created successfully:', data);
+                setSuccessMessage(data.message || 'Trip created successfully');
             } else {
+                const data = await response.json();
+                setSuccessMessage('');
+                setErrorMessage(data.message || 'Failed to create trip');
                 throw new Error('Failed to create trip');
             }
         } catch (error) {
@@ -108,9 +116,10 @@ function TripRequest() {
 
     return (
         <div className="tripRequest">
-            
             <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h1>Create Trip </h1>
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
                 <div className={styles.gridContainer}>
                     <label className={styles.fullWidth}>
                         <div className={styles.formText}>Start Time:</div>
@@ -137,8 +146,6 @@ function TripRequest() {
             </form>
             <center>
             <button onClick={() => navigate('/trip-list')} className={styles.blueButton}>Go to Trip List</button>
-            <button onClick={() => navigate('/trips')} className={styles.blueButton}>Go to Trips</button>
-            <button onClick={() => navigate('/map')} className={styles.blueButton}>Show Map</button>
             <button onClick={handleLogout} className={styles.blueButton}>Logout</button>
             </center>
         </div>
