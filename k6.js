@@ -13,7 +13,7 @@ function simulateUserLoginTest() {
 
   const params = { headers: { 'Content-Type': 'application/json' } };
   let response = http.post(url, payload, params);
-  check(response, { 'is status 200': (r) => r.status === 200 });
+  check(response, { 'Fetch Driver Profile': (r) => r.status === 200 });
   sleep(1);
 }
 
@@ -96,8 +96,26 @@ export const options = {
         //     vus: 2000,
         //     iterations: 1,
         //     exec: 'simulateUserLogin'
-        // }
+      // }
     };
+
+export function setup() {
+  // Create a driver user
+  let url = `${ENDPOINT}/driver/create`;
+  const payload = JSON.stringify({
+    "username": "jDoe11",
+    "password": "53%32",
+    "name": "John Doe",
+    "phone_number": "1234567890",
+    "email": "john.doe1@example.com",
+    "max_available_seats": 4,
+    "licence_plate": "319IRG"
+  });
+  const params = { headers: { 'Content-Type': 'application/json' } };
+  let response = http.post(url, payload, params);
+  check(response, { 'Sign Up a Driver': (r) => r.status === 201 });
+
+}
 
 export function simulateUserLogin() {
     group('User Actions', function () {
