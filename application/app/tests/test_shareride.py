@@ -111,7 +111,7 @@ class Test3(RideTest):
         # Leo approves John's request to join his trip
         response = self.client.post('/trip/post/approve', json={"username": "lSmith88", "trip_id": Test3.trip_id, "trip_request_id": Test3.trip_request_id})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
-        self.assertEqual(response.json['message'], f"Trip {TRIP_REQUEST_LEO.get('name')} has successfully been added to the trip.",
+        self.assertEqual(response.json['message'], f"Trip {PASSENGER_JOHN.get('name')} has successfully been added to the trip.",
                          "Response message should indicate that the trip request has been approved")
 
     def test_3_get_approved_trip_requests(self):
