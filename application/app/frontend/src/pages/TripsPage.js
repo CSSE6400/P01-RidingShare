@@ -33,7 +33,8 @@ const TripsPage = () => {
           },
           body: JSON.stringify({
             trip_id: tripId,
-            username: user.username
+            username: user.username,
+            password: user.password
           }),
         });
 
@@ -51,7 +52,7 @@ const TripsPage = () => {
     };
 
     fetchTrips();
-  }, [user.username, tripId]);
+  }, [user.username, tripId, user.password]);
 
   const fetchTripDetails = async (trip_id) => {
     try {
@@ -62,7 +63,9 @@ const TripsPage = () => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          trip_request_id: trip_id
+          trip_request_id: trip_id,
+          username: user.username,
+          password: user.password
         }),
       });
       if (response.ok) {

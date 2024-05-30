@@ -34,7 +34,7 @@ function LoginEmail() {
       });
       const data = await response.json();
       if (response.status === 200) {
-        setUser({ username, user_type });
+        setUser({ username, password, user_type });
         if (user_type === 'driver') {
           navigate('/trip-request');
         } else if (user_type === 'passenger') {

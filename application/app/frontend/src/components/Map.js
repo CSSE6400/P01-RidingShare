@@ -32,6 +32,8 @@ const SimpleMap = () => {
             'Accept': 'application/json',
           },
           body: JSON.stringify({
+            username: user.username,
+            password: user.password,
             trip_id: tripId
           }),
         });
@@ -50,7 +52,7 @@ const SimpleMap = () => {
     if (!doneFetch) {
       fetchTripLocation();
     }
-  }, [tripId, doneFetch]);
+  }, [tripId, doneFetch, user.username, user.password]);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -63,7 +65,8 @@ const SimpleMap = () => {
           },
           body: JSON.stringify({
             trip_id: tripId,
-            username: user.username
+            username: user.username,
+            password: user.password
           }),
         });
 
@@ -79,7 +82,7 @@ const SimpleMap = () => {
     if (doneFetch) {
       fetchLocations();
     }
-  }, [tripId, doneFetch, user.username]);
+  }, [tripId, doneFetch, user.username, user.password]);
 
   useEffect(() => {
     if (doneFetch && trip.start_location && trip.end_location && passengers.length > 0) {
