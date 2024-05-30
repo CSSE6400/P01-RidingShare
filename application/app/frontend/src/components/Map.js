@@ -92,7 +92,7 @@ const SimpleMap = () => {
         ...passengers.map(passenger => ({
           lat: passenger.lat,
           lng: passenger.long,
-          name: "Mid Point"
+          name: passenger.name
         })),
         {
           lat: trip.end_location.latitude,
