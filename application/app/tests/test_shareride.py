@@ -36,7 +36,7 @@ class Test1(RideTest):
 
     def test_5_get_trip_requests(self):
         # Test to ensure that trip requests for a specific passenger can be retrieved correctly.
-        response = self.client.post('/trip_requests/get/all', json={"username": "jDoe12"})
+        response = self.client.post('/trip_requests/get/all', json={"username": "jDoe12", "password": "53%32"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(len(response.json), 1)
         self.assertEqual(response.json['trip_requests'][0]['start_address'], RIDE_REQUEST_JOHN['pickup_location']['address'])
@@ -67,13 +67,12 @@ class Test2(RideTest):
     def test_4_nondrivers_cannot_create_trip(self):
         # Test to check the system properly handles trip creation attempts by non-drivers.
         response = self.client.post('/trip/create', json=TRIP_REQUEST_LEO)
-        self.assertEqual(response.status_code, 404, "Expected status code to be 404 Created")
-        self.assertEqual(response.json['message'], "Invalid Driver! Please ensure the username is linked to a driver account.",
-                         "Response message should indicate that the user is already a passenger")
+        self.assertEqual(response.status_code, 301, "Expected status code to be 301 Created")
+        self.assertEqual(response.json['error'], "That user does not exist or has incorrect login details.")
                          
     def test_5_get_all_trips_for_user(self):
         # Test to verify that all trips associated with a specific driver can be retrieved.
-        response = self.client.post('/trips/get/all', json={"username": "Moedab11"})
+        response = self.client.post('/trips/get/all', json={"username": "Moedab11", "password": "53%31"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(len(response.json), 1)
         self.assertEqual(response.json['trips'][0]['start_address'], TRIP_REQUEST_MOE['start_location']['address'])
@@ -98,7 +97,7 @@ class Test3(RideTest):
         print("john",ride_request_john.json)
 
         time.sleep(1)
-        response = self.client.post('/trip/get/pending_nearby', json={"username": "lSmith88", "trip_id": Test3.trip_id})
+        response = self.client.post('/trip/get/pending_nearby', json={"username": "lSmith88", "trip_id": Test3.trip_id, "password": "53%30"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         print("hello",response.json)
         #Kylie's request should not be fetched since she is not nearby, Chris's request should not be fetched because it is oustide the trip's timeframe
@@ -109,18 +108,18 @@ class Test3(RideTest):
     def test_2_approve_trip_request(self):
         # test to verify that the driver can approve trip requests
         # Leo approves John's request to join his trip
-        response = self.client.post('/trip/post/approve', json={"username": "lSmith88", "trip_id": Test3.trip_id, "trip_request_id": Test3.trip_request_id})
+        response = self.client.post('/trip/post/approve', json={"username": "lSmith88", "trip_id": Test3.trip_id, "trip_request_id": Test3.trip_request_id, "password": "53%30"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(response.json['message'], f"Trip {PASSENGER_JOHN.get('name')} has successfully been added to the trip.",
                          "Response message should indicate that the trip request has been approved")
 
     def test_3_get_approved_trip_requests(self):
         # test to verify that the driver can retreive all the approved trip requests
-        response = self.client.post('/trip/get/approved', json={"username": "lSmith88", "trip_id": Test3.trip_id})
+        response = self.client.post('/trip/get/approved', json={"username": "lSmith88", "trip_id": Test3.trip_id, "password": "53%30"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(response.json["accepted_trips"][0], Test3.trip_request_id)
 
-        response = self.client.post('/trip_requests/get', json={"trip_request_id": Test3.trip_request_id})
+        response = self.client.post('/trip_requests/get', json={"trip_request_id": Test3.trip_request_id, "username": "lSmith88", "password": "53%30"})
         self.assertEqual(response.status_code, 200, "Expected status code to be 200 OK")
         self.assertEqual(response.json["status"], "MATCHED")
         self.assertEqual(response.json["trip_id"], Test3.trip_id)

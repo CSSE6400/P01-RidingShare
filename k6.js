@@ -30,6 +30,7 @@ function simulateTripCreationTest() {
 
     const payload = JSON.stringify({
         "username": "jDoe11",
+        "password": "53%32",
         "start_time": startTime.toISOString(),
         "end_time": endTime.toISOString(),
         "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, Brisbane, QLD"},
