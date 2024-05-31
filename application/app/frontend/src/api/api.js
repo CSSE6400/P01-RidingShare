@@ -1,43 +1,3 @@
-export const getPassenger = async () => {
-  const url = "/passengers";
-  const response = await fetch(url);
-  return response.json(); 
-}
-
-export const AddPassenger = async (post) => {
-  const url = "/passengers";
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(post),
-  });
-  return response.json(); 
-};
-
-export const loginUser = async (body) => {
-  const url = "/profile"; 
-  try {
-      const response = await fetch(url, {
-          method: 'POST',  
-          headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-          },
-          body: JSON.stringify(body) 
-      });
-      if (response.ok) {
-          return response.json();
-      } else {
-          throw new Error('Failed to login');
-      }
-  } catch (error) {
-      throw error;
-  }
-};
-
 export const fetchCoordinates = async (address) => {
   const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
   const response = await fetch(url);
@@ -53,29 +13,7 @@ export const fetchCoordinates = async (address) => {
   }
 };
 
-
-export const getPendingTripRequests = async (username) => {
-  const url = "/trip_requests/get/pending";
-  try {
-      const response = await fetch(url, {
-          method: 'POST',  
-          headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-          },
-          body: JSON.stringify({username}) 
-      });
-      if (response.ok) {
-          return response.json();
-      } else {
-          throw new Error('Failed to fetch pending trip requests');
-      }
-  } catch (error) {
-      throw error;
-  }
-};
-
-export const getNearbyTripRequests = async (tripId, username) => {
+export const getNearbyTripRequests = async (tripId, username, password) => {
     const url = "/trip/get/pending_nearby";
     try {
         const response = await fetch(url, {
@@ -84,7 +22,7 @@ export const getNearbyTripRequests = async (tripId, username) => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({ trip_id: tripId, username })
+            body: JSON.stringify({ trip_id: tripId, username, password })
         });
         if (response.ok) {
             return response.json();
@@ -96,7 +34,7 @@ export const getNearbyTripRequests = async (tripId, username) => {
     }
   };
 
-  export const approveRequest = async (username, tripRequestId, tripId) => {
+  export const approveRequest = async (username, password, tripRequestId, tripId) => {
     const url = "/trip/post/approve";
     try {
         const response = await fetch(url, {
@@ -105,7 +43,7 @@ export const getNearbyTripRequests = async (tripId, username) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, trip_request_id: tripRequestId, trip_id: tripId }),
+            body: JSON.stringify({ username, password, trip_request_id: tripRequestId, trip_id: tripId }),
         });
         if (response.ok) {
             return await response.json();

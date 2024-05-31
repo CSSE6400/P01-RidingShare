@@ -10,6 +10,7 @@ import styles from '../styles/TripRequest.module.css';
 function RideRequests() {
   const { user } = useContext(UserContext);
   const username = user.username;
+  const password = user.password;
   const { tripId } = useParams();
   const [tripRequests, setTripRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,7 +20,7 @@ function RideRequests() {
   useEffect(() => {
     const fetchTripRequests = async () => {
       try {
-        const data = await getNearbyTripRequests(tripId, username);
+        const data = await getNearbyTripRequests(tripId, username, password);
         setTripRequests(data.Trips);
     } catch (error) {
         setErrorMessage('Failed to fetch trip requests.');
@@ -27,13 +28,13 @@ function RideRequests() {
       }
     };
     fetchTripRequests();
-  }, [tripId, username]);
+  }, [password, tripId, username]);
 
   const handleApprove = async (tripRequestId) => {
     try {
       setErrorMessage('');
       setSuccessMessage('');
-      const response = await approveRequest(username, tripRequestId, tripId);
+      const response = await approveRequest(username, password, tripRequestId, tripId);
       setSuccessMessage(response.message);
       setTripRequests(tripRequests.filter(request => request.id !== tripRequestId));
     } catch (error) {

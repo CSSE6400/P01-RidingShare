@@ -21,7 +21,7 @@ const TripList = () => {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
           },
-          body: JSON.stringify({ username: user.username }), // Use the username from context
+          body: JSON.stringify({ username: user.username, password: user.password }), // Use the username from context
         });
 
         if (response.ok) {
@@ -38,7 +38,7 @@ const TripList = () => {
     };
 
     fetchTrips();
-  }, [user.username]);
+  }, [user.password, user.username]);
 
   if (loading) {
     return <div>Loading trips...</div>;

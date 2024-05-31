@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCoordinates } from '../api/api';
 import styles from '../styles/RideRequest.module.css';
@@ -65,6 +65,8 @@ function RideRequest() {
             const dropoffCoords = await fetchCoordinates(dropoffAddress);
 
             const tripData = {
+                username: user.username,
+                password: user.password,
                 start_location: { ...pickupCoords},
                 end_location: { ...dropoffCoords},
             };
@@ -111,6 +113,7 @@ function RideRequest() {
 
             const tripData = {
                 username: user.username,
+                password: user.password,
                 pickup_location: { ...pickupCoords, "address": pickupAddress },
                 dropoff_location: { ...dropoffCoords, "address": dropoffAddress },
                 ...tripWindows

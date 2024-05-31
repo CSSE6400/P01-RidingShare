@@ -46,11 +46,6 @@ const SignUpPage = () => {
     };
 
     const handleSubmit = async (event) => {
-        console.log(username);
-        console.log(password);
-        console.log(email);
-        console.log(maxAvailableSeat);
-        console.log(licencePlate);
         event.preventDefault();
         try {
             if (user_type === 'driver') {
