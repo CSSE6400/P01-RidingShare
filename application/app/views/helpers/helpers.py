@@ -10,6 +10,8 @@ from typing import Optional
 from math import radians, sin, cos, sqrt, atan2
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Blueprint, make_response, jsonify, request, render_template
 
 def get_trip_from_id(trip_id: str) -> Optional[Trip]:
 	return db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
@@ -126,8 +128,12 @@ def distance_query(start_long, start_lat, end_long, end_lat, distance, offers, s
 
 	return [trip.to_dict() for trip in nearby_requests]
 
-
-
+def check_username_password(username, password):
+	user = get_user_from_username(username)
+	if user == None or not check_password_hash(user.password, password):
+		return make_response({"error": "That user does not exist or has incorrect login details."}, 301)
+	return None
+	
 def link_trip_request_to_trip(trip_id: str, trip_request_id: str) -> bool:
 	trip = db.session.execute(db.select(Trip).filter_by(id=trip_id)).scalars().first()
 	trip_req = db.session.execute(db.select(TripRequest).filter_by(id=trip_request_id)).scalars().first()

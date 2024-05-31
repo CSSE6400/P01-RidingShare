@@ -1,5 +1,9 @@
 from flask_restful import reqparse 
 
+handle_user_password = reqparse.RequestParser()
+handle_user_password.add_argument("username", 	            type=str, required=True, help="Username cannot be blank!")
+handle_user_password.add_argument("password", 	            type=str, required=True, help="Password cannot be blank!")
+
 create_user_parser = reqparse.RequestParser()
 create_user_parser.add_argument("username", 	            type=str, required=True, help="Username cannot be blank!")
 create_user_parser.add_argument("password", 	            type=str, required=True, help="Password cannot be blank!")
@@ -19,7 +23,7 @@ get_user_details_parser.add_argument("password", 	                type=str, requ
 get_user_details_parser.add_argument("user_type", 	                type=str, required=True, help="User type cannot be blank!")
 
 get_user_details_by_username_parser = reqparse.RequestParser()
-get_user_details_by_username_parser.add_argument("username", 	                type=str, required=True, help="Username cannot be blank!")
+get_user_details_by_username_parser.add_argument("target_username", 	                type=str, required=True, help="Target username cannot be blank!")
 get_user_details_by_username_parser.add_argument("user_type", 	                type=str, required=True, help="User type cannot be blank!")
 
 get_user_parser = reqparse.RequestParser()

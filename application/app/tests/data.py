@@ -44,6 +44,7 @@ DRIVER_LEO = {
 
 TRIP_REQUEST_MOE = {
                 "username": "Moedab11",
+                "password": "53%31",
                 "start_time": "2024-05-10T10:00:00Z",
                 "end_time": "2024-05-10T10:30:00Z",
                 "start_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "123 street road, Brisbane, QLD"},
@@ -54,6 +55,7 @@ TRIP_REQUEST_MOE = {
 
 RIDE_REQUEST_JOHN = {
                 "username": "jDoe12",
+                "password": "53%32",
                 "pickup_location": {"latitude": 37.7751, "longitude": -122.4153, "address": "123 street road, Brisbane, QLD"},
                 "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, Brisbane, QLD"},
                 "pickup_window_start": "2024-05-10T10:30:00",
@@ -62,6 +64,7 @@ RIDE_REQUEST_JOHN = {
 
 RIDE_REQUEST_JOHN_2 = {
                 "username": "jDoe12",
+                "password": "53%32",
                 "pickup_location": {"latitude": -27.4711, "longitude": 153.0235, "address": "Post Office Square, Brisbane, QLD"},
                 "dropoff_location": {"latitude": -27.4817, "longitude": 153.0292, "address": "The Brisbane Showgrounds, QLD"},
                 "pickup_window_start": "2024-05-10T07:00:00",
@@ -70,6 +73,7 @@ RIDE_REQUEST_JOHN_2 = {
 
 RIDE_REQUEST_CHRIS = {
                     "username": "CAdams34",
+                    "password": "53%34",
                     "pickup_location": {"latitude": -27.4711, "longitude": 153.0235, "address": "Post Office Square, Brisbane, QLD"},
                     "dropoff_location": {"latitude": -27.4817, "longitude": 153.0292, "address": "The Brisbane Showgrounds, QLD"},
                     "pickup_window_start": "2024-05-10T10:30:00",
@@ -78,6 +82,7 @@ RIDE_REQUEST_CHRIS = {
 
 TRIP_REQUEST_LEO = {
                         "username": "lSmith88",
+                        "password": "53%30",
                         "start_time": "2024-05-10T07:00:00Z",
                         "end_time": "2024-05-10T07:30:00Z",
                         "start_location": {"latitude": -27.4711, "longitude": 153.0235, "address": "Post Office Square, Brisbane, QLD"},
@@ -88,6 +93,7 @@ TRIP_REQUEST_LEO = {
 
 RIDE_REQUEST_KYLIE = {
                     "username": "kWhite34",
+                    "password": "53%34",
                     "pickup_location": {"latitude": 37.7751, "longitude": -122.4153, "address": "123 street road, Brisbane, QLD"},
                     "dropoff_location": {"latitude": 37.7749, "longitude": -122.4194, "address": "125 street road, Brisbane, QLD"},
                     "pickup_window_start": "2024-05-10T07:00:00",
