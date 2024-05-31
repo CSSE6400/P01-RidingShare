@@ -164,7 +164,7 @@ class GetUserInformation(Resource):
 
         contents = get_user_details_by_username_parser.parse_args()
 
-        user = get_user_from_username(contents.get("username"))
+        user = get_user_from_username(contents.get("target_username"))
         if user == None:
             return make_response({"error": "That user does not exist"}, 301)
 
