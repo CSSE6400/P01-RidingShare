@@ -4,7 +4,7 @@ import '../styles/TripInformationPage.css'
 import { useParams } from 'react-router-dom';
 import styles from '../styles/TripRequest.module.css';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './UserContext';
+import { UserContext } from '../components/UserContext';
 
 const TripInformation = () => {
   const { tripId } = useParams();
