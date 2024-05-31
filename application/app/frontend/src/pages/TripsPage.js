@@ -1,19 +1,14 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { MapContainer, TileLayer } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from '../components/UserContext';
 import "leaflet/dist/leaflet.css";
 import 'leaflet/dist/images/marker-shadow.png';
 import '../styles/ApprovedTrips.css';
 import ApprovedTripCard from '../components/ApprovedTripCard';
-import Routing from "../components/Routing";
+import Alert from '@mui/material/Alert';
+import styles from '../styles/TripRequest.module.css';
 
-const locations = [
-  { lat: -27.4679, lng: 153.0215, name: "Start Point" },
-  { lat: -27.4705, lng: 153.0265, name: "Mid Point" },
-  { lat: -27.4517, lng: 153.0412, name: "End Point" }
-];
 
 const TripsPage = () => {
   const { tripId } = useParams();
@@ -21,15 +16,11 @@ const TripsPage = () => {
   const [tripDetails, setTripDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
-  // const [locations, setLocations] = useState([]);
 
   const navigate = useNavigate();
   const tripInfo = (tripRequestId) => {
     navigate(`/trip-info/${tripRequestId}`);
   };
-  const mapRef = useRef(null);
-  const latitude = -27.4679;
-  const longitude = 153.0215;
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -42,7 +33,8 @@ const TripsPage = () => {
           },
           body: JSON.stringify({
             trip_id: tripId,
-            username: user.username
+            username: user.username,
+            password: user.password
           }),
         });
 
@@ -60,7 +52,7 @@ const TripsPage = () => {
     };
 
     fetchTrips();
-  }, [user.username, tripId]);
+  }, [user.username, tripId, user.password]);
 
   const fetchTripDetails = async (trip_id) => {
     try {
@@ -71,7 +63,9 @@ const TripsPage = () => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          trip_request_id: trip_id
+          trip_request_id: trip_id,
+          username: user.username,
+          password: user.password
         }),
       });
       if (response.ok) {
@@ -102,7 +96,14 @@ const TripsPage = () => {
   }
 
   if (!trips.length) {
-    return <div>No trips available.</div>;
+    return (
+      <div className="container">
+        <Alert severity="info">No approved trips available.</Alert>
+        <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+        </center>
+      </div>
+    );
   }
 
   return (
@@ -116,20 +117,13 @@ const TripsPage = () => {
             key={index}
             riderName={trip.passenger_name}
             startingPoint={trip.start_address}
-            destination={"test"}
+            destination={trip.end_address}
             onClickCard={() => tripInfo(trip.id)}
           />
         ))}
       </div>
-      <div className="map-container">
-        <MapContainer center={[latitude, longitude]} zoom={13} ref={mapRef} className="map-container">
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Routing waypoints={locations} />
-        </MapContainer>
-      </div>
+      <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      <button onClick={() => navigate(`/map/${tripId}`)} className={"blueButton"}>Go to Map</button>
     </div>
   );
 };

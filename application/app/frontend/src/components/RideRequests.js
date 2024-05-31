@@ -10,6 +10,7 @@ import styles from '../styles/TripRequest.module.css';
 function RideRequests() {
   const { user } = useContext(UserContext);
   const username = user.username;
+  const password = user.password;
   const { tripId } = useParams();
   const [tripRequests, setTripRequests] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,27 +20,21 @@ function RideRequests() {
   useEffect(() => {
     const fetchTripRequests = async () => {
       try {
-        const response = await getNearbyTripRequests(tripId, username);
-
-        if (response && Array.isArray(response)) {
-          setTripRequests(response);
-        } else {
-          setErrorMessage('Data received is not valid');
-          console.error('Data received is not an array:', response);
-        }
-      } catch (error) {
+        const data = await getNearbyTripRequests(tripId, username, password);
+        setTripRequests(data.Trips);
+    } catch (error) {
         setErrorMessage('Failed to fetch trip requests.');
         console.error('Failed to fetch trip requests:', error);
       }
     };
     fetchTripRequests();
-  }, [tripId, username]);
+  }, [password, tripId, username]);
 
   const handleApprove = async (tripRequestId) => {
     try {
       setErrorMessage('');
       setSuccessMessage('');
-      const response = await approveRequest(username, tripRequestId, tripId);
+      const response = await approveRequest(username, password, tripRequestId, tripId);
       setSuccessMessage(response.message);
       setTripRequests(tripRequests.filter(request => request.id !== tripRequestId));
     } catch (error) {
@@ -66,10 +61,11 @@ function RideRequests() {
               />
             ))
           ) : (
-            <p>No ride requests available.</p>
+            <Alert severity="info">No ride requests available.</Alert>
           )}
         </div>
-        <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to Trips</button>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+        <button onClick={() => navigate(`/trips/${tripId}`)} className={styles.blueButton}>Go to your Trips Page</button>
       </center>
     </div>
   );

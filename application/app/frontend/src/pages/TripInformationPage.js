@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import DriverInformationCard from '../components/DriverInformationCard';
 import '../styles/TripInformationPage.css'
 import { useParams } from 'react-router-dom';
+import styles from '../styles/TripRequest.module.css';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../components/UserContext';
 
 const TripInformation = () => {
   const { tripId } = useParams();
+  const { user } = useContext(UserContext);
   const [tripDetails, setTripDetails] = useState([]);
   const [driverInformation, setDriverInformaion] = useState([]);
   const [carInformation, setCarInformation] = useState([]);
   const [TripInformation, setTripInformation] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchTripDetails = async (trip_request_id) => {
     try {
@@ -20,6 +25,8 @@ const TripInformation = () => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
+          username: user.username,
+          password: user.password,
           trip_request_id: trip_request_id
         }),
       });
@@ -42,7 +49,9 @@ const TripInformation = () => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          username: driverUsername,
+          username: user.username,
+          password: user.password,
+          target_username: driverUsername,
           user_type: "driver"
         }),
       });
@@ -68,6 +77,8 @@ const TripInformation = () => {
           'Accept': 'application/json',
         },
         body: JSON.stringify({
+          username: user.username,
+          password: user.password,
           trip_id: trip_id
         }),
       });
@@ -129,6 +140,9 @@ const TripInformation = () => {
           <h3>{tripDetails.end_address}</h3>
         </div>
       </div>
+      <center>
+        <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
+      </center>
     </div>
   )
 }

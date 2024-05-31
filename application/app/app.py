@@ -34,6 +34,7 @@ def create_app(config_overrides=None):
 
     # Create the database tables
     with app.app_context():
+        add_postgis_extension()
         db.create_all()
         db.session.commit()
         db.engine.dispose()
@@ -59,13 +60,26 @@ def create_app(config_overrides=None):
     
 
 def celery_init_app(app: Flask) -> Celery:
-	class FlaskTask(Task):
-			def __call__(self, *args: object, **kwargs: object) -> object:
-				with app.app_context():
-					return self.run(*args, **kwargs)
+    class FlaskTask(Task):
+            def __call__(self, *args: object, **kwargs: object) -> object:
+                with app.app_context():
+                    return self.run(*args, **kwargs)
 
-	celery_app = Celery(app.name, task_cls=FlaskTask)
-	celery_app.config_from_object(app.config["CELERY"])
-	celery_app.set_default()
-	app.extensions["celery"] = celery_app
-	return celery_app
+    celery_app = Celery(app.name, task_cls=FlaskTask)
+    celery_app.config_from_object(app.config["CELERY"])
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    return celery_app
+
+
+def add_postgis_extension():
+    from models import db
+    from sqlalchemy.sql import text
+    try:
+        db.session.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print("Error adding PostGIS extension:", str(e))
+    finally:
+        db.session.close()

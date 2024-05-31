@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import TripCard from './TripCard';
+import RequestCard from './RequestCard';
 import { UserContext } from './UserContext';
 import '../styles/TripList.css';
-import Alert from '@mui/material/Alert';
 import styles from '../styles/TripRequest.module.css';
 import { useNavigate } from 'react-router-dom';
 
-const TripList = () => {
+const RequestList = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useContext(UserContext);
@@ -15,7 +14,7 @@ const TripList = () => {
   useEffect(() => {
     const fetchTrips = async () => {
       try {
-        const response = await fetch('/trips/get/all', { // Use your actual base URL here
+        const response = await fetch('/trip_requests/get/all', { // Use your actual base URL here
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -26,7 +25,7 @@ const TripList = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setTrips(data.trips);
+          setTrips(data.trip_requests);
         } else {
           console.error('Failed to fetch trips');
         }
@@ -47,10 +46,8 @@ const TripList = () => {
   if (!trips.length) {
     return (
       <div>
-        <Alert severity="info">No trips available.</Alert>
-        <center>
-          <button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button>
-        </center>
+        <div>No trips available.</div>
+        <center><button onClick={() => navigate(-1)} className={styles.blueButton}>Back</button></center>
       </div>
     );
   }
@@ -59,7 +56,7 @@ const TripList = () => {
     <div>
       <div className="trip-list">
         {trips.map((trip) => (
-          <TripCard key={trip.id} trip={trip} />
+          <RequestCard key={trip.id} trip={trip} />
         ))}
       </div>
       <center>
@@ -69,4 +66,4 @@ const TripList = () => {
   );
 };
 
-export default TripList;
+export default RequestList;
