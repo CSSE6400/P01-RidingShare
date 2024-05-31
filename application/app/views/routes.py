@@ -450,12 +450,11 @@ class ApproveRequest(Resource):
                     trip_request_query.status = TripRequestState.MATCHED
                     db.session.commit()
                     link_trip_request_to_trip(contents.get("trip_id"), contents.get("trip_request_id"))
-
                     if len(trip_query.trip_requests) == seats:
                         trip_query.status = TripState.MATCHED
                         trip_query.seats_remaining = trip_query.seats_remaining - 1
-                        if trip_req_id in trip.optional_trip_requests["Trips"]:
-                            trip.optional_trip_requests["Trips"].remove(trip_req_id)
+                        #if trip_req_id in trip.optional_trip_requests:
+                        #     trip.optional_trip_requests[""].remove(trip_req_id)
                         db.session.commit()
 
                     return make_response(jsonify({"message": f"Trip {trip_request_query.passenger.user[0].name} has successfully been added to the trip."}), 200)
