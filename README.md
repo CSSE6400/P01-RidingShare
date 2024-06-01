@@ -3,7 +3,9 @@
 # Application Demo
 As the application requires a collection of self-hosted tools and engines to perform, that can take time to be provisioned a simplified demo script has been created that modifies the usage of these enigines to publically available free and open-source hosting. 
 
-Please note however that the usage of these API's however is rate limited so the demo application will be more limited. 
+Please note however that due to demo constraints and the usage of these externally hosted API's being rate limited the demo application will be slightly limited. he functionality of this demo is not significantly impacted however, so no noticible difference should be felt. With the only major difference being no security certificate will be provisioned and connected instead the demo uses HTTP.
+
+If you would like for the full application to be spun up you can either follow the steps below on [Deploying the Application](#Deploying-the-Application) however this will take time to provision the apis, or contact one of the team members and we can deploy a fully independent API. T
 
 ## Setting up the envrionment
 To deploy the demo script you will need that `Terraform` and `Docker` both installed on your system.
