@@ -13,12 +13,12 @@ data "aws_subnets" "private" {
     } 
 }
 
-output "public_dns_name" {
-    description = "Public DNS address of the load balancer listener"
-    value 		= aws_lb.riding_share.dns_name
+output "application_dns_name" {
+    description = "DNS address of the application"
+    value       = aws_lb.riding_share.dns_name
 }
 
 resource "local_file" "url" {
    content   = format("https://%s/", aws_lb.riding_share.dns_name)
-    filename = "./api.txt"
+    filename = "./application_url.txt"
 }

@@ -19,6 +19,8 @@ services:
     environment:
       CELERY_BROKER_URL: redis://redis:6379 
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
+      ROUTING_URL: http://router.project-osrm.org
+      GEOCODING_URL: https://nominatim.openstreetmap.org
     ports:
       - "8080:8080"
     depends_on:
@@ -31,7 +33,8 @@ services:
     environment:
       CELERY_BROKER_URL: redis://redis:6379 
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
-      # ROUTING_API_URL: trwst.com
+      ROUTING_URL: http://router.project-osrm.org
+      GEOCODING_URL: https://nominatim.openstreetmap.org
     command: celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo --uid=nobody --gid=nogroup
     depends_on:
       - redis

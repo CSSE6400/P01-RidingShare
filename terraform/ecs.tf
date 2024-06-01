@@ -60,11 +60,15 @@ resource "aws_ecs_task_definition" "app" {
                 },
                 {
                     name = "SQLALCHEMY_DATABASE_URI"
-           		    value = "postgresql+psycopg://${var.database_username}:${var.database_password}@${aws_db_instance.riding_share_database.address}:${aws_db_instance.riding_share_database.port}/${aws_db_instance.riding_share_database.db_name}" 
+                    value = "postgresql+psycopg://${var.database_username}:${var.database_password}@${aws_db_instance.riding_share_database.address}:${aws_db_instance.riding_share_database.port}/${aws_db_instance.riding_share_database.db_name}" 
                 },
                 {
-                    name = "ROUTING_API_URL"
-                    value = data.external.hosted_apis_ip.result.value
+                    name = "ROUTING_URL"
+                    value = var.routing_engine_url
+                },
+                {
+                    name = "GEOCODING_URL"
+                    value = var.geocoding_engine_url
                 }
             ]
             logConfiguration = {
@@ -132,11 +136,15 @@ resource "aws_ecs_task_definition" "matching_celery" {
                 },
                 {
                     name = "SQLALCHEMY_DATABASE_URI"
-           		    value = "postgresql+psycopg://${var.database_username}:${var.database_password}@${aws_db_instance.riding_share_database.address}:${aws_db_instance.riding_share_database.port}/${aws_db_instance.riding_share_database.db_name}" 
+                    value = "postgresql+psycopg://${var.database_username}:${var.database_password}@${aws_db_instance.riding_share_database.address}:${aws_db_instance.riding_share_database.port}/${aws_db_instance.riding_share_database.db_name}" 
                 },
                 {
-                    name = "ROUTING_API_URL"
-                    value = data.external.hosted_apis_ip.result.value
+                    name = "ROUTING_URL"
+                    value = var.routing_engine_url
+                },
+                {
+                    name = "GEOCODING_URL"
+                    value = var.geocoding_engine_url
                 }
             ]
             logConfiguration = {
