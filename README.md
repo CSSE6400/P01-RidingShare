@@ -14,6 +14,12 @@ Below are the links to installation guides for both of these tools. Ensure you f
 - [Terraform Installer Guide](https://developer.hashicorp.com/terraform/install)    
 - [Docker Installer Guide](https://docs.docker.com/engine/install/)
 
+If you are on a system that used APT (such as a codespace) there is a provided script to install terraform for you.
+```shell
+./install_terraform.sh
+```
+
+
 ## Creating credentials
 Running the demo requires AWS credentials to be passed in. A shell script has been provided to generate a blank credentials file for you to fill out. Simply run the following script command.
 ```shell
