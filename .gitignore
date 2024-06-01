@@ -276,4 +276,4 @@ application/data/
 application/app/frontend/node_modules/
 node_modules
 aws/
-api.txt
+application_url.txt

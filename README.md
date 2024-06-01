@@ -1,9 +1,56 @@
 # P01-RidingShare
 
+# Application Demo
+As the application requires a collection of self-hosted tools and engines to perform, that can take time to be provisioned a simplified demo script has been created that modifies the usage of these enigines to publically available free and open-source hosting. 
+
+Please note however that the usage of these API's however is rate limited so the demo application will be more limited. 
+
+## Setting up the envrionment
+To deploy the demo script you will need that `Terraform` and `Docker` both installed on your system.
+
+Below are the links to installation guides for both of these tools. Ensure you follow the correct instructions for your system.
+- [Terraform Installer Guide](https://developer.hashicorp.com/terraform/install)    
+- [Docker Installer Guide](https://docs.docker.com/engine/install/)
+
+## Creating credentials
+Running the demo requires AWS credentials to be passed in. A shell script has been provided to generate a blank credentials file for you to fill out. Simply run the following script command.
+```shell
+./generate_credentials_file.sh
+```
+Once the credentials file is generated simply paste in your AWS credentials.   
+The credentials file must export your credentials as environment variables such as below.
+```shell
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_SESSION_TOKEN=...
+```
+
+## Running the Demo
+After setting up the required environment and credentials you can then just run the demo script .
+```shell
+./demo.sh
+```
+After running the script an `application_url.txt` file will be generated with the URL of the demo to run on. Additinally the URL will also be displayed in the console output under `application_dns_name`.
+
+**NOTE**   
+Please note that for the demo your application will be generated under a new DNS and such won't have a signed certificate and instead will use HTTP. Additionally the demo application will only last until your temporary credentials expire.
+
+
+## Stopping the Demo
+After finishing with the demo you need to teardown the application so it does not remain running. Once again a script has been provided for convinence. 
+
+**NOTE**   
+Please note that depending on how long the application was up for your credentials may have expired and new ones will need to be generated. These new credentials simply need to be copied into the credentials file again as above, replacing the existing ones.
+
+```shell
+./teardown.sh
+```
+
+
 # Deploying the Application
 
 ## Installing the Environment
-To deploy the application both Terraform and the AWS cli tools must be installed.  
+To deploy the application both Terraform and the AWS cli tools must be installed. Additionally Docker needs to be installed to create the container image locally.
 
 Some installation scripts have been provided to streamline the process for specific OSes.
 
@@ -17,9 +64,10 @@ The following script installs the AWS cli tool. It supports both Linux and MacOS
 ./install_aws.sh
 ```
 
-The links for installation documentation can be found below.   
-- [Terraform Installer](https://developer.hashicorp.com/terraform/install)    
-- [AWS cli Installer](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+The links for installation documentation can be found below. Ensure you follow the correct instructions for your system.
+- [Terraform Installer Guide](https://developer.hashicorp.com/terraform/install)    
+- [AWS cli Installer Guide](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- [Docker Installer Guide](https://docs.docker.com/engine/install/)
 
 
 ## Self-Hosted API Tools
