@@ -68,7 +68,7 @@ resource "aws_security_group" "load_balancer" {
 resource "aws_lb_listener" "app_http" { 
     load_balancer_arn = aws_lb.riding_share.arn 
     port              = "80" 
-    protocol          = "HTTPS" 
+    protocol          = "HTTP" 
  
     default_action { 
         type              = "forward" 
