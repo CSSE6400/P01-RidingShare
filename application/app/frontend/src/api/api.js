@@ -1,5 +1,6 @@
 export const fetchCoordinates = async (address) => {
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json`;
+  const geocodingUrl = process.env.REACT_APP_GEOCODING_URL
+  const url = `${geocodingUrl}/search?q=${encodeURIComponent(address)}&format=json`;
   const response = await fetch(url);
   if (response.ok) {
       const data = await response.json();

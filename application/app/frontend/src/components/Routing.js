@@ -9,10 +9,14 @@ const customIcon = new L.Icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
 });
-
 const createRoutineMachineLayer = ({ waypoints }) => {
+  const url = process.env.REACT_APP_ROUTING_URL
+  const routingUrl = `${url}/route/v1`
   const instance = L.Routing.control({
     waypoints: waypoints.map(wp => L.latLng(wp.lat, wp.lng)),
+    router: L.Routing.osrmv1({
+      serviceUrl: routingUrl
+    }),
     lineOptions: {
       styles: [
         {
