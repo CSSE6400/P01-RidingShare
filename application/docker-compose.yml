@@ -1,5 +1,6 @@
-services: 
+version: '3.8'
 
+services: 
   database:
     image: postgis/postgis
     restart: always
@@ -13,14 +14,16 @@ services:
       - "5432:5432"
 
   api: 
-    build: .
+    build:
+      context: .
+      args:
+        ROUTING_URL: https://router.project-osrm.org
+        GEOCODING_URL: https://nominatim.openstreetmap.org
     container_name: ridingshare
     restart: always 
     environment:
       CELERY_BROKER_URL: redis://redis:6379 
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
-      ROUTING_URL: http://router.project-osrm.org
-      GEOCODING_URL: https://nominatim.openstreetmap.org
     ports:
       - "8080:8080"
     depends_on:
@@ -28,13 +31,15 @@ services:
     command: ["flask", "--app", "wsgi:app", "run", "--debug", "--host", "0.0.0.0", "--port", "8080"]
 
   matching_worker:
-    build: .
+    build:
+      context: .
+      args:
+        ROUTING_URL: https://router.project-osrm.org
+        GEOCODING_URL: https://nominatim.openstreetmap.org
     restart: always
     environment:
       CELERY_BROKER_URL: redis://redis:6379 
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg://administrator:verySecretPassword@database:5432/ride
-      ROUTING_URL: http://router.project-osrm.org
-      GEOCODING_URL: https://nominatim.openstreetmap.org
     command: celery --app tasks.celery_app worker --loglevel=info -Q matching.fifo --uid=nobody --gid=nogroup
     depends_on:
       - redis
@@ -44,4 +49,4 @@ services:
     image: redis:latest 
     restart: always 
     ports: 
-    - "6379:6379"
+      - "6379:6379"

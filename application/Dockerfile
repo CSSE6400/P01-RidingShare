@@ -26,6 +26,12 @@ RUN chmod +x entrypoint.sh
 # Copying our application into the container
 COPY app /app
 
+ARG ROUTING_URL
+ARG GEOCODING_URL
+
+# Set environment variables
+ENV REACT_APP_ROUTING_URL=$ROUTING_URL
+ENV REACT_APP_GEOCODING_URL=$GEOCODING_URL
 # Build the frontend with yarn
 RUN /bin/bash -c "source ~/.bashrc && cd frontend && yarn install && yarn build"
 
