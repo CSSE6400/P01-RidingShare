@@ -37,6 +37,13 @@ resource "aws_security_group" "load_balancer" {
         cidr_blocks   = ["0.0.0.0/0"] 
     } 
 
+    ingress { 
+        from_port     = 80
+        to_port       = 80
+        protocol      = "tcp" 
+        cidr_blocks   = ["0.0.0.0/0"] 
+    } 
+
     egress { 
         from_port     = 0 
         to_port       = 0 
@@ -45,12 +52,23 @@ resource "aws_security_group" "load_balancer" {
     } 
 }
 
+# Removed for the demo
+# resource "aws_lb_listener" "app_https" { 
+#     load_balancer_arn = aws_lb.riding_share.arn 
+#     port              = "443" 
+#     protocol          = "HTTPS" 
+#     certificate_arn   = "arn:aws:acm:us-east-1:590183807676:certificate/336a8af4-2190-4605-a19a-2adab8363c14"
+ 
+#     default_action { 
+#         type              = "forward" 
+#         target_group_arn  = aws_lb_target_group.app.arn 
+#     } 
+# }
 
-resource "aws_lb_listener" "app_https" { 
+resource "aws_lb_listener" "app_http" { 
     load_balancer_arn = aws_lb.riding_share.arn 
-    port              = "443" 
-    protocol          = "HTTPS" 
-    certificate_arn   = "arn:aws:acm:us-east-1:590183807676:certificate/336a8af4-2190-4605-a19a-2adab8363c14"
+    port              = "80" 
+    protocol          = "HTTP" 
  
     default_action { 
         type              = "forward" 

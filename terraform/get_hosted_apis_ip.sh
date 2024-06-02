@@ -7,4 +7,6 @@ output=$(aws ec2 describe-instances \
 --query "Reservations[*].Instances[*].[PublicIpAddress]" \
 --output text)
 
-echo "{\"value\": \"$output\"}" | jq .
+port="${2:+:$2}"
+
+echo "{\"value\": \"$output$port\"}" | jq .

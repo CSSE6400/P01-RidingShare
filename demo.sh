@@ -12,4 +12,4 @@ cp credentials ./application
 source credentials
 
 terraform init
-terraform apply -auto-approve
+terraform apply -auto-approve -var routing_engine_url="http://router.project-osrm.org" -var geocoding_engine_url="https://nominatim.openstreetmap.org"
