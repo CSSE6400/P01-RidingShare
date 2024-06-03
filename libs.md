@@ -44,5 +44,6 @@
 4. **React Router**
    - Homepage: [https://reactrouter.com/en/main](https://reactrouter.com/en/main)
   
-
+5. **Werkzeug.security**
+   - Homepage: [https://werkzeug.palletsprojects.com/en/2.3.x/utils/](https://werkzeug.palletsprojects.com/en/2.3.x/utils/)
    
