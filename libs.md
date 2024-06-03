@@ -7,9 +7,28 @@
    
 2. **SQLAlchemy**
    - Homepage: [https://www.sqlalchemy.org/](https://www.sqlalchemy.org/)
+  
+3. **GeoAlchemy**
+   - Homepage: [https://geoalchemy-2.readthedocs.io/en/latest/](https://geoalchemy-2.readthedocs.io/en/latest/)
    
-3. **PostGIS**
+4. **PostGIS**
    - Homepage: [https://postgis.net/](https://postgis.net/)
+  
+5. **GUnicorn**
+   - Homepage: [https://pypi.org/project/gunicorn/](https://pypi.org/project/gunicorn/)
+  
+6. **Celery**
+   - Homepage: [https://docs.celeryq.dev/en/main/getting-started/introduction.html](https://docs.celeryq.dev/en/main/getting-started/introduction.html)
+
+5. **Boto3**
+   - Homepage: [https://boto3.amazonaws.com/v1/documentation/api/latest/index.html](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+  
+5. **Redis**
+   - Homepage: [https://redis.io/](https://redis.io/)
+  
+5. **Psycopg**
+   - Homepage: [https://www.psycopg.org/psycopg3/](https://www.psycopg.org/psycopg3/)
+
 
 ## Frontend
 
